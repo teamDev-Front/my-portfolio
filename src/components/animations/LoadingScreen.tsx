@@ -111,8 +111,7 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
       {/* Logo Particles */}
       <LogoParticles
         logoPath="/images/hcs-logo.svg"
-        onReady={handleParticlesReady}
-      />
+        onReady={handleLoadComplete} />
 
       {/* Corner decorations */}
       <div className="absolute top-6 left-6 w-12 h-12 border-l-2 border-t-2 border-accent/30 pointer-events-none" />
