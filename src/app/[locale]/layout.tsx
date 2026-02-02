@@ -5,6 +5,7 @@ import { routing } from '@/i18n/routing';
 import { ThemeProvider } from '@/components/layout/ThemeProvider';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { AppWrapper } from '@/components/animations/AppWrapper';
 
 type Props = {
   children: React.ReactNode;
@@ -28,13 +29,15 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <ThemeProvider>
       <NextIntlClientProvider messages={messages}>
-        <div className="flex flex-col min-h-screen">
-          <Header />
-          <main className="flex-grow">
-            {children}
-          </main>
-          <Footer />
-        </div>
+        <AppWrapper>
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            <main className="flex-grow">
+              {children}
+            </main>
+            <Footer />
+          </div>
+        </AppWrapper>
       </NextIntlClientProvider>
     </ThemeProvider>
   );

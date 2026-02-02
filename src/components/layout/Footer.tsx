@@ -16,7 +16,6 @@ export function Footer() {
     { href: `/${locale}/about`, label: tNav('about') },
     { href: `/${locale}/services`, label: tNav('services') },
     { href: `/${locale}/portfolio`, label: tNav('portfolio') },
-    { href: `/${locale}/blog`, label: tNav('blog') },
     { href: `/${locale}/contact`, label: tNav('contact') },
   ];
 

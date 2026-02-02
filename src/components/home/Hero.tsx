@@ -5,6 +5,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { gsap } from 'gsap';
 import { ArrowRight, Play } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { FloatingShapes } from '@/components/animations/FloatingShapes';
 
 export function Hero() {
   const t = useTranslations('hero');
@@ -13,6 +14,7 @@ export function Hero() {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
+  const techRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -34,6 +36,19 @@ export function Hero() {
         { opacity: 0, y: 20 },
         { opacity: 1, y: 0, duration: 0.6 },
         '-=0.3'
+      )
+      .fromTo(
+        techRef.current?.children || [],
+        { opacity: 0, scale: 0.8, y: 20 },
+        {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          duration: 0.4,
+          stagger: 0.1,
+          ease: 'back.out(1.7)'
+        },
+        '-=0.2'
       );
     }, heroRef);
 
@@ -50,6 +65,9 @@ export function Hero() {
         <div className="absolute top-1/4 -left-20 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
       </div>
+
+      {/* Interactive floating shapes */}
+      <FloatingShapes />
 
       {/* Grid pattern overlay */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
@@ -95,11 +113,12 @@ export function Hero() {
           </div>
 
           {/* Tech stack badges */}
-          <div className="mt-16 flex flex-wrap justify-center gap-3">
+          <div ref={techRef} className="mt-16 flex flex-wrap justify-center gap-3">
             {['React', 'Next.js', 'TypeScript', 'Node.js', 'Python', 'AI/LLM'].map((tech) => (
               <span
                 key={tech}
-                className="px-4 py-2 bg-card/50 border border-card-border rounded-full text-sm text-muted"
+                className="px-4 py-2 bg-card/50 border border-card-border rounded-full text-sm text-muted hover:border-accent/50 hover:text-accent transition-colors cursor-default"
+                style={{ opacity: 0 }}
               >
                 {tech}
               </span>

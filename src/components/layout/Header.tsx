@@ -30,7 +30,6 @@ export function Header() {
     { href: `/${locale}/about`, label: t('about') },
     { href: `/${locale}/services`, label: t('services') },
     { href: `/${locale}/portfolio`, label: t('portfolio') },
-    { href: `/${locale}/blog`, label: t('blog') },
     { href: `/${locale}/contact`, label: t('contact') },
   ];
 

@@ -5,6 +5,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
 import { ArrowUpRight, ExternalLink } from 'lucide-react';
 import { FadeIn } from '@/components/animations/FadeIn';
+import { TiltCard } from '@/components/animations/TiltCard';
 import { projects } from '@/lib/data/projects';
 import type { Locale } from '@/i18n/routing';
 import { cn } from '@/lib/utils';
@@ -49,7 +50,8 @@ export function PortfolioGrid() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProjects.map((project, index) => (
             <FadeIn key={project.id} delay={index * 0.05}>
-              <div className="group bg-card rounded-2xl border border-card-border overflow-hidden card-hover">
+              <TiltCard tiltAmount={8} className="h-full">
+              <div className="group bg-card rounded-2xl border border-card-border overflow-hidden card-hover h-full">
                 {/* Image */}
                 <div className="aspect-video bg-hcs-gray relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-accent/20 to-transparent" />
@@ -108,6 +110,7 @@ export function PortfolioGrid() {
                   </div>
                 </div>
               </div>
+              </TiltCard>
             </FadeIn>
           ))}
         </div>
