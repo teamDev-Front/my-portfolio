@@ -429,15 +429,15 @@ export function CosmicBackground() {
         start: branchPoint,
         end: branchEnd,
         segments: generateLightningSegments(branchPoint, branchEnd),
-        alpha: 0.8,
-        width: lightning.width * 0.6,
+        alpha: 1,
+        width: lightning.width * 0.7,
       };
       lightningsRef.current.push(branch);
 
       gsap.to(branch, {
         alpha: 0,
-        duration: 0.12 + Math.random() * 0.1,
-        ease: 'power2.in',
+        duration: 0.25 + Math.random() * 0.15,
+        ease: 'power1.in',
         onComplete: () => {
           const index = lightningsRef.current.indexOf(branch);
           if (index > -1) lightningsRef.current.splice(index, 1);
