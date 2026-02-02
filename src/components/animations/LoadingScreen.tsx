@@ -109,7 +109,7 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
 
       {/* Logo Particles */}
       <LogoParticles
-        logoPath="/images/hcs-logo.png"
+        logoPath="/images/hcs-logo.svg"
         onReady={handleParticlesReady}
       />
 
