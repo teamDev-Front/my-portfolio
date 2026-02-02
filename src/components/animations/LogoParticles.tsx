@@ -21,7 +21,7 @@ interface LogoParticlesProps {
 }
 
 export function LogoParticles({
-  logoPath = '/images/hcs-logo.png',
+  logoPath = '/images/hcs-logo.svg',
   onReady,
 }: LogoParticlesProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);

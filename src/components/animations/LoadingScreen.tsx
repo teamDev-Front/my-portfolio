@@ -3,6 +3,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ParticleBackground } from './ParticleBackground';
+import { LogoParticles } from './LogoParticles';
+import { AnimatedBackground } from './AnimatedBackground';
 
 interface LoadingScreenProps {
   onComplete: () => void;
@@ -103,11 +105,13 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
       className="fixed inset-0 z-[100] bg-hcs-black"
       style={{ height: viewportHeight }}
     >
-      {/* Particle Background with Logo */}
-      <ParticleBackground
+      {/* Animated Background */}
+      <AnimatedBackground />
+
+      {/* Logo Particles */}
+      <LogoParticles
         logoPath="/images/hcs-logo.svg"
-        backgroundColor="#0a0a0a"
-        onLoadComplete={handleLoadComplete}
+        onReady={handleParticlesReady}
       />
 
       {/* Corner decorations */}
