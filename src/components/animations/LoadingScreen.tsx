@@ -2,9 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { ParticleBackground } from './ParticleBackground';
 import { LogoParticles } from './LogoParticles';
-import { AnimatedBackground } from './AnimatedBackground';
+import { CosmicBackground } from './CosmicBackground';
 
 interface LoadingScreenProps {
   onComplete: () => void;
@@ -105,8 +104,8 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
       className="fixed inset-0 z-[100] bg-hcs-black"
       style={{ height: viewportHeight }}
     >
-      {/* Animated Background */}
-      <AnimatedBackground />
+      {/* Cosmic Background */}
+      <CosmicBackground />
 
       {/* Logo Particles */}
       <LogoParticles
