@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { AnimatedBackground } from './AnimatedBackground';
-import { LogoParticles } from './LogoParticles';
+import { ParticleBackground } from './ParticleBackground';
 
 interface LoadingScreenProps {
   onComplete: () => void;
@@ -59,8 +58,8 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
     }
   }, [isReady]);
 
-  const handleParticlesReady = () => {
-    // Ensure minimum loading time
+  const handleLoadComplete = () => {
+    // Ensure minimum loading time of 1.5 seconds
     const elapsed = Date.now() - loadingStartTime.current;
     const remainingTime = Math.max(0, 1500 - elapsed);
 
@@ -104,13 +103,11 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
       className="fixed inset-0 z-[100] bg-hcs-black"
       style={{ height: viewportHeight }}
     >
-      {/* Animated Background */}
-      <AnimatedBackground />
-
-      {/* Logo Particles */}
-      <LogoParticles
-        logoPath="/images/hcs-logo.png"
-        onReady={handleParticlesReady}
+      {/* Particle Background with Logo */}
+      <ParticleBackground
+        logoPath="/images/hcs-logo.svg"
+        backgroundColor="#0a0a0a"
+        onLoadComplete={handleLoadComplete}
       />
 
       {/* Corner decorations */}
