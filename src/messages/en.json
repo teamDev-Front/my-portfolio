@@ -1,0 +1,280 @@
+{
+  "metadata": {
+    "title": "Habaeb Creative Solutions | Web Development & Digital Solutions",
+    "description": "Website creation, e-commerce, SaaS, systems and AI automation. Digital solutions for law firms, real estate, clinics and businesses.",
+    "keywords": "web development, website creation, e-commerce, SaaS, systems, AI automation, corporate websites, law firms, real estate, clinics"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "portfolio": "Portfolio",
+    "blog": "Blog",
+    "contact": "Contact",
+    "getQuote": "Get Quote"
+  },
+  "hero": {
+    "tagline": "Front-End & Creative Solutions That Convert",
+    "subtitle": "Building websites, e-commerce, SaaS and systems with cutting-edge technology and user-centered design",
+    "cta": "Let's Build Your Next Digital Experience",
+    "secondaryCta": "View Portfolio"
+  },
+  "intro": {
+    "title": "About Luiz Habaeb",
+    "subtitle": "Front-End Developer & HCS Founder",
+    "description": "I'm a front-end developer with strong experience in React, Next.js, Angular and TypeScript. I also work with Python, Django, SQL, Oracle and Supabase. I integrate AI/LLM services into front-end applications and lead cross-functional teams.",
+    "highlight1": "Father of two, married",
+    "highlight2": "Studying Database at FATEC",
+    "highlight3": "Advanced English",
+    "cta": "Learn My Story"
+  },
+  "services": {
+    "title": "Services",
+    "subtitle": "Complete digital solutions to transform your business",
+    "viewAll": "View All Services",
+    "websites": {
+      "title": "Websites & Landing Pages",
+      "description": "Development of responsive, accessible, SEO-optimized websites with high performance"
+    },
+    "ecommerce": {
+      "title": "E-commerce",
+      "description": "Online stores on Shopify, WooCommerce or custom development with payment integration"
+    },
+    "saas": {
+      "title": "SaaS & Systems",
+      "description": "Full-stack development with React/Next.js, Node.js, Python/Django and SQL/NoSQL databases"
+    },
+    "ai": {
+      "title": "AI & Automation",
+      "description": "Chatbots, business intelligence, marketing automation and personalization strategies"
+    },
+    "design": {
+      "title": "UX/UI Design",
+      "description": "Wireframing, Figma/Framer prototyping, micro-interactions and accessible design"
+    },
+    "marketing": {
+      "title": "Digital Marketing",
+      "description": "SEO, SEM, social media ads and content strategy"
+    },
+    "consulting": {
+      "title": "Consulting",
+      "description": "Technical analysis, strategic planning and mentorship for development teams"
+    }
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "subtitle": "Projects that transform businesses and create value",
+    "viewAll": "View All Projects",
+    "viewProject": "View Project",
+    "filters": {
+      "all": "All",
+      "healthPharma": "Health/Pharma",
+      "retailEcommerce": "Retail & E-commerce",
+      "sustainability": "Sustainability",
+      "aiData": "AI & Data",
+      "corporate": "Corporate"
+    },
+    "techStack": "Technologies",
+    "liveDemo": "Live Demo",
+    "caseStudy": "Case Study"
+  },
+  "testimonials": {
+    "title": "Results & Testimonials",
+    "subtitle": "Measurable impacts for our clients"
+  },
+  "cta": {
+    "title": "Ready to Transform Your Digital Presence?",
+    "subtitle": "Let's discuss your project and find the best solution for your business",
+    "button": "Start Project",
+    "secondaryButton": "Schedule Consultation"
+  },
+  "about": {
+    "pageTitle": "About Me",
+    "pageSubtitle": "Learn about my journey and values",
+    "bio": {
+      "title": "My Story",
+      "p1": "My journey in technology began in technical support and hospital administration, where I developed a strong foundation in problem-solving and customer service.",
+      "p2": "I evolved into front-end development, where I discovered my passion for creating intuitive interfaces and memorable digital experiences. I worked as a Product Owner at Ericsson and led development at Deploy Experience.",
+      "p3": "Currently, I work remotely at Quantflow while running Habaeb Creative Solutions, my freelance studio focused on landing pages, websites, custom systems and SaaS solutions.",
+      "p4": "I believe technology should solve real business problems. My differentiator is combining deep technical knowledge with product vision and user-centered design."
+    },
+    "skills": {
+      "title": "Technical Skills",
+      "frontend": "Front-End",
+      "backend": "Back-End",
+      "tools": "Tools",
+      "soft": "Soft Skills"
+    },
+    "timeline": {
+      "title": "Professional Journey",
+      "current": "Current"
+    },
+    "values": {
+      "title": "Values",
+      "teamwork": "Teamwork",
+      "teamworkDesc": "Collaboration and clear communication are essential for successful projects",
+      "adaptability": "Adaptability",
+      "adaptabilityDesc": "Flexibility to embrace change and new technologies",
+      "improvement": "Continuous Improvement",
+      "improvementDesc": "Always seeking to learn and evolve as a professional",
+      "quality": "Quality",
+      "qualityDesc": "Commitment to clean code and scalable solutions"
+    }
+  },
+  "servicesPage": {
+    "pageTitle": "Services",
+    "pageSubtitle": "Complete digital solutions for your business",
+    "websites": {
+      "title": "Websites & Landing Pages",
+      "description": "Creation of corporate websites, landing pages and capture pages optimized for conversion.",
+      "features": [
+        "Responsive design for all devices",
+        "On-page SEO optimization",
+        "Ultra-fast loading",
+        "WCAG 2.2 accessibility",
+        "Analytics integration",
+        "CMS for content management"
+      ]
+    },
+    "ecommerce": {
+      "title": "E-commerce",
+      "description": "Complete online stores ready to sell, with inventory management, payments and logistics.",
+      "features": [
+        "Shopify, WooCommerce or custom development",
+        "Payment gateway integration",
+        "Inventory and logistics management",
+        "Checkout optimized for conversion",
+        "Marketplace integrations",
+        "Sales dashboards and reports"
+      ]
+    },
+    "saas": {
+      "title": "SaaS & Custom Systems",
+      "description": "Development of web platforms, management systems and scalable SaaS applications.",
+      "features": [
+        "React, Next.js, Angular",
+        "Node.js, Python, Django",
+        "SQL and NoSQL databases (PostgreSQL, MongoDB, Supabase)",
+        "RESTful and GraphQL APIs",
+        "AI/LLM integration",
+        "Scalable cloud architecture"
+      ]
+    },
+    "ai": {
+      "title": "AI & Automation",
+      "description": "Intelligent solutions that automate processes and boost results.",
+      "features": [
+        "Chatbots and virtual assistants",
+        "Marketing automation",
+        "Business Intelligence and dashboards",
+        "LLM integration (GPT, Claude)",
+        "Predictive analytics",
+        "Real-time personalization"
+      ]
+    },
+    "design": {
+      "title": "UX/UI Design & Prototyping",
+      "description": "User-centered design that transforms interfaces into memorable experiences.",
+      "features": [
+        "User research and personas",
+        "Wireframes and user flows",
+        "Figma/Framer prototyping",
+        "Design systems",
+        "GSAP micro-interactions",
+        "Usability testing"
+      ]
+    },
+    "marketing": {
+      "title": "Digital Marketing & Ads",
+      "description": "Digital strategies to attract, convert and retain customers.",
+      "features": [
+        "Technical and on-page SEO",
+        "Google Ads and Meta Ads",
+        "Content strategy",
+        "Email marketing and automation",
+        "Social media management",
+        "Analytics and conversion optimization"
+      ]
+    },
+    "industries": {
+      "title": "Industries Served",
+      "subtitle": "Experience across various market segments",
+      "list": [
+        "Law firms and legal offices",
+        "Real estate agencies and brokers",
+        "Clinics and healthcare professionals",
+        "E-commerce and retail",
+        "Startups and SaaS",
+        "Consulting and services"
+      ]
+    }
+  },
+  "blog": {
+    "pageTitle": "Blog & Insights",
+    "pageSubtitle": "Articles on web development, AI, UX design and digital marketing",
+    "readMore": "Read More",
+    "categories": "Categories",
+    "recentPosts": "Recent Posts",
+    "allPosts": "All Posts"
+  },
+  "contact": {
+    "pageTitle": "Contact",
+    "pageSubtitle": "Let's talk about your project",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "company": "Company",
+      "projectType": "Project Type",
+      "message": "Message",
+      "submit": "Send Message",
+      "sending": "Sending...",
+      "success": "Message sent successfully! I'll be in touch soon.",
+      "error": "Error sending message. Please try again.",
+      "projectTypes": {
+        "website": "Corporate Website",
+        "ecommerce": "E-commerce",
+        "saas": "SaaS / System",
+        "landing": "Landing Page",
+        "consulting": "Consulting",
+        "other": "Other"
+      }
+    },
+    "info": {
+      "title": "Contact Information",
+      "email": "contact@habaeb.dev",
+      "location": "São Paulo, Brazil",
+      "availability": "Available for remote projects globally"
+    },
+    "schedule": {
+      "title": "Schedule a Consultation",
+      "description": "Book a free call to discuss your project",
+      "button": "Schedule Meeting"
+    },
+    "social": {
+      "title": "Social Media"
+    }
+  },
+  "footer": {
+    "description": "Creative digital solutions that transform businesses. Web development, e-commerce, SaaS and AI automation.",
+    "quickLinks": "Quick Links",
+    "services": "Services",
+    "contact": "Contact",
+    "newsletter": {
+      "title": "Newsletter",
+      "placeholder": "Your email",
+      "button": "Subscribe",
+      "description": "Receive development and design tips"
+    },
+    "copyright": "© 2026 Habaeb Creative Solutions. All rights reserved.",
+    "madeWith": "Made with"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "back": "Back",
+    "learnMore": "Learn More",
+    "viewMore": "View More",
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode"
+  }
+}
