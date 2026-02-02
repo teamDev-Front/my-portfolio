@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { LoadingScreen } from './LoadingScreen';
-import { CustomCursor } from './CustomCursor';
-import { SmoothScroll } from './SmoothScroll';
 
 interface AppWrapperProps {
   children: React.ReactNode;
@@ -38,17 +36,14 @@ export function AppWrapper({ children }: AppWrapperProps) {
   return (
     <>
       {isLoading && <LoadingScreen onComplete={handleLoadingComplete} />}
-      <CustomCursor />
-      <SmoothScroll>
-        <div
-          style={{
-            opacity: showContent ? 1 : 0,
-            transition: 'opacity 0.5s ease',
-          }}
-        >
-          {children}
-        </div>
-      </SmoothScroll>
+      <div
+        style={{
+          opacity: showContent ? 1 : 0,
+          transition: 'opacity 0.5s ease',
+        }}
+      >
+        {children}
+      </div>
     </>
   );
 }
