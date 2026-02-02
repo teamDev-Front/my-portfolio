@@ -232,9 +232,11 @@ export function CosmicBackground() {
     });
   }, []);
 
-  // Spawn light beam
+  // Spawn light beam (shooting star)
   const spawnBeam = useCallback((width: number, height: number) => {
     const isVertical = Math.random() > 0.5;
+    // Alternate between white and red beams
+    const isWhite = Math.random() > 0.5;
     const beam: LightBeam = {
       x: isVertical ? Math.random() * width : -100,
       y: isVertical ? -100 : Math.random() * height,
@@ -243,7 +245,7 @@ export function CosmicBackground() {
       width: 1 + Math.random() * 2,
       alpha: 0,
       speed: 200 + Math.random() * 300,
-      color: Math.random() > 0.7 ? 'rgba(255, 100, 100, 0.6)' : 'rgba(100, 100, 120, 0.4)',
+      color: isWhite ? 'rgba(255, 255, 255, 0.7)' : 'rgba(255, 120, 120, 0.6)',
     };
 
     beamsRef.current.push(beam);
@@ -409,14 +411,15 @@ export function CosmicBackground() {
       },
     });
 
-    // Single branch occasionally (only for intense)
-    if (intense && Math.random() > 0.6) {
+    // Branch occasionally - more likely when intense
+    const branchChance = intense ? 0.4 : 0.7;
+    if (Math.random() > branchChance) {
       const mainAngle = Math.atan2(end.y - start.y, end.x - start.x);
       const dist = Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2));
       const branchIndex = Math.floor(lightning.segments.length * (0.4 + Math.random() * 0.3));
       const branchPoint = lightning.segments[branchIndex];
-      const branchAngle = mainAngle + (Math.random() - 0.5) * Math.PI * 0.6;
-      const branchLength = dist * (0.25 + Math.random() * 0.2);
+      const branchAngle = mainAngle + (Math.random() - 0.5) * Math.PI * 0.7;
+      const branchLength = dist * (0.3 + Math.random() * 0.25);
       const branchEnd = {
         x: branchPoint.x + Math.cos(branchAngle) * branchLength,
         y: branchPoint.y + Math.sin(branchAngle) * branchLength,
@@ -426,14 +429,14 @@ export function CosmicBackground() {
         start: branchPoint,
         end: branchEnd,
         segments: generateLightningSegments(branchPoint, branchEnd),
-        alpha: 0.7,
-        width: lightning.width * 0.5,
+        alpha: 0.8,
+        width: lightning.width * 0.6,
       };
       lightningsRef.current.push(branch);
 
       gsap.to(branch, {
         alpha: 0,
-        duration: 0.1 + Math.random() * 0.1,
+        duration: 0.12 + Math.random() * 0.1,
         ease: 'power2.in',
         onComplete: () => {
           const index = lightningsRef.current.indexOf(branch);
@@ -493,14 +496,14 @@ export function CosmicBackground() {
         const isIntenseDrag = dragSpeed > 20;
         const isMediumDrag = dragSpeed > 12;
 
-        // Spawn lightning during drag - controlled frequency
-        const spawnInterval = isIntenseDrag ? 0.06 : isMediumDrag ? 0.08 : 0.12;
+        // Spawn lightning during drag
+        const spawnInterval = isIntenseDrag ? 0.04 : isMediumDrag ? 0.06 : 0.09;
         if (timeRef.current - lastDragLightningRef.current > spawnInterval && prevX > 0) {
           lastDragLightningRef.current = timeRef.current;
 
-          // Find nearby grid points - limited radius
-          const lightningRadius = isIntenseDrag ? 120 : isMediumDrag ? 100 : 80;
-          const spawnChance = isIntenseDrag ? 0.88 : isMediumDrag ? 0.92 : 0.95;
+          // Find nearby grid points
+          const lightningRadius = isIntenseDrag ? 140 : isMediumDrag ? 110 : 90;
+          const spawnChance = isIntenseDrag ? 0.82 : isMediumDrag ? 0.88 : 0.92;
 
           const grid = gridRef.current;
           for (const point of grid) {
@@ -605,13 +608,13 @@ export function CosmicBackground() {
           );
           const isIntenseDrag = dragSpeed > 25;
 
-          // Spawn lightning during drag - controlled frequency
-          const spawnInterval = isIntenseDrag ? 0.1 : 0.15;
+          // Spawn lightning during drag
+          const spawnInterval = isIntenseDrag ? 0.07 : 0.1;
           if (timeRef.current - lastDragLightningRef.current > spawnInterval && prevX > 0) {
             lastDragLightningRef.current = timeRef.current;
 
-            const lightningRadius = isIntenseDrag ? 100 : 70;
-            const spawnChance = 0.92;
+            const lightningRadius = isIntenseDrag ? 120 : 90;
+            const spawnChance = isIntenseDrag ? 0.85 : 0.9;
 
             const grid = gridRef.current;
             for (const point of grid) {
