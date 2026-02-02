@@ -52,16 +52,16 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
           y: 0,
           duration: 0.8,
           ease: 'power2.out',
-          delay: 0.5,
+          delay: 0.3,
         }
       );
     }
   }, [isParticlesReady]);
 
   const handleParticlesReady = () => {
-    // Ensure minimum loading time of 2 seconds
+    // Ensure minimum loading time of 1.5 seconds
     const elapsed = Date.now() - loadingStartTime.current;
-    const remainingTime = Math.max(0, 2000 - elapsed);
+    const remainingTime = Math.max(0, 1500 - elapsed);
 
     setTimeout(() => {
       setIsParticlesReady(true);
@@ -91,22 +91,22 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
     >
       {/* Particle Background with Logo */}
       <ParticleBackground
-        logoPath="/images/hcs-logo.png"
+        logoPath="/images/hcs-logo.svg"
         backgroundColor="#0a0a0a"
         onLoadComplete={handleParticlesReady}
       />
 
-      {/* Subtle gradient overlay */}
-      <div className="absolute inset-0 pointer-events-none bg-gradient-radial from-transparent via-transparent to-hcs-black/50" />
+      {/* Subtle gradient overlay for depth */}
+      <div className="absolute inset-0 pointer-events-none bg-gradient-radial from-transparent via-transparent to-hcs-black/30" />
 
-      {/* Grid pattern */}
-      <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(220,38,38,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(220,38,38,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
+      {/* Subtle grid pattern */}
+      <div className="absolute inset-0 pointer-events-none opacity-30 bg-[linear-gradient(rgba(220,38,38,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(220,38,38,0.02)_1px,transparent_1px)] bg-[size:80px_80px]" />
 
       {/* Corner decorations */}
-      <div className="absolute top-6 left-6 w-12 h-12 border-l-2 border-t-2 border-accent/40 pointer-events-none" />
-      <div className="absolute top-6 right-6 w-12 h-12 border-r-2 border-t-2 border-accent/40 pointer-events-none" />
-      <div className="absolute bottom-6 left-6 w-12 h-12 border-l-2 border-b-2 border-accent/40 pointer-events-none" />
-      <div className="absolute bottom-6 right-6 w-12 h-12 border-r-2 border-b-2 border-accent/40 pointer-events-none" />
+      <div className="absolute top-6 left-6 w-12 h-12 border-l-2 border-t-2 border-accent/30 pointer-events-none" />
+      <div className="absolute top-6 right-6 w-12 h-12 border-r-2 border-t-2 border-accent/30 pointer-events-none" />
+      <div className="absolute bottom-6 left-6 w-12 h-12 border-l-2 border-b-2 border-accent/30 pointer-events-none" />
+      <div className="absolute bottom-6 right-6 w-12 h-12 border-r-2 border-b-2 border-accent/30 pointer-events-none" />
 
       {/* Instruction to interact */}
       {isParticlesReady && (
