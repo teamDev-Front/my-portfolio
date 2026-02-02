@@ -346,96 +346,41 @@ export function CosmicBackground() {
     });
   }, [isMobile]);
 
-  // Generate realistic lightning segments with jagged paths
+  // Generate lightning segments with natural jagged paths
   const generateLightningSegments = useCallback((
     start: { x: number; y: number },
-    end: { x: number; y: number },
-    detail: number = 1
+    end: { x: number; y: number }
   ) => {
     const segments: { x: number; y: number }[] = [{ ...start }];
     const dx = end.x - start.x;
     const dy = end.y - start.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
 
-    // More segments for more jagged appearance
-    const segmentCount = Math.max(5, Math.floor(dist / (15 / detail)));
+    // Moderate segment count for cleaner look
+    const segmentCount = Math.max(3, Math.floor(dist / 25));
 
     // Perpendicular vector for offsets
     const perpX = -dy / dist;
     const perpY = dx / dist;
-
-    let currentX = start.x;
-    let currentY = start.y;
 
     for (let i = 1; i < segmentCount; i++) {
       const t = i / segmentCount;
       const targetX = start.x + dx * t;
       const targetY = start.y + dy * t;
 
-      // Jaggedness varies along the bolt - more in the middle
-      const jaggedness = (1 - Math.pow(Math.abs(t - 0.5) * 2, 2)) * 35 * detail;
-
-      // Random sharp offset perpendicular to direction
+      // Subtle jaggedness - peaks in the middle
+      const jaggedness = (1 - Math.pow(Math.abs(t - 0.5) * 2, 2)) * 15;
       const offset = (Math.random() - 0.5) * jaggedness;
 
-      // Also add some forward/backward variation for more chaos
-      const forwardJitter = (Math.random() - 0.5) * 10 * detail;
-
-      currentX = targetX + perpX * offset + (dx / dist) * forwardJitter;
-      currentY = targetY + perpY * offset + (dy / dist) * forwardJitter;
-
-      segments.push({ x: currentX, y: currentY });
+      segments.push({
+        x: targetX + perpX * offset,
+        y: targetY + perpY * offset,
+      });
     }
 
     segments.push({ ...end });
     return segments;
   }, []);
-
-  // Spawn a branch from a lightning bolt
-  const spawnBranch = useCallback((
-    origin: { x: number; y: number },
-    mainAngle: number,
-    length: number,
-    width: number,
-    alpha: number,
-    depth: number = 0
-  ) => {
-    if (depth > 2) return; // Max recursion depth
-
-    // Branch angle deviates from main bolt
-    const branchAngle = mainAngle + (Math.random() - 0.5) * Math.PI * 0.8;
-    const branchEnd = {
-      x: origin.x + Math.cos(branchAngle) * length,
-      y: origin.y + Math.sin(branchAngle) * length,
-    };
-
-    const branch: Lightning = {
-      start: origin,
-      end: branchEnd,
-      segments: generateLightningSegments(origin, branchEnd, 0.7),
-      alpha: alpha * 0.8,
-      width: width * 0.6,
-    };
-    lightningsRef.current.push(branch);
-
-    gsap.to(branch, {
-      alpha: 0,
-      duration: 0.1 + Math.random() * 0.15,
-      ease: 'power2.in',
-      onComplete: () => {
-        const index = lightningsRef.current.indexOf(branch);
-        if (index > -1) lightningsRef.current.splice(index, 1);
-      },
-    });
-
-    // Sub-branches (recursive)
-    if (Math.random() > 0.5 && depth < 2) {
-      const subBranchPoint = branch.segments[Math.floor(branch.segments.length * 0.6)];
-      setTimeout(() => {
-        spawnBranch(subBranchPoint, branchAngle, length * 0.5, width * 0.5, alpha * 0.6, depth + 1);
-      }, 20);
-    }
-  }, [generateLightningSegments]);
 
   // Spawn lightning between two points
   const spawnLightning = useCallback((
@@ -448,36 +393,15 @@ export function CosmicBackground() {
     const lightning: Lightning = {
       start,
       end,
-      segments: generateLightningSegments(start, end, intense ? 1.5 : 1),
+      segments: generateLightningSegments(start, end),
       alpha: 1,
-      width: intense ? 2 + Math.random() * 2 : 1.5 + Math.random() * 1.5,
+      width: intense ? 1.5 + Math.random() * 1 : 1 + Math.random() * 0.5,
     };
     lightningsRef.current.push(lightning);
 
-    // Flash effect at the start point for intense lightnings
-    if (intense) {
-      const flash: ClickFlash = {
-        x: start.x,
-        y: start.y,
-        radius: 0,
-        alpha: 0.6,
-      };
-      clickFlashRef.current.push(flash);
-      gsap.to(flash, {
-        radius: 40,
-        alpha: 0,
-        duration: 0.15,
-        ease: 'power2.out',
-        onComplete: () => {
-          const index = clickFlashRef.current.indexOf(flash);
-          if (index > -1) clickFlashRef.current.splice(index, 1);
-        },
-      });
-    }
-
     gsap.to(lightning, {
       alpha: 0,
-      duration: intense ? 0.25 + Math.random() * 0.2 : 0.15 + Math.random() * 0.15,
+      duration: 0.15 + Math.random() * 0.1,
       ease: 'power2.in',
       onComplete: () => {
         const index = lightningsRef.current.indexOf(lightning);
@@ -485,25 +409,39 @@ export function CosmicBackground() {
       },
     });
 
-    const mainAngle = Math.atan2(end.y - start.y, end.x - start.x);
-    const dist = Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2));
+    // Single branch occasionally (only for intense)
+    if (intense && Math.random() > 0.6) {
+      const mainAngle = Math.atan2(end.y - start.y, end.x - start.x);
+      const dist = Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2));
+      const branchIndex = Math.floor(lightning.segments.length * (0.4 + Math.random() * 0.3));
+      const branchPoint = lightning.segments[branchIndex];
+      const branchAngle = mainAngle + (Math.random() - 0.5) * Math.PI * 0.6;
+      const branchLength = dist * (0.25 + Math.random() * 0.2);
+      const branchEnd = {
+        x: branchPoint.x + Math.cos(branchAngle) * branchLength,
+        y: branchPoint.y + Math.sin(branchAngle) * branchLength,
+      };
 
-    // Multiple branching points along the main bolt
-    const branchCount = intense ? Math.floor(Math.random() * 3) + 2 : Math.floor(Math.random() * 2) + 1;
+      const branch: Lightning = {
+        start: branchPoint,
+        end: branchEnd,
+        segments: generateLightningSegments(branchPoint, branchEnd),
+        alpha: 0.7,
+        width: lightning.width * 0.5,
+      };
+      lightningsRef.current.push(branch);
 
-    for (let b = 0; b < branchCount; b++) {
-      if (Math.random() > (intense ? 0.3 : 0.5)) {
-        const branchIndex = Math.floor(lightning.segments.length * (0.3 + Math.random() * 0.5));
-        const branchPoint = lightning.segments[branchIndex];
-        const branchLength = dist * (0.3 + Math.random() * 0.4);
-
-        // Slight delay for cascading effect
-        setTimeout(() => {
-          spawnBranch(branchPoint, mainAngle, branchLength, lightning.width, lightning.alpha, 0);
-        }, b * 15);
-      }
+      gsap.to(branch, {
+        alpha: 0,
+        duration: 0.1 + Math.random() * 0.1,
+        ease: 'power2.in',
+        onComplete: () => {
+          const index = lightningsRef.current.indexOf(branch);
+          if (index > -1) lightningsRef.current.splice(index, 1);
+        },
+      });
     }
-  }, [generateLightningSegments, spawnBranch]);
+  }, [generateLightningSegments]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -552,18 +490,17 @@ export function CosmicBackground() {
         const dragSpeed = Math.sqrt(
           Math.pow(e.clientX - prevX, 2) + Math.pow(e.clientY - prevY, 2)
         );
-        const isIntenseDrag = dragSpeed > 15; // Fast drag = intense lightning
-        const isMediumDrag = dragSpeed > 8;
+        const isIntenseDrag = dragSpeed > 20;
+        const isMediumDrag = dragSpeed > 12;
 
-        // Spawn lightning during drag - faster spawning when dragging fast
-        const spawnInterval = isIntenseDrag ? 0.02 : isMediumDrag ? 0.04 : 0.06;
+        // Spawn lightning during drag - controlled frequency
+        const spawnInterval = isIntenseDrag ? 0.06 : isMediumDrag ? 0.08 : 0.12;
         if (timeRef.current - lastDragLightningRef.current > spawnInterval && prevX > 0) {
           lastDragLightningRef.current = timeRef.current;
 
-          // Find nearby grid points to connect with lightning
-          // Larger radius when dragging fast
-          const lightningRadius = isIntenseDrag ? 180 : isMediumDrag ? 140 : 100;
-          const spawnChance = isIntenseDrag ? 0.6 : isMediumDrag ? 0.75 : 0.85;
+          // Find nearby grid points - limited radius
+          const lightningRadius = isIntenseDrag ? 120 : isMediumDrag ? 100 : 80;
+          const spawnChance = isIntenseDrag ? 0.88 : isMediumDrag ? 0.92 : 0.95;
 
           const grid = gridRef.current;
           for (const point of grid) {
@@ -574,22 +511,20 @@ export function CosmicBackground() {
               spawnLightning(
                 { x: e.clientX, y: e.clientY },
                 { x: point.x, y: point.y },
-                { intense: isIntenseDrag || (isMediumDrag && Math.random() > 0.5) }
+                { intense: isIntenseDrag }
               );
             }
           }
 
-          // Spawn trailing particles - more when fast
-          const particleChance = isIntenseDrag ? 0.2 : isMediumDrag ? 0.35 : 0.5;
-          if (Math.random() > particleChance) {
+          // Spawn trailing particles
+          if (Math.random() > 0.6) {
             const angle = Math.atan2(e.clientY - prevY, e.clientX - prevX) + Math.PI;
-            const particleSpeed = isIntenseDrag ? 4 : 2;
             const particle: ClickParticle = {
               x: e.clientX,
               y: e.clientY,
-              vx: Math.cos(angle + (Math.random() - 0.5)) * particleSpeed,
-              vy: Math.sin(angle + (Math.random() - 0.5)) * particleSpeed,
-              size: 1 + Math.random() * (isIntenseDrag ? 3 : 2),
+              vx: Math.cos(angle + (Math.random() - 0.5)) * 2,
+              vy: Math.sin(angle + (Math.random() - 0.5)) * 2,
+              size: 1 + Math.random() * 2,
               alpha: 0.8,
               color: Math.random() > 0.5 ? 'rgba(255, 150, 150, 1)' : 'rgba(255, 255, 255, 1)',
               life: 0,
@@ -668,16 +603,15 @@ export function CosmicBackground() {
           const dragSpeed = Math.sqrt(
             Math.pow(touch.clientX - prevX, 2) + Math.pow(touch.clientY - prevY, 2)
           );
-          const isIntenseDrag = dragSpeed > 20; // Higher threshold for touch
-          const isMediumDrag = dragSpeed > 10;
+          const isIntenseDrag = dragSpeed > 25;
 
-          // Spawn lightning during drag
-          const spawnInterval = isIntenseDrag ? 0.04 : isMediumDrag ? 0.07 : 0.1;
+          // Spawn lightning during drag - controlled frequency
+          const spawnInterval = isIntenseDrag ? 0.1 : 0.15;
           if (timeRef.current - lastDragLightningRef.current > spawnInterval && prevX > 0) {
             lastDragLightningRef.current = timeRef.current;
 
-            const lightningRadius = isIntenseDrag ? 150 : isMediumDrag ? 120 : 90;
-            const spawnChance = isIntenseDrag ? 0.7 : isMediumDrag ? 0.8 : 0.9;
+            const lightningRadius = isIntenseDrag ? 100 : 70;
+            const spawnChance = 0.92;
 
             const grid = gridRef.current;
             for (const point of grid) {
