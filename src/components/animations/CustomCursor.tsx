@@ -36,14 +36,17 @@ export function CustomCursor() {
     };
 
     const handleMouseEnter = (e: Event) => {
-      const target = e.target as HTMLElement;
-      
+      const target = e.target;
+
+      // Check if target is an Element (not a text node or other node type)
+      if (!(target instanceof Element)) return;
+
       if (
         target.tagName === 'A' ||
         target.tagName === 'BUTTON' ||
         target.closest('a') ||
         target.closest('button') ||
-        target.dataset.cursor
+        (target as HTMLElement).dataset?.cursor
       ) {
         setIsHovering(true);
       }
