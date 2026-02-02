@@ -48,6 +48,39 @@ interface LightBeam {
   color: string;
 }
 
+interface ClickParticle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  alpha: number;
+  color: string;
+  life: number;
+  maxLife: number;
+  trail: { x: number; y: number; alpha: number }[];
+}
+
+interface DragTrail {
+  points: { x: number; y: number; time: number }[];
+  alpha: number;
+}
+
+interface Lightning {
+  start: { x: number; y: number };
+  end: { x: number; y: number };
+  segments: { x: number; y: number }[];
+  alpha: number;
+  width: number;
+}
+
+interface ClickFlash {
+  x: number;
+  y: number;
+  radius: number;
+  alpha: number;
+}
+
 export function CosmicBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number | null>(null);
@@ -55,10 +88,15 @@ export function CosmicBackground() {
   const orbsRef = useRef<FloatingOrb[]>([]);
   const wavesRef = useRef<EnergyWave[]>([]);
   const beamsRef = useRef<LightBeam[]>([]);
-  const mouseRef = useRef({ x: -9999, y: -9999, active: false });
+  const clickParticlesRef = useRef<ClickParticle[]>([]);
+  const dragTrailRef = useRef<DragTrail>({ points: [], alpha: 0 });
+  const lightningsRef = useRef<Lightning[]>([]);
+  const clickFlashRef = useRef<ClickFlash[]>([]);
+  const mouseRef = useRef({ x: -9999, y: -9999, active: false, dragging: false });
   const timeRef = useRef(0);
   const lastWaveTimeRef = useRef(0);
   const lastBeamTimeRef = useRef(0);
+  const lastDragLightningRef = useRef(0);
 
   const [isMobile] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -164,21 +202,19 @@ export function CosmicBackground() {
   }, [isMobile]);
 
   // Spawn energy wave
-  const spawnWave = useCallback((width: number, height: number) => {
-    const colors = [
-      'rgba(220, 50, 50, 0.4)',
-      'rgba(180, 40, 40, 0.35)',
-      'rgba(255, 80, 80, 0.3)',
-    ];
+  const spawnWave = useCallback((width: number, height: number, x?: number, y?: number, isClick?: boolean) => {
+    const colors = isClick
+      ? ['rgba(255, 120, 120, 0.6)', 'rgba(255, 80, 80, 0.5)']
+      : ['rgba(220, 50, 50, 0.4)', 'rgba(180, 40, 40, 0.35)', 'rgba(255, 80, 80, 0.3)'];
 
     const wave: EnergyWave = {
-      x: Math.random() * width,
-      y: Math.random() * height,
+      x: x ?? Math.random() * width,
+      y: y ?? Math.random() * height,
       radius: 0,
-      maxRadius: Math.max(width, height) * 0.6,
+      maxRadius: isClick ? Math.max(width, height) * 0.4 : Math.max(width, height) * 0.6,
       alpha: 1,
       color: colors[Math.floor(Math.random() * colors.length)],
-      speed: 2 + Math.random() * 2,
+      speed: isClick ? 4 : 2 + Math.random() * 2,
     };
 
     wavesRef.current.push(wave);
@@ -187,8 +223,8 @@ export function CosmicBackground() {
     gsap.to(wave, {
       radius: wave.maxRadius,
       alpha: 0,
-      duration: 4,
-      ease: 'power1.out',
+      duration: isClick ? 1.5 : 4,
+      ease: isClick ? 'power2.out' : 'power1.out',
       onComplete: () => {
         const index = wavesRef.current.indexOf(wave);
         if (index > -1) wavesRef.current.splice(index, 1);
@@ -240,6 +276,153 @@ export function CosmicBackground() {
     }, '-=0.5');
   }, []);
 
+  // Spawn click particles explosion
+  const spawnClickExplosion = useCallback((x: number, y: number) => {
+    const particleCount = isMobile ? 15 : 25;
+    const colors = [
+      'rgba(255, 150, 150, 1)',
+      'rgba(255, 100, 100, 1)',
+      'rgba(255, 200, 200, 1)',
+      'rgba(255, 80, 80, 1)',
+      'rgba(255, 255, 255, 1)',
+    ];
+
+    for (let i = 0; i < particleCount; i++) {
+      const angle = (Math.PI * 2 * i) / particleCount + (Math.random() - 0.5) * 0.5;
+      const speed = 3 + Math.random() * 6;
+      const particle: ClickParticle = {
+        x,
+        y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        size: 2 + Math.random() * 3,
+        alpha: 1,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        life: 0,
+        maxLife: 60 + Math.random() * 40,
+        trail: [],
+      };
+      clickParticlesRef.current.push(particle);
+    }
+
+    // Spawn additional spark particles
+    const sparkCount = isMobile ? 8 : 15;
+    for (let i = 0; i < sparkCount; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 5 + Math.random() * 10;
+      const particle: ClickParticle = {
+        x,
+        y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        size: 1 + Math.random() * 1.5,
+        alpha: 1,
+        color: 'rgba(255, 255, 255, 1)',
+        life: 0,
+        maxLife: 30 + Math.random() * 20,
+        trail: [],
+      };
+      clickParticlesRef.current.push(particle);
+    }
+
+    // Spawn click flash
+    const flash: ClickFlash = {
+      x,
+      y,
+      radius: 0,
+      alpha: 0.8,
+    };
+    clickFlashRef.current.push(flash);
+
+    gsap.to(flash, {
+      radius: 80,
+      alpha: 0,
+      duration: 0.3,
+      ease: 'power2.out',
+      onComplete: () => {
+        const index = clickFlashRef.current.indexOf(flash);
+        if (index > -1) clickFlashRef.current.splice(index, 1);
+      },
+    });
+  }, [isMobile]);
+
+  // Generate lightning segments
+  const generateLightningSegments = useCallback((start: { x: number; y: number }, end: { x: number; y: number }) => {
+    const segments: { x: number; y: number }[] = [{ ...start }];
+    const dx = end.x - start.x;
+    const dy = end.y - start.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const segmentCount = Math.max(3, Math.floor(dist / 30));
+
+    for (let i = 1; i < segmentCount; i++) {
+      const t = i / segmentCount;
+      const baseX = start.x + dx * t;
+      const baseY = start.y + dy * t;
+      const offset = (1 - Math.abs(t - 0.5) * 2) * 20; // More offset in middle
+      const perpX = -dy / dist;
+      const perpY = dx / dist;
+      segments.push({
+        x: baseX + perpX * (Math.random() - 0.5) * offset,
+        y: baseY + perpY * (Math.random() - 0.5) * offset,
+      });
+    }
+    segments.push({ ...end });
+    return segments;
+  }, []);
+
+  // Spawn lightning between two points
+  const spawnLightning = useCallback((start: { x: number; y: number }, end: { x: number; y: number }) => {
+    const lightning: Lightning = {
+      start,
+      end,
+      segments: generateLightningSegments(start, end),
+      alpha: 1,
+      width: 1 + Math.random() * 2,
+    };
+    lightningsRef.current.push(lightning);
+
+    gsap.to(lightning, {
+      alpha: 0,
+      duration: 0.2 + Math.random() * 0.2,
+      ease: 'power2.in',
+      onComplete: () => {
+        const index = lightningsRef.current.indexOf(lightning);
+        if (index > -1) lightningsRef.current.splice(index, 1);
+      },
+    });
+
+    // Spawn branching lightnings occasionally
+    if (Math.random() > 0.6) {
+      const midIndex = Math.floor(lightning.segments.length / 2);
+      const midPoint = lightning.segments[midIndex];
+      const branchAngle = Math.atan2(end.y - start.y, end.x - start.x) + (Math.random() - 0.5) * Math.PI;
+      const branchLength = 30 + Math.random() * 50;
+      const branchEnd = {
+        x: midPoint.x + Math.cos(branchAngle) * branchLength,
+        y: midPoint.y + Math.sin(branchAngle) * branchLength,
+      };
+
+      const branch: Lightning = {
+        start: midPoint,
+        end: branchEnd,
+        segments: generateLightningSegments(midPoint, branchEnd),
+        alpha: 0.7,
+        width: lightning.width * 0.6,
+      };
+      lightningsRef.current.push(branch);
+
+      gsap.to(branch, {
+        alpha: 0,
+        duration: 0.15,
+        ease: 'power2.in',
+        onComplete: () => {
+          const index = lightningsRef.current.indexOf(branch);
+          if (index > -1) lightningsRef.current.splice(index, 1);
+        },
+      });
+    }
+  }, [generateLightningSegments]);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -267,31 +450,180 @@ export function CosmicBackground() {
 
     // Mouse interaction
     const handleMouseMove = (e: MouseEvent) => {
+      const prevX = mouseRef.current.x;
+      const prevY = mouseRef.current.y;
       mouseRef.current.x = e.clientX;
       mouseRef.current.y = e.clientY;
       mouseRef.current.active = true;
+
+      // Handle drag trail
+      if (mouseRef.current.dragging) {
+        const trail = dragTrailRef.current;
+        trail.points.push({ x: e.clientX, y: e.clientY, time: timeRef.current });
+
+        // Limit trail length
+        if (trail.points.length > 30) {
+          trail.points.shift();
+        }
+
+        // Spawn lightning during drag
+        if (timeRef.current - lastDragLightningRef.current > 0.05 && prevX > 0) {
+          lastDragLightningRef.current = timeRef.current;
+
+          // Find nearby grid points to connect with lightning
+          const grid = gridRef.current;
+          for (const point of grid) {
+            const dist = Math.sqrt(
+              Math.pow(point.x - e.clientX, 2) + Math.pow(point.y - e.clientY, 2)
+            );
+            if (dist < 100 && Math.random() > 0.85) {
+              spawnLightning(
+                { x: e.clientX, y: e.clientY },
+                { x: point.x, y: point.y }
+              );
+            }
+          }
+
+          // Spawn trailing particles
+          if (Math.random() > 0.5) {
+            const angle = Math.atan2(e.clientY - prevY, e.clientX - prevX) + Math.PI;
+            const particle: ClickParticle = {
+              x: e.clientX,
+              y: e.clientY,
+              vx: Math.cos(angle + (Math.random() - 0.5)) * 2,
+              vy: Math.sin(angle + (Math.random() - 0.5)) * 2,
+              size: 1 + Math.random() * 2,
+              alpha: 0.8,
+              color: Math.random() > 0.5 ? 'rgba(255, 150, 150, 1)' : 'rgba(255, 255, 255, 1)',
+              life: 0,
+              maxLife: 20 + Math.random() * 20,
+              trail: [],
+            };
+            clickParticlesRef.current.push(particle);
+          }
+        }
+      }
     };
 
     const handleMouseLeave = () => {
       mouseRef.current.active = false;
+      mouseRef.current.dragging = false;
+      dragTrailRef.current.points = [];
+    };
+
+    const handleMouseDown = (e: MouseEvent) => {
+      mouseRef.current.dragging = true;
+      dragTrailRef.current.alpha = 1;
+
+      // Spawn click effects
+      spawnClickExplosion(e.clientX, e.clientY);
+      spawnWave(width, height, e.clientX, e.clientY, true);
+
+      // Boost energy of nearby grid points
+      const grid = gridRef.current;
+      for (const point of grid) {
+        const dist = Math.sqrt(
+          Math.pow(point.x - e.clientX, 2) + Math.pow(point.y - e.clientY, 2)
+        );
+        if (dist < 150) {
+          const boost = (1 - dist / 150) * 0.5;
+          gsap.to(point, {
+            energy: point.energy + boost,
+            duration: 0.3,
+            ease: 'power2.out',
+          });
+        }
+      }
+    };
+
+    const handleMouseUp = () => {
+      mouseRef.current.dragging = false;
+
+      // Fade out trail
+      gsap.to(dragTrailRef.current, {
+        alpha: 0,
+        duration: 0.5,
+        ease: 'power2.out',
+        onComplete: () => {
+          dragTrailRef.current.points = [];
+        },
+      });
     };
 
     const handleTouchMove = (e: TouchEvent) => {
       if (e.touches.length > 0) {
-        mouseRef.current.x = e.touches[0].clientX;
-        mouseRef.current.y = e.touches[0].clientY;
+        const touch = e.touches[0];
+        const prevX = mouseRef.current.x;
+        const prevY = mouseRef.current.y;
+        mouseRef.current.x = touch.clientX;
+        mouseRef.current.y = touch.clientY;
         mouseRef.current.active = true;
+
+        if (mouseRef.current.dragging) {
+          const trail = dragTrailRef.current;
+          trail.points.push({ x: touch.clientX, y: touch.clientY, time: timeRef.current });
+
+          if (trail.points.length > 20) {
+            trail.points.shift();
+          }
+
+          // Spawn lightning during drag (less frequently on mobile)
+          if (timeRef.current - lastDragLightningRef.current > 0.1 && prevX > 0) {
+            lastDragLightningRef.current = timeRef.current;
+
+            const grid = gridRef.current;
+            for (const point of grid) {
+              const dist = Math.sqrt(
+                Math.pow(point.x - touch.clientX, 2) + Math.pow(point.y - touch.clientY, 2)
+              );
+              if (dist < 80 && Math.random() > 0.9) {
+                spawnLightning(
+                  { x: touch.clientX, y: touch.clientY },
+                  { x: point.x, y: point.y }
+                );
+              }
+            }
+          }
+        }
+      }
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        mouseRef.current.x = touch.clientX;
+        mouseRef.current.y = touch.clientY;
+        mouseRef.current.active = true;
+        mouseRef.current.dragging = true;
+        dragTrailRef.current.alpha = 1;
+
+        spawnClickExplosion(touch.clientX, touch.clientY);
+        spawnWave(width, height, touch.clientX, touch.clientY, true);
       }
     };
 
     const handleTouchEnd = () => {
       mouseRef.current.active = false;
+      mouseRef.current.dragging = false;
+
+      gsap.to(dragTrailRef.current, {
+        alpha: 0,
+        duration: 0.3,
+        ease: 'power2.out',
+        onComplete: () => {
+          dragTrailRef.current.points = [];
+        },
+      });
     };
 
-    document.addEventListener('mousemove', handleMouseMove, { passive: true });
-    document.addEventListener('mouseleave', handleMouseLeave);
-    document.addEventListener('touchmove', handleTouchMove, { passive: true });
-    document.addEventListener('touchend', handleTouchEnd);
+    canvas.style.pointerEvents = 'auto';
+    canvas.addEventListener('mousemove', handleMouseMove, { passive: true });
+    canvas.addEventListener('mouseleave', handleMouseLeave);
+    canvas.addEventListener('mousedown', handleMouseDown);
+    canvas.addEventListener('mouseup', handleMouseUp);
+    canvas.addEventListener('touchmove', handleTouchMove, { passive: true });
+    canvas.addEventListener('touchstart', handleTouchStart, { passive: true });
+    canvas.addEventListener('touchend', handleTouchEnd);
     window.addEventListener('resize', resize);
 
     // Animation settings
@@ -315,6 +647,10 @@ export function CosmicBackground() {
       const orbs = orbsRef.current;
       const waves = wavesRef.current;
       const beams = beamsRef.current;
+      const clickParticles = clickParticlesRef.current;
+      const dragTrail = dragTrailRef.current;
+      const lightnings = lightningsRef.current;
+      const clickFlashes = clickFlashRef.current;
 
       // Spawn waves periodically
       if (time - lastWaveTimeRef.current > (isMobile ? 6 : 4)) {
@@ -339,15 +675,12 @@ export function CosmicBackground() {
 
       // Draw floating orbs
       for (const orb of orbs) {
-        // Update position with subtle movement
         orb.x += orb.vx;
         orb.y += orb.vy;
 
-        // Bounce off edges
         if (orb.x < -orb.radius || orb.x > width + orb.radius) orb.vx *= -1;
         if (orb.y < -orb.radius || orb.y > height + orb.radius) orb.vy *= -1;
 
-        // Draw orb with pulsing
         const pulse = 1 + Math.sin(time * orb.pulseSpeed + orb.pulsePhase) * 0.2;
         const gradient = ctx.createRadialGradient(
           orb.x, orb.y, 0,
@@ -372,7 +705,6 @@ export function CosmicBackground() {
           ctx.arc(wave.x, wave.y, wave.radius, 0, Math.PI * 2);
           ctx.stroke();
 
-          // Inner glow
           ctx.strokeStyle = wave.color.replace(/[\d.]+\)$/, `${wave.alpha * 0.15})`);
           ctx.lineWidth = 8;
           ctx.stroke();
@@ -381,7 +713,6 @@ export function CosmicBackground() {
 
       // Update grid points
       for (const point of grid) {
-        // Gravitational attraction/repulsion to mouse
         if (mouse.active) {
           const dx = point.x - mouse.x;
           const dy = point.y - mouse.y;
@@ -391,22 +722,21 @@ export function CosmicBackground() {
             const dist = Math.sqrt(distSq);
             const force = (1 - dist / gravitationalRadius) * gravitationalStrength;
             const angle = Math.atan2(dy, dx);
-            point.vx += Math.cos(angle) * force * gravitationalRadius;
-            point.vy += Math.sin(angle) * force * gravitationalRadius;
+            // Stronger force when dragging
+            const dragMultiplier = mouse.dragging ? 2 : 1;
+            point.vx += Math.cos(angle) * force * gravitationalRadius * dragMultiplier;
+            point.vy += Math.sin(angle) * force * gravitationalRadius * dragMultiplier;
           }
         }
 
-        // Apply friction and return force
         point.vx *= friction;
         point.vy *= friction;
         point.vx += (point.ox - point.x) * returnSpeed;
         point.vy += (point.oy - point.y) * returnSpeed;
 
-        // Organic breathing movement
         const breathX = Math.sin(time * 0.5 + point.pulsePhase) * 3;
         const breathY = Math.cos(time * 0.4 + point.pulsePhase) * 3;
 
-        // Update position
         point.x = point.ox + point.vx + breathX;
         point.y = point.oy + point.vy + breathY;
       }
@@ -420,14 +750,12 @@ export function CosmicBackground() {
           const dy = point.y - connPoint.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          // Dynamic alpha based on distance and energy
           const maxDist = isMobile ? 120 : 90;
           if (dist < maxDist) {
             const distAlpha = 1 - dist / maxDist;
             const energyPulse = Math.sin(time * 2 + point.pulsePhase) * 0.5 + 0.5;
             const alpha = distAlpha * connectionBaseAlpha * (point.energy + connPoint.energy) * (0.7 + energyPulse * 0.3);
 
-            // Check proximity to mouse for highlight effect
             let highlight = 0;
             if (mouse.active) {
               const midX = (point.x + connPoint.x) / 2;
@@ -436,11 +764,10 @@ export function CosmicBackground() {
                 Math.pow(midX - mouse.x, 2) + Math.pow(midY - mouse.y, 2)
               );
               if (mouseDist < gravitationalRadius) {
-                highlight = (1 - mouseDist / gravitationalRadius) * 0.3;
+                highlight = (1 - mouseDist / gravitationalRadius) * (mouse.dragging ? 0.5 : 0.3);
               }
             }
 
-            // Draw connection with gradient
             const gradient = ctx.createLinearGradient(point.x, point.y, connPoint.x, connPoint.y);
             const baseColor = highlight > 0 ? `rgba(255, 100, 100, ${alpha + highlight})` : `rgba(80, 80, 100, ${alpha})`;
             const endColor = highlight > 0 ? `rgba(200, 60, 60, ${alpha + highlight})` : `rgba(60, 60, 80, ${alpha * 0.6})`;
@@ -448,7 +775,7 @@ export function CosmicBackground() {
             gradient.addColorStop(1, endColor);
 
             ctx.strokeStyle = gradient;
-            ctx.lineWidth = highlight > 0 ? 1.5 : 1;
+            ctx.lineWidth = highlight > 0 ? (mouse.dragging ? 2 : 1.5) : 1;
             ctx.beginPath();
             ctx.moveTo(point.x, point.y);
             ctx.lineTo(connPoint.x, connPoint.y);
@@ -463,7 +790,6 @@ export function CosmicBackground() {
         const size = 1.5 + pulse * 1;
         const alpha = 0.2 + point.energy * 0.3 + pulse * 0.1;
 
-        // Check proximity to mouse
         let isNearMouse = false;
         if (mouse.active) {
           const dist = Math.sqrt(
@@ -473,27 +799,155 @@ export function CosmicBackground() {
         }
 
         if (isNearMouse) {
-          // Glowing point near mouse
           const glowGradient = ctx.createRadialGradient(
             point.x, point.y, 0,
-            point.x, point.y, size * 4
+            point.x, point.y, size * (mouse.dragging ? 6 : 4)
           );
-          glowGradient.addColorStop(0, `rgba(255, 100, 100, ${alpha * 1.5})`);
-          glowGradient.addColorStop(0.5, `rgba(200, 50, 50, ${alpha * 0.5})`);
+          glowGradient.addColorStop(0, `rgba(255, 100, 100, ${alpha * (mouse.dragging ? 2 : 1.5)})`);
+          glowGradient.addColorStop(0.5, `rgba(200, 50, 50, ${alpha * (mouse.dragging ? 0.8 : 0.5)})`);
           glowGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
           ctx.fillStyle = glowGradient;
           ctx.beginPath();
-          ctx.arc(point.x, point.y, size * 4, 0, Math.PI * 2);
+          ctx.arc(point.x, point.y, size * (mouse.dragging ? 6 : 4), 0, Math.PI * 2);
           ctx.fill();
         }
 
-        // Main point
         ctx.fillStyle = isNearMouse
           ? `rgba(255, 150, 150, ${alpha})`
           : `rgba(100, 100, 120, ${alpha})`;
         ctx.beginPath();
         ctx.arc(point.x, point.y, size, 0, Math.PI * 2);
         ctx.fill();
+      }
+
+      // Draw drag trail
+      if (dragTrail.points.length > 1 && dragTrail.alpha > 0) {
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        for (let i = 1; i < dragTrail.points.length; i++) {
+          const p1 = dragTrail.points[i - 1];
+          const p2 = dragTrail.points[i];
+          const progress = i / dragTrail.points.length;
+          const alpha = progress * dragTrail.alpha * 0.6;
+          const width = progress * 4;
+
+          // Main trail
+          const trailGradient = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
+          trailGradient.addColorStop(0, `rgba(255, 100, 100, ${alpha * 0.5})`);
+          trailGradient.addColorStop(1, `rgba(255, 150, 150, ${alpha})`);
+
+          ctx.strokeStyle = trailGradient;
+          ctx.lineWidth = width;
+          ctx.beginPath();
+          ctx.moveTo(p1.x, p1.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.stroke();
+
+          // Glow
+          ctx.strokeStyle = `rgba(255, 200, 200, ${alpha * 0.3})`;
+          ctx.lineWidth = width + 4;
+          ctx.stroke();
+        }
+      }
+
+      // Draw lightnings
+      for (const lightning of lightnings) {
+        if (lightning.alpha > 0 && lightning.segments.length > 1) {
+          // Glow
+          ctx.strokeStyle = `rgba(255, 150, 150, ${lightning.alpha * 0.3})`;
+          ctx.lineWidth = lightning.width + 4;
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+          ctx.beginPath();
+          ctx.moveTo(lightning.segments[0].x, lightning.segments[0].y);
+          for (let i = 1; i < lightning.segments.length; i++) {
+            ctx.lineTo(lightning.segments[i].x, lightning.segments[i].y);
+          }
+          ctx.stroke();
+
+          // Core
+          ctx.strokeStyle = `rgba(255, 255, 255, ${lightning.alpha})`;
+          ctx.lineWidth = lightning.width;
+          ctx.stroke();
+        }
+      }
+
+      // Draw click flashes
+      for (const flash of clickFlashes) {
+        if (flash.alpha > 0) {
+          const flashGradient = ctx.createRadialGradient(
+            flash.x, flash.y, 0,
+            flash.x, flash.y, flash.radius
+          );
+          flashGradient.addColorStop(0, `rgba(255, 255, 255, ${flash.alpha})`);
+          flashGradient.addColorStop(0.3, `rgba(255, 150, 150, ${flash.alpha * 0.5})`);
+          flashGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          ctx.fillStyle = flashGradient;
+          ctx.beginPath();
+          ctx.arc(flash.x, flash.y, flash.radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // Update and draw click particles
+      for (let i = clickParticles.length - 1; i >= 0; i--) {
+        const p = clickParticles[i];
+        p.life++;
+
+        // Add to trail
+        if (p.trail.length === 0 || Math.random() > 0.5) {
+          p.trail.push({ x: p.x, y: p.y, alpha: p.alpha });
+        }
+        if (p.trail.length > 8) p.trail.shift();
+
+        // Apply gravity and friction
+        p.vy += 0.1;
+        p.vx *= 0.98;
+        p.vy *= 0.98;
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Fade based on life
+        const lifeProgress = p.life / p.maxLife;
+        p.alpha = 1 - lifeProgress;
+        p.size *= 0.99;
+
+        // Draw trail
+        for (let j = 0; j < p.trail.length; j++) {
+          const t = p.trail[j];
+          const trailAlpha = (j / p.trail.length) * p.alpha * 0.3;
+          ctx.fillStyle = p.color.replace(/[\d.]+\)$/, `${trailAlpha})`);
+          ctx.beginPath();
+          ctx.arc(t.x, t.y, p.size * 0.5 * (j / p.trail.length), 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Draw particle
+        if (p.alpha > 0.01) {
+          // Glow
+          const glowGradient = ctx.createRadialGradient(
+            p.x, p.y, 0,
+            p.x, p.y, p.size * 3
+          );
+          glowGradient.addColorStop(0, p.color.replace(/[\d.]+\)$/, `${p.alpha * 0.5})`));
+          glowGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          ctx.fillStyle = glowGradient;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Core
+          ctx.fillStyle = p.color.replace(/[\d.]+\)$/, `${p.alpha})`);
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Remove dead particles
+        if (p.life >= p.maxLife || p.alpha <= 0.01) {
+          clickParticles.splice(i, 1);
+        }
       }
 
       // Draw light beams
@@ -541,19 +995,22 @@ export function CosmicBackground() {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseleave', handleMouseLeave);
-      document.removeEventListener('touchmove', handleTouchMove);
-      document.removeEventListener('touchend', handleTouchEnd);
+      canvas.removeEventListener('mousemove', handleMouseMove);
+      canvas.removeEventListener('mouseleave', handleMouseLeave);
+      canvas.removeEventListener('mousedown', handleMouseDown);
+      canvas.removeEventListener('mouseup', handleMouseUp);
+      canvas.removeEventListener('touchmove', handleTouchMove);
+      canvas.removeEventListener('touchstart', handleTouchStart);
+      canvas.removeEventListener('touchend', handleTouchEnd);
       window.removeEventListener('resize', resize);
     };
-  }, [isMobile, initGrid, initOrbs, spawnWave, spawnBeam]);
+  }, [isMobile, initGrid, initOrbs, spawnWave, spawnBeam, spawnClickExplosion, spawnLightning]);
 
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 pointer-events-none"
-      style={{ zIndex: 0 }}
+      className="absolute inset-0"
+      style={{ zIndex: 0, touchAction: 'none' }}
     />
   );
 }
