@@ -29,8 +29,10 @@ export function ContactForm() {
         const input = field.querySelector('input, select, textarea');
         const line = field.querySelector('.field-line');
 
-        gsap.set([label, input], { opacity: 0, y: 20 });
-        gsap.set(line, { scaleX: 0 });
+        // Set initial states with null checks
+        if (label) gsap.set(label, { opacity: 0, y: 20 });
+        if (input) gsap.set(input, { opacity: 0, y: 20 });
+        if (line) gsap.set(line, { scaleX: 0 });
 
         const tl = gsap.timeline({
           scrollTrigger: {
@@ -40,24 +42,30 @@ export function ContactForm() {
           },
         });
 
-        tl.to(label, {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          ease: 'power3.out',
-          delay: index * 0.1,
-        })
-        .to(input, {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          ease: 'power3.out',
-        }, '-=0.3')
-        .to(line, {
-          scaleX: 1,
-          duration: 0.6,
-          ease: 'power2.inOut',
-        }, '-=0.3');
+        if (label) {
+          tl.to(label, {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: 'power3.out',
+            delay: index * 0.1,
+          });
+        }
+        if (input) {
+          tl.to(input, {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: 'power3.out',
+          }, '-=0.3');
+        }
+        if (line) {
+          tl.to(line, {
+            scaleX: 1,
+            duration: 0.6,
+            ease: 'power2.inOut',
+          }, '-=0.3');
+        }
       });
 
       // Magnetic button effect
