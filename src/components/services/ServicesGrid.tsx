@@ -2,234 +2,205 @@
 
 import { useRef, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { Globe, ShoppingCart, Server, Bot, Palette, Megaphone, Check } from 'lucide-react';
+import { Globe, ShoppingCart, Server, Bot, Palette, Megaphone, Check, ArrowRight } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const services = [
-  { key: 'websites', icon: Globe, id: 'websites', color: 'from-blue-500/20 to-cyan-500/20' },
-  { key: 'ecommerce', icon: ShoppingCart, id: 'ecommerce', color: 'from-green-500/20 to-emerald-500/20' },
-  { key: 'saas', icon: Server, id: 'saas', color: 'from-purple-500/20 to-violet-500/20' },
-  { key: 'ai', icon: Bot, id: 'ai', color: 'from-orange-500/20 to-amber-500/20' },
-  { key: 'design', icon: Palette, id: 'design', color: 'from-pink-500/20 to-rose-500/20' },
-  { key: 'marketing', icon: Megaphone, id: 'marketing', color: 'from-red-500/20 to-accent/20' },
+  { key: 'websites', icon: Globe, id: 'websites', gradient: 'from-blue-500 to-cyan-400' },
+  { key: 'ecommerce', icon: ShoppingCart, id: 'ecommerce', gradient: 'from-green-500 to-emerald-400' },
+  { key: 'saas', icon: Server, id: 'saas', gradient: 'from-purple-500 to-violet-400' },
+  { key: 'ai', icon: Bot, id: 'ai', gradient: 'from-orange-500 to-amber-400' },
+  { key: 'design', icon: Palette, id: 'design', gradient: 'from-pink-500 to-rose-400' },
+  { key: 'marketing', icon: Megaphone, id: 'marketing', gradient: 'from-red-500 to-accent' },
 ];
 
 export function ServicesGrid() {
   const t = useTranslations('servicesPage');
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const progressRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const horizontalRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Progress bar animation
-      if (progressRef.current) {
-        gsap.fromTo(
-          progressRef.current,
-          { scaleY: 0 },
-          {
-            scaleY: 1,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top 20%',
-              end: 'bottom 80%',
-              scrub: 1,
-            },
-          }
-        );
-      }
+      if (!horizontalRef.current || !cardsRef.current) return;
 
-      // Cards animation
-      cardsRef.current.forEach((card, index) => {
-        if (!card) return;
+      const cards = cardsRef.current.children;
+      const totalWidth = cardsRef.current.scrollWidth - window.innerWidth + 200;
 
-        const isEven = index % 2 === 0;
-
-        // Card entrance with 3D rotation
-        gsap.fromTo(
-          card,
-          {
-            opacity: 0,
-            x: isEven ? -80 : 80,
-            rotateY: isEven ? -15 : 15,
-          },
-          {
-            opacity: 1,
-            x: 0,
-            rotateY: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top 85%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
-
-        // Icon pop animation
-        const icon = card.querySelector('.service-icon');
-        if (icon) {
-          gsap.fromTo(
-            icon,
-            { scale: 0, rotation: -180 },
-            {
-              scale: 1,
-              rotation: 0,
-              duration: 0.6,
-              ease: 'back.out(2)',
-              scrollTrigger: {
-                trigger: card,
-                start: 'top 80%',
-                toggleActions: 'play none none reverse',
-              },
-            }
-          );
-        }
-
-        // Features stagger
-        const features = card.querySelectorAll('.feature-item');
-        gsap.fromTo(
-          features,
-          { opacity: 0, x: 20 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.4,
-            stagger: 0.08,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top 75%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
-
-        // 3D hover effect
-        const handleMouseMove = (e: MouseEvent) => {
-          const rect = card.getBoundingClientRect();
-          const centerX = rect.left + rect.width / 2;
-          const centerY = rect.top + rect.height / 2;
-          const mouseX = e.clientX - centerX;
-          const mouseY = e.clientY - centerY;
-
-          const rotateX = (mouseY / rect.height) * -8;
-          const rotateY = (mouseX / rect.width) * 8;
-
-          gsap.to(card, {
-            rotateX,
-            rotateY,
-            scale: 1.02,
-            duration: 0.3,
-            ease: 'power2.out',
-          });
-        };
-
-        const handleMouseLeave = () => {
-          gsap.to(card, {
-            rotateX: 0,
-            rotateY: 0,
-            scale: 1,
-            duration: 0.5,
-            ease: 'elastic.out(1, 0.5)',
-          });
-        };
-
-        card.addEventListener('mousemove', handleMouseMove);
-        card.addEventListener('mouseleave', handleMouseLeave);
+      // Horizontal scroll animation
+      const horizontalScroll = gsap.to(cardsRef.current, {
+        x: -totalWidth,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: horizontalRef.current,
+          start: 'top top',
+          end: () => `+=${totalWidth}`,
+          pin: true,
+          scrub: 1,
+          anticipatePin: 1,
+        },
       });
-    }, sectionRef);
+
+      // Individual card animations as they come into view
+      Array.from(cards).forEach((card, index) => {
+        const cardEl = card as HTMLElement;
+        const inner = cardEl.querySelector('.card-inner');
+        const icon = cardEl.querySelector('.card-icon');
+        const title = cardEl.querySelector('.card-title');
+        const desc = cardEl.querySelector('.card-desc');
+        const features = cardEl.querySelectorAll('.card-feature');
+        const number = cardEl.querySelector('.card-number');
+        const line = cardEl.querySelector('.card-line');
+
+        // Set initial states
+        gsap.set(inner, { rotateY: -15, scale: 0.9, opacity: 0.5 });
+        gsap.set(icon, { scale: 0, rotation: -180 });
+        gsap.set([title, desc], { opacity: 0, y: 30 });
+        gsap.set(features, { opacity: 0, x: -20 });
+        gsap.set(number, { opacity: 0, scale: 0.5 });
+        gsap.set(line, { scaleX: 0 });
+
+        // Create timeline for each card
+        const cardTL = gsap.timeline({
+          scrollTrigger: {
+            trigger: cardEl,
+            containerAnimation: horizontalScroll,
+            start: 'left 80%',
+            end: 'left 30%',
+            scrub: 1,
+          },
+        });
+
+        cardTL
+          .to(inner, { rotateY: 0, scale: 1, opacity: 1, duration: 0.5 })
+          .to(number, { opacity: 1, scale: 1, duration: 0.3 }, '-=0.3')
+          .to(line, { scaleX: 1, duration: 0.4 }, '-=0.2')
+          .to(icon, { scale: 1, rotation: 0, duration: 0.5, ease: 'back.out(2)' }, '-=0.3')
+          .to(title, { opacity: 1, y: 0, duration: 0.4 }, '-=0.3')
+          .to(desc, { opacity: 1, y: 0, duration: 0.4 }, '-=0.2')
+          .to(features, { opacity: 1, x: 0, duration: 0.3, stagger: 0.05 }, '-=0.2');
+      });
+
+    }, containerRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={sectionRef} className="section-padding relative">
-      {/* Chapter progress indicator */}
-      <div className="hidden lg:block fixed left-8 top-1/2 -translate-y-1/2 z-50">
-        <div className="relative h-40 w-1 bg-card-border rounded-full">
-          <div
-            ref={progressRef}
-            className="absolute top-0 left-0 w-full bg-gradient-to-b from-accent to-accent/50 rounded-full origin-top"
-            style={{ height: '100%' }}
-          />
-        </div>
-        <div className="mt-2 text-xs text-muted font-mono text-center">
-          SCROLL
-        </div>
-      </div>
+    <div ref={containerRef}>
+      {/* Horizontal Scroll Section */}
+      <section ref={horizontalRef} className="relative bg-hcs-dark overflow-hidden">
+        {/* Background elements */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(239,68,68,0.05),transparent_70%)]" />
 
-      <div className="container-custom">
-        <div className="space-y-16 lg:space-y-24">
+        {/* Progress indicator */}
+        <div className="fixed top-1/2 left-8 -translate-y-1/2 z-50 hidden lg:block">
+          <div className="flex flex-col items-center gap-2">
+            {services.map((_, i) => (
+              <div
+                key={i}
+                className="w-2 h-2 rounded-full bg-accent/30 transition-all duration-300"
+                style={{ opacity: 0.3 }}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div
+          ref={cardsRef}
+          className="flex gap-8 px-[10vw] py-20 min-h-screen items-center"
+          style={{ width: 'fit-content' }}
+        >
           {services.map((service, index) => (
             <div
               key={service.key}
               id={service.id}
-              ref={(el) => { cardsRef.current[index] = el; }}
-              className="relative bg-card rounded-2xl border border-card-border p-8 lg:p-12 overflow-hidden"
-              style={{
-                transformStyle: 'preserve-3d',
-                perspective: '1000px',
-              }}
+              className="w-[80vw] md:w-[60vw] lg:w-[45vw] flex-shrink-0"
+              style={{ perspective: '1500px' }}
             >
-              {/* Chapter number */}
-              <div className="absolute top-4 right-4 lg:top-6 lg:right-6 text-6xl lg:text-8xl font-bold text-accent/5 font-mono">
-                {String(index + 1).padStart(2, '0')}
-              </div>
+              <div
+                className="card-inner relative bg-card/80 backdrop-blur-sm rounded-3xl border border-card-border p-8 lg:p-12 h-full"
+                style={{ transformStyle: 'preserve-3d' }}
+              >
+                {/* Large number background */}
+                <div className="card-number absolute top-4 right-4 text-[12rem] font-bold text-accent/5 leading-none pointer-events-none">
+                  {String(index + 1).padStart(2, '0')}
+                </div>
 
-              {/* Background gradient */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl`} />
+                {/* Gradient line */}
+                <div className={`card-line absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${service.gradient} rounded-t-3xl origin-left`} />
 
-              <div className="relative z-10 grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-                <div>
-                  <div className="service-icon w-16 h-16 bg-accent/10 rounded-xl flex items-center justify-center mb-6 relative">
-                    <service.icon className="w-8 h-8 text-accent" />
-                    <div className="absolute inset-0 bg-accent/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative z-10">
+                  {/* Icon */}
+                  <div className={`card-icon w-20 h-20 rounded-2xl bg-gradient-to-br ${service.gradient} flex items-center justify-center mb-8 shadow-lg`}>
+                    <service.icon className="w-10 h-10 text-white" />
                   </div>
 
-                  <span className="text-accent font-mono text-xs mb-2 block">
+                  {/* Service label */}
+                  <span className="text-accent font-mono text-xs tracking-widest mb-4 block">
                     SERVICE {String(index + 1).padStart(2, '0')}
                   </span>
 
-                  <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-4">
+                  {/* Title */}
+                  <h2 className="card-title text-3xl lg:text-4xl font-bold text-foreground mb-4">
                     {t(`${service.key}.title`)}
                   </h2>
 
-                  <p className="text-muted leading-relaxed">
+                  {/* Description */}
+                  <p className="card-desc text-muted text-lg leading-relaxed mb-8 max-w-lg">
                     {t(`${service.key}.description`)}
                   </p>
-                </div>
 
-                <div className="lg:pt-8">
-                  <div className="text-xs font-mono text-accent mb-4">INCLUDES</div>
-                  <ul className="space-y-3">
-                    {[0, 1, 2, 3, 4, 5].map((i) => {
+                  {/* Features */}
+                  <div className="space-y-3">
+                    <div className="text-xs font-mono text-accent mb-3">WHAT&apos;S INCLUDED</div>
+                    {[0, 1, 2, 3].map((i) => {
                       const feature = t(`${service.key}.features.${i}`);
                       if (!feature || feature.includes('.features.')) return null;
                       return (
-                        <li key={i} className="feature-item flex items-start gap-3">
-                          <div className="w-5 h-5 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <div key={i} className="card-feature flex items-center gap-3 group">
+                          <div className="w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
                             <Check className="w-3 h-3 text-accent" />
                           </div>
-                          <span className="text-foreground">{feature}</span>
-                        </li>
+                          <span className="text-foreground group-hover:text-accent transition-colors">
+                            {feature}
+                          </span>
+                        </div>
                       );
                     })}
-                  </ul>
+                  </div>
+
+                  {/* CTA */}
+                  <div className="mt-10">
+                    <button className="group flex items-center gap-2 text-accent font-medium hover:gap-4 transition-all">
+                      Learn More
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </div>
                 </div>
               </div>
-
-              {/* Decorative line */}
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
             </div>
           ))}
+
+          {/* End card */}
+          <div className="w-[50vw] flex-shrink-0 flex items-center justify-center">
+            <div className="text-center">
+              <h3 className="text-4xl font-bold text-foreground mb-4">Ready to Start?</h3>
+              <p className="text-muted mb-8">Let&apos;s build something amazing together</p>
+              <a
+                href="/contact"
+                className="inline-flex items-center gap-2 bg-accent text-white px-8 py-4 rounded-xl font-medium hover:bg-accent/90 transition-colors"
+              >
+                Get in Touch
+                <ArrowRight className="w-5 h-5" />
+              </a>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }

@@ -12,150 +12,166 @@ export function ServicesHero() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
-  const decorRef = useRef<HTMLDivElement>(null);
-  const counterRef = useRef<HTMLDivElement>(null);
+  const maskRef = useRef<HTMLDivElement>(null);
+  const lineRef = useRef<HTMLDivElement>(null);
+  const numbersRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ delay: 0.2 });
+      // Initial states
+      gsap.set(titleRef.current, { yPercent: 100 });
+      gsap.set(subtitleRef.current, { opacity: 0, y: 30 });
 
-      // Title animation - words slide up
-      if (titleRef.current) {
+      const tl = gsap.timeline({ delay: 0.3 });
+
+      // Title reveal with mask
+      tl.to(titleRef.current, {
+        yPercent: 0,
+        duration: 1.2,
+        ease: 'power4.out',
+      });
+
+      // Animated line drawing
+      if (lineRef.current) {
         tl.fromTo(
-          titleRef.current,
+          lineRef.current,
+          { scaleX: 0, transformOrigin: 'left center' },
+          { scaleX: 1, duration: 1, ease: 'power2.inOut' },
+          '-=0.6'
+        );
+      }
+
+      // Subtitle fade
+      tl.to(subtitleRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power3.out',
+      }, '-=0.4');
+
+      // Animated counter numbers
+      if (numbersRef.current) {
+        const items = numbersRef.current.querySelectorAll('.number-item');
+
+        tl.fromTo(
+          items,
           {
             opacity: 0,
             y: 60,
+            rotateX: -90,
           },
           {
             opacity: 1,
             y: 0,
+            rotateX: 0,
             duration: 0.8,
-            ease: 'power3.out',
-          }
-        );
-      }
-
-      // Subtitle animation
-      if (subtitleRef.current) {
-        tl.fromTo(
-          subtitleRef.current,
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 0.6 },
-          '-=0.3'
-        );
-      }
-
-      // Counter animation
-      if (counterRef.current) {
-        const counters = counterRef.current.querySelectorAll('.counter-item');
-        tl.fromTo(
-          counters,
-          { opacity: 0, y: 20, scale: 0.9 },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.5,
-            stagger: 0.1,
+            stagger: 0.15,
             ease: 'back.out(1.7)',
           },
-          '-=0.2'
-        );
-      }
-
-      // Decorative elements
-      if (decorRef.current) {
-        const elements = decorRef.current.children;
-        tl.fromTo(
-          elements,
-          { scale: 0, opacity: 0 },
-          {
-            scale: 1,
-            opacity: 1,
-            duration: 0.5,
-            stagger: 0.1,
-            ease: 'back.out(2)',
-          },
-          '-=0.5'
+          '-=0.4'
         );
 
-        // Floating animation
-        Array.from(elements).forEach((el, i) => {
-          gsap.to(el, {
-            y: (i % 2 === 0 ? -20 : 20),
-            rotation: (i % 2 === 0 ? 10 : -10),
-            duration: 2 + i * 0.3,
-            repeat: -1,
-            yoyo: true,
-            ease: 'sine.inOut',
-          });
+        // Animate the actual numbers counting up
+        items.forEach((item) => {
+          const numberEl = item.querySelector('.number-value');
+          if (numberEl) {
+            const finalValue = parseInt(numberEl.getAttribute('data-value') || '0');
+            gsap.fromTo(
+              { val: 0 },
+              { val: finalValue },
+              {
+                duration: 2,
+                ease: 'power2.out',
+                delay: 1,
+                onUpdate: function() {
+                  if (numberEl) {
+                    numberEl.textContent = Math.round(this.targets()[0].val) + '+';
+                  }
+                },
+              }
+            );
+          }
         });
       }
 
-      // Parallax on scroll
-      ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: 'top top',
-        end: 'bottom top',
-        scrub: 1,
-        onUpdate: (self) => {
-          if (titleRef.current) {
-            gsap.to(titleRef.current, {
-              y: self.progress * 50,
-              duration: 0.1,
-            });
-          }
+      // Parallax scroll effect
+      gsap.to(titleRef.current, {
+        yPercent: -30,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 1,
         },
       });
+
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={sectionRef} className="pt-32 pb-16 hero-pattern relative overflow-hidden">
-      {/* Decorative elements */}
-      <div ref={decorRef} className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-20 left-10 w-20 h-20 border border-accent/20 rounded-full" />
-        <div className="absolute top-40 right-20 w-4 h-4 bg-accent/30 rounded-full" />
-        <div className="absolute bottom-20 left-1/4 w-16 h-16 border border-accent/10 rotate-45" />
-        <div className="absolute top-1/3 right-10 w-3 h-3 bg-accent/40 rounded-full" />
-        <div className="absolute bottom-32 right-1/3 w-8 h-8 border-2 border-accent/20 rounded-lg rotate-12" />
+    <section ref={sectionRef} className="min-h-screen flex items-center justify-center relative overflow-hidden bg-hcs-dark">
+      {/* Animated background grid */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(239,68,68,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(239,68,68,0.03)_1px,transparent_1px)] bg-[size:100px_100px] animate-pulse" />
+
+      {/* Large background text */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <span className="text-[20vw] font-bold text-accent/[0.02] whitespace-nowrap">
+          SERVICES
+        </span>
       </div>
 
-      {/* Background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/5 rounded-full blur-3xl" />
+      {/* Floating orbs */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-accent/5 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }} />
 
-      <div className="container-custom relative">
-        <div className="max-w-3xl mx-auto text-center">
-          <span className="text-accent font-mono text-sm mb-4 block">SERVICES</span>
-          <h1
-            ref={titleRef}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6"
-          >
-            {t('pageTitle')}
-          </h1>
-          <p ref={subtitleRef} className="text-xl text-muted mb-12">
+      <div className="container-custom relative z-10">
+        <div className="max-w-5xl mx-auto">
+          {/* Label */}
+          <div className="flex items-center gap-4 mb-8">
+            <div ref={lineRef} className="w-12 h-[2px] bg-accent" />
+            <span className="text-accent font-mono text-sm tracking-widest">WHAT I DO</span>
+          </div>
+
+          {/* Title with mask */}
+          <div ref={maskRef} className="overflow-hidden mb-8">
+            <h1
+              ref={titleRef}
+              className="text-5xl md:text-7xl lg:text-8xl font-bold text-foreground leading-[0.9]"
+            >
+              {t('pageTitle')}
+            </h1>
+          </div>
+
+          {/* Subtitle */}
+          <p ref={subtitleRef} className="text-xl md:text-2xl text-muted max-w-2xl mb-16">
             {t('pageSubtitle')}
           </p>
 
-          {/* Quick stats */}
-          <div ref={counterRef} className="flex flex-wrap justify-center gap-8">
-            <div className="counter-item text-center">
-              <div className="text-3xl font-bold text-accent">6+</div>
-              <div className="text-sm text-muted">Service Areas</div>
+          {/* Animated stats */}
+          <div ref={numbersRef} className="grid grid-cols-3 gap-8 max-w-xl" style={{ perspective: '1000px' }}>
+            <div className="number-item text-center" style={{ transformStyle: 'preserve-3d' }}>
+              <div className="number-value text-5xl md:text-6xl font-bold text-accent mb-2" data-value="50">0+</div>
+              <div className="text-sm text-muted uppercase tracking-wider">Projects</div>
             </div>
-            <div className="counter-item text-center">
-              <div className="text-3xl font-bold text-accent">50+</div>
-              <div className="text-sm text-muted">Projects Delivered</div>
+            <div className="number-item text-center" style={{ transformStyle: 'preserve-3d' }}>
+              <div className="number-value text-5xl md:text-6xl font-bold text-accent mb-2" data-value="8">0+</div>
+              <div className="text-sm text-muted uppercase tracking-wider">Years</div>
             </div>
-            <div className="counter-item text-center">
-              <div className="text-3xl font-bold text-accent">8+</div>
-              <div className="text-sm text-muted">Years Experience</div>
+            <div className="number-item text-center" style={{ transformStyle: 'preserve-3d' }}>
+              <div className="number-value text-5xl md:text-6xl font-bold text-accent mb-2" data-value="6">0+</div>
+              <div className="text-sm text-muted uppercase tracking-wider">Services</div>
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Scroll indicator */}
+      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+        <span className="text-xs text-muted uppercase tracking-widest">Scroll</span>
+        <div className="w-[1px] h-16 bg-gradient-to-b from-accent to-transparent animate-pulse" />
       </div>
     </section>
   );

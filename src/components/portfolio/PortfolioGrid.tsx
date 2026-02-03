@@ -20,15 +20,34 @@ export function PortfolioGrid() {
   const t = useTranslations('portfolio');
   const locale = useLocale() as Locale;
   const [activeCategory, setActiveCategory] = useState<Category>('all');
+  const [hoveredProject, setHoveredProject] = useState<string | null>(null);
 
   const sectionRef = useRef<HTMLDivElement>(null);
   const filtersRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const cursorRef = useRef<HTMLDivElement>(null);
 
   const filteredProjects = activeCategory === 'all'
     ? projects
     : projects.filter(p => p.category === activeCategory);
+
+  // Custom cursor effect
+  useEffect(() => {
+    const cursor = cursorRef.current;
+    if (!cursor) return;
+
+    const moveCursor = (e: MouseEvent) => {
+      gsap.to(cursor, {
+        x: e.clientX,
+        y: e.clientY,
+        duration: 0.5,
+        ease: 'power3.out',
+      });
+    };
+
+    window.addEventListener('mousemove', moveCursor);
+    return () => window.removeEventListener('mousemove', moveCursor);
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -37,13 +56,13 @@ export function PortfolioGrid() {
         const buttons = filtersRef.current.querySelectorAll('button');
         gsap.fromTo(
           buttons,
-          { opacity: 0, y: 20 },
+          { opacity: 0, y: 30 },
           {
             opacity: 1,
             y: 0,
-            duration: 0.5,
-            stagger: 0.05,
-            ease: 'power2.out',
+            duration: 0.6,
+            stagger: 0.08,
+            ease: 'back.out(1.7)',
             scrollTrigger: {
               trigger: filtersRef.current,
               start: 'top 90%',
@@ -52,199 +71,193 @@ export function PortfolioGrid() {
           }
         );
       }
-    }, sectionRef);
 
-    return () => ctx.revert();
-  }, []);
+      // Grid cards with clip-path reveal
+      const cards = gridRef.current?.querySelectorAll('.project-card');
+      cards?.forEach((card, index) => {
+        const image = card.querySelector('.project-image');
+        const content = card.querySelector('.project-content');
+        const overlay = card.querySelector('.project-overlay');
 
-  // Animate cards when filter changes or on scroll
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      cardsRef.current.forEach((card, index) => {
-        if (!card) return;
+        gsap.set(image, { clipPath: 'inset(100% 0 0 0)' });
+        gsap.set(content, { opacity: 0, y: 40 });
+        gsap.set(overlay, { opacity: 0 });
 
-        // Card entrance animation
-        gsap.fromTo(
-          card,
-          {
-            opacity: 0,
-            y: 50,
-            scale: 0.95,
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: card,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse',
           },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.6,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top 90%',
-              toggleActions: 'play none none reverse',
-            },
-            delay: index * 0.05,
-          }
-        );
+        });
 
-        // 3D hover effect
-        const handleMouseMove = (e: MouseEvent) => {
-          const rect = card.getBoundingClientRect();
-          const centerX = rect.left + rect.width / 2;
-          const centerY = rect.top + rect.height / 2;
-          const mouseX = e.clientX - centerX;
-          const mouseY = e.clientY - centerY;
-
-          const rotateX = (mouseY / rect.height) * -10;
-          const rotateY = (mouseX / rect.width) * 10;
-
-          gsap.to(card, {
-            rotateX,
-            rotateY,
-            scale: 1.02,
-            duration: 0.3,
-            ease: 'power2.out',
-          });
-        };
-
-        const handleMouseLeave = () => {
-          gsap.to(card, {
-            rotateX: 0,
-            rotateY: 0,
-            scale: 1,
-            duration: 0.5,
-            ease: 'elastic.out(1, 0.5)',
-          });
-        };
-
-        card.addEventListener('mousemove', handleMouseMove);
-        card.addEventListener('mouseleave', handleMouseLeave);
-
-        return () => {
-          card.removeEventListener('mousemove', handleMouseMove);
-          card.removeEventListener('mouseleave', handleMouseLeave);
-        };
+        tl.to(image, {
+          clipPath: 'inset(0% 0 0 0)',
+          duration: 1,
+          ease: 'power4.out',
+          delay: index * 0.1,
+        })
+        .to(content, {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: 'power3.out',
+        }, '-=0.5')
+        .to(overlay, {
+          opacity: 1,
+          duration: 0.4,
+        }, '-=0.4');
       });
-    }, gridRef);
+    }, sectionRef);
 
     return () => ctx.revert();
   }, [filteredProjects]);
 
   const handleCategoryChange = (category: Category) => {
-    // Animate out current cards
-    gsap.to(cardsRef.current.filter(Boolean), {
+    const cards = gridRef.current?.querySelectorAll('.project-card');
+    if (!cards) return;
+
+    gsap.to(Array.from(cards), {
       opacity: 0,
-      y: 20,
+      y: 30,
       scale: 0.95,
       duration: 0.3,
-      stagger: 0.02,
+      stagger: 0.03,
       ease: 'power2.in',
       onComplete: () => {
         setActiveCategory(category);
-        // Reset refs for new cards
-        cardsRef.current = [];
       },
     });
   };
 
   return (
-    <section ref={sectionRef} className="section-padding relative">
-      {/* Background grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:80px_80px]" />
+    <section ref={sectionRef} className="py-20 relative bg-hcs-dark">
+      {/* Custom cursor */}
+      <div
+        ref={cursorRef}
+        className={cn(
+          'fixed top-0 left-0 w-32 h-32 pointer-events-none z-50 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-300',
+          hoveredProject ? 'opacity-100' : 'opacity-0'
+        )}
+      >
+        <div className="w-full h-full rounded-full bg-accent/90 flex items-center justify-center">
+          <span className="text-white text-sm font-medium">VIEW</span>
+        </div>
+      </div>
 
-      <div className="container-custom relative">
+      <div className="container-custom">
         {/* Filters */}
-        <div ref={filtersRef} className="flex flex-wrap justify-center gap-3 mb-12">
+        <div ref={filtersRef} className="flex flex-wrap justify-center gap-3 mb-16">
           {categories.map((category) => (
             <button
               key={category}
               onClick={() => handleCategoryChange(category)}
               className={cn(
-                'px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-300',
+                'px-6 py-3 rounded-full text-sm font-medium transition-all duration-500 relative overflow-hidden group',
                 activeCategory === category
-                  ? 'bg-accent text-white shadow-lg shadow-accent/25'
-                  : 'bg-card border border-card-border text-muted hover:text-foreground hover:border-accent/50 hover:scale-105'
+                  ? 'bg-accent text-white'
+                  : 'bg-transparent border border-card-border text-muted hover:text-foreground hover:border-accent'
               )}
             >
-              {t(`filters.${category}`)}
+              <span className="relative z-10">{t(`filters.${category}`)}</span>
+              {activeCategory !== category && (
+                <span className="absolute inset-0 bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+              )}
             </button>
           ))}
         </div>
 
         {/* Projects Grid */}
-        <div ref={gridRef} className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div ref={gridRef} className="grid md:grid-cols-2 gap-8">
           {filteredProjects.map((project, index) => (
-            <div
+            <Link
               key={project.id}
-              ref={(el) => { cardsRef.current[index] = el; }}
-              className="group bg-card rounded-2xl border border-card-border overflow-hidden h-full"
-              style={{
-                transformStyle: 'preserve-3d',
-                perspective: '1000px',
-              }}
+              href={`/${locale}/portfolio/${project.slug}`}
+              className="project-card group relative block"
+              onMouseEnter={() => setHoveredProject(project.id)}
+              onMouseLeave={() => setHoveredProject(null)}
             >
-              {/* Image */}
-              <div className="aspect-video bg-hcs-gray relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-accent/20 to-transparent" />
+              {/* Image container with clip-path */}
+              <div className="project-image relative aspect-[4/3] bg-hcs-gray rounded-2xl overflow-hidden">
+                {/* Placeholder gradient */}
+                <div className="absolute inset-0 bg-gradient-to-br from-accent/30 via-accent/10 to-transparent" />
+
+                {/* Project initials */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-3xl font-bold text-muted/50">
+                  <span className="text-[8rem] font-bold text-white/10">
                     {project.translations[locale].title.substring(0, 2).toUpperCase()}
                   </span>
                 </div>
 
                 {/* Hover overlay */}
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
-                  <Link
-                    href={`/${locale}/portfolio/${project.slug}`}
-                    className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-black hover:bg-accent hover:text-white transition-colors transform hover:scale-110"
-                  >
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                {/* Project number */}
+                <div className="absolute top-6 left-6 text-white/50 font-mono text-sm">
+                  {String(index + 1).padStart(2, '0')}
+                </div>
+
+                {/* Category badge */}
+                <div className="absolute top-6 right-6">
+                  <span className="px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-white text-xs font-medium">
+                    {t(`filters.${project.category}`)}
+                  </span>
+                </div>
+
+                {/* Hover actions */}
+                <div className="absolute bottom-6 right-6 flex gap-3 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
+                  <span className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-black hover:bg-accent hover:text-white transition-colors">
                     <ArrowUpRight className="w-5 h-5" />
-                  </Link>
+                  </span>
                   {project.liveUrl && (
                     <a
                       href={project.liveUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-10 h-10 bg-accent rounded-full flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors transform hover:scale-110"
+                      onClick={(e) => e.stopPropagation()}
+                      className="w-12 h-12 bg-accent rounded-full flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors"
                     >
                       <ExternalLink className="w-5 h-5" />
                     </a>
                   )}
                 </div>
-
-                {/* Project number */}
-                <div className="absolute top-3 left-3 text-xs font-mono text-white/50">
-                  {String(index + 1).padStart(2, '0')}
-                </div>
               </div>
 
               {/* Content */}
-              <div className="p-6">
-                <span className="text-xs text-accent font-medium uppercase tracking-wider">
-                  {t(`filters.${project.category}`)}
-                </span>
-                <h3 className="text-lg font-semibold text-foreground mt-2 mb-2 group-hover:text-accent transition-colors">
-                  {project.translations[locale].title}
-                </h3>
-                <p className="text-sm text-muted line-clamp-2 mb-4">
-                  {project.translations[locale].shortDescription}
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {project.technologies.slice(0, 3).map((tech) => (
+              <div className="project-content mt-6">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <h3 className="text-2xl font-bold text-foreground group-hover:text-accent transition-colors duration-300">
+                      {project.translations[locale].title}
+                    </h3>
+                    <p className="text-muted mt-2 line-clamp-2">
+                      {project.translations[locale].shortDescription}
+                    </p>
+                  </div>
+                  <ArrowUpRight className="w-6 h-6 text-muted group-hover:text-accent group-hover:translate-x-1 group-hover:-translate-y-1 transition-all flex-shrink-0 mt-1" />
+                </div>
+
+                {/* Technologies */}
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {project.technologies.slice(0, 4).map((tech) => (
                     <span
                       key={tech}
-                      className="px-2 py-1 bg-hcs-gray rounded text-xs text-muted group-hover:bg-accent/10 group-hover:text-accent transition-colors"
+                      className="px-3 py-1 bg-card border border-card-border rounded-full text-xs text-muted group-hover:border-accent/30 group-hover:text-foreground transition-colors"
                     >
                       {tech}
                     </span>
                   ))}
-                  {project.technologies.length > 3 && (
-                    <span className="px-2 py-1 bg-hcs-gray rounded text-xs text-muted">
-                      +{project.technologies.length - 3}
+                  {project.technologies.length > 4 && (
+                    <span className="px-3 py-1 bg-card border border-card-border rounded-full text-xs text-muted">
+                      +{project.technologies.length - 4}
                     </span>
                   )}
                 </div>
               </div>
-            </div>
+
+              {/* Decorative line */}
+              <div className="project-overlay absolute -bottom-4 left-0 right-0 h-[2px] bg-gradient-to-r from-accent via-accent/50 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+            </Link>
           ))}
         </div>
       </div>
