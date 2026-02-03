@@ -359,7 +359,7 @@ export function CosmicBackground() {
 
       gsap.to(branch, {
         alpha: 0,
-        duration: 0.25 + Math.random() * 0.15,
+        duration: 0.50 + Math.random() * 0.30,
         ease: 'power1.in',
         onComplete: () => {
           const index = lightningsRef.current.indexOf(branch);

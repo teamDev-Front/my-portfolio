@@ -38,7 +38,7 @@ export function Footer() {
   return (
     <footer className="bg-hcs-dark border-t border-card-border">
       <div className="container-custom section-padding">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pt-8">
           {/* Brand */}
           <div className="lg:col-span-1">
             <Logo />
@@ -116,12 +116,12 @@ export function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="mt-12 pt-8 border-t border-card-border flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="mt-12 py-8 border-t border-card-border flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-muted text-sm">
             © {currentYear} Habaeb Creative Solutions. {locale === 'pt-BR' ? 'Todos os direitos reservados.' : 'All rights reserved.'}
           </p>
           <p className="text-muted text-sm flex items-center gap-1">
-            {t('madeWith')} <Heart className="w-4 h-4 text-accent fill-accent" /> {locale === 'pt-BR' ? 'em São Paulo, Brasil' : 'in São Paulo, Brazil'}
+            {t('madeWith')} <Heart className="w-4 h-4 text-accent fill-accent" /> {locale === 'pt-BR' ? 'em São José dos Campos-SP, Brasil' : 'in São José dos Campos-SP, Brazil'}
           </p>
         </div>
       </div>

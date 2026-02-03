@@ -227,7 +227,7 @@ export function Hero() {
 
           <p
             ref={subtitleRef}
-            className="text-lg md:text-xl text-muted max-w-2xl mx-auto mb-10"
+            className="text-lg md:text-xl text-muted max-w-4xl text-nowrap mx-auto mb-10"
           >
             {t('subtitle')}
           </p>

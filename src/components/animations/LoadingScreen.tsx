@@ -126,12 +126,12 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
         {isReady ? (
           <>
             <p className="text-xs md:text-sm text-muted/70 tracking-[0.25em] uppercase">
-              Interaja com o logo
+              EXPLORE BEFORE YOU
             </p>
 
             <button
               onClick={handleEnterSite}
-              className="group relative px-10 py-3.5 overflow-hidden"
+              className="group relative px-10 py-3.5 overflow-hidden cursor-pointer"
             >
               {/* Border */}
               <span className="absolute inset-0 border border-accent/40 group-hover:border-accent transition-colors duration-300" />
@@ -140,8 +140,8 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
               <span className="absolute inset-0 bg-accent transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out" />
 
               {/* Text */}
-              <span className="relative z-10 text-sm font-medium tracking-[0.2em] uppercase text-white/90 group-hover:text-white transition-colors duration-300">
-                Entrar
+              <span className="relative z-10  text-sm font-medium tracking-[0.2em] uppercase text-white/90 group-hover:text-white transition-colors duration-300">
+                GO
               </span>
             </button>
           </>
