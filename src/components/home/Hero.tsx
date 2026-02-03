@@ -1,10 +1,10 @@
 'use client';
 
-import { useRef, useEffect, useState, useCallback } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowRight, Play, ChevronDown } from 'lucide-react';
+import { ArrowRight, Play } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { FloatingShapes } from '@/components/animations/FloatingShapes';
 
@@ -15,16 +15,16 @@ export function Hero() {
   const locale = useLocale();
   const heroRef = useRef<HTMLDivElement>(null);
   const titleContainerRef = useRef<HTMLDivElement>(null);
-  const charsRef = useRef<(HTMLSpanElement | null)[]>([]);
+  const wordsRef = useRef<(HTMLSpanElement | null)[]>([]);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const techRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const glitchOverlayRef = useRef<HTMLDivElement>(null);
+  const lineRef = useRef<HTMLDivElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isAnimationComplete, setIsAnimationComplete] = useState(false);
 
   const tagline = t('tagline');
+  const words = tagline.split(' ');
 
   // Mouse tracking for parallax
   useEffect(() => {
@@ -41,186 +41,97 @@ export function Hero() {
   // Main animation sequence
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const chars = charsRef.current.filter(Boolean);
-      if (chars.length === 0) return;
-
-      // Initial state - chars scattered in 3D space
-      chars.forEach((char, i) => {
-        const randomX = (Math.random() - 0.5) * 800;
-        const randomY = (Math.random() - 0.5) * 600;
-        const randomZ = Math.random() * 500 - 250;
-        const randomRotateX = (Math.random() - 0.5) * 360;
-        const randomRotateY = (Math.random() - 0.5) * 360;
-        const randomRotateZ = (Math.random() - 0.5) * 180;
-
-        gsap.set(char, {
-          x: randomX,
-          y: randomY,
-          z: randomZ,
-          rotateX: randomRotateX,
-          rotateY: randomRotateY,
-          rotateZ: randomRotateZ,
-          opacity: 0,
-          scale: 0,
-        });
-      });
+      const wordElements = wordsRef.current.filter(Boolean);
+      if (wordElements.length === 0) return;
 
       const masterTL = gsap.timeline({
         defaults: { ease: 'power3.out' },
         delay: 0.3,
-        onComplete: () => setIsAnimationComplete(true),
       });
 
-      // Glitch overlay flash
+      // Accent line animation
       masterTL.fromTo(
-        glitchOverlayRef.current,
-        { opacity: 0 },
-        { opacity: 0.8, duration: 0.1 }
+        lineRef.current,
+        { scaleX: 0 },
+        { scaleX: 1, duration: 1, ease: 'power4.out' }
       );
 
-      masterTL.to(glitchOverlayRef.current, {
-        opacity: 0,
-        duration: 0.1,
-      });
-
-      // Characters appear scattered with glow
-      masterTL.to(chars, {
-        opacity: 1,
-        scale: 1,
-        duration: 0.4,
-        stagger: {
-          each: 0.02,
-          from: 'random',
-        },
-      });
-
-      // Hold scattered state briefly
-      masterTL.to({}, { duration: 0.5 });
-
-      // Another glitch flash before assembly
-      masterTL.to(glitchOverlayRef.current, {
-        opacity: 0.6,
-        duration: 0.05,
-      });
-      masterTL.to(glitchOverlayRef.current, {
-        opacity: 0,
-        duration: 0.05,
-      });
-
-      // Characters fly to their positions with elastic ease
-      masterTL.to(chars, {
-        x: 0,
-        y: 0,
-        z: 0,
-        rotateX: 0,
-        rotateY: 0,
-        rotateZ: 0,
-        duration: 1.2,
-        ease: 'elastic.out(1, 0.5)',
-        stagger: {
-          each: 0.03,
-          from: 'center',
-        },
-      });
-
-      // Subtle floating animation for each character after assembly
-      chars.forEach((char, i) => {
-        gsap.to(char, {
-          y: Math.sin(i * 0.5) * 3,
-          duration: 2 + (i % 3) * 0.3,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-          delay: 2.5 + i * 0.05,
-        });
-      });
-
-      // Subtitle with typewriter effect
-      if (subtitleRef.current) {
-        const text = subtitleRef.current.textContent || '';
-        subtitleRef.current.innerHTML = '';
-
-        text.split('').forEach((char) => {
-          const span = document.createElement('span');
-          span.textContent = char === ' ' ? '\u00A0' : char;
-          span.style.display = 'inline-block';
-          span.style.opacity = '0';
-          span.style.transform = 'translateY(20px)';
-          subtitleRef.current?.appendChild(span);
-        });
-
-        masterTL.fromTo(
-          subtitleRef.current.children,
-          { opacity: 0, y: 20, filter: 'blur(4px)' },
-          {
-            opacity: 1,
-            y: 0,
-            filter: 'blur(0px)',
-            duration: 0.03,
-            stagger: 0.015,
-          },
-          '-=0.5'
-        );
-      }
-
-      // CTA buttons with 3D flip effect
+      // Words entrance - clean slide up with stagger
       masterTL.fromTo(
-        ctaRef.current?.children || [],
+        wordElements,
         {
           opacity: 0,
-          y: 60,
-          rotateX: -90,
-          transformOrigin: 'top center',
+          y: 80,
+          rotateX: -40,
         },
         {
           opacity: 1,
           y: 0,
           rotateX: 0,
           duration: 0.8,
+          stagger: 0.1,
+          ease: 'back.out(1.2)',
+        },
+        '-=0.5'
+      );
+
+      // Subtitle animation
+      if (subtitleRef.current) {
+        masterTL.fromTo(
+          subtitleRef.current,
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.6 },
+          '-=0.3'
+        );
+      }
+
+      // CTA buttons
+      masterTL.fromTo(
+        ctaRef.current?.children || [],
+        {
+          opacity: 0,
+          y: 40,
+          scale: 0.9,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.6,
           stagger: 0.15,
           ease: 'back.out(1.7)',
         },
         '-=0.3'
       );
 
-      // Tech badges spiral in
-      const techBadges = techRef.current?.children || [];
-      Array.from(techBadges).forEach((badge, i) => {
-        const angle = (i / techBadges.length) * Math.PI * 2;
-        const radius = 200;
-        gsap.set(badge, {
-          x: Math.cos(angle) * radius,
-          y: Math.sin(angle) * radius,
-          scale: 0,
-          rotation: 360,
-          opacity: 0,
-        });
-      });
-
-      masterTL.to(
-        techBadges,
+      // Tech badges
+      masterTL.fromTo(
+        techRef.current?.children || [],
         {
-          x: 0,
-          y: 0,
-          scale: 1,
-          rotation: 0,
+          opacity: 0,
+          scale: 0,
+          y: 20,
+        },
+        {
           opacity: 1,
-          duration: 0.6,
+          scale: 1,
+          y: 0,
+          duration: 0.4,
           stagger: 0.08,
           ease: 'back.out(2)',
         },
-        '-=0.4'
-      );
-
-      // Scroll indicator with bounce
-      masterTL.fromTo(
-        scrollRef.current,
-        { opacity: 0, y: -30 },
-        { opacity: 1, y: 0, duration: 0.8, ease: 'bounce.out' },
         '-=0.3'
       );
 
-      // Parallax scroll effect on hero
+      // Scroll indicator
+      masterTL.fromTo(
+        scrollRef.current,
+        { opacity: 0, y: -20 },
+        { opacity: 1, y: 0, duration: 0.6 },
+        '-=0.2'
+      );
+
+      // Parallax scroll effect
       ScrollTrigger.create({
         trigger: heroRef.current,
         start: 'top top',
@@ -241,56 +152,11 @@ export function Hero() {
     return () => ctx.revert();
   }, []);
 
-  // Render characters for animation
-  const renderChars = useCallback(() => {
-    let charIndex = 0;
-    const words = tagline.split(' ');
-
-    return words.map((word, wordIndex) => {
-      const isHighlight = word.includes('&') || word === 'Convert' || word === 'Convertem';
-
-      const chars = word.split('').map((char, i) => {
-        const currentIndex = charIndex++;
-        return (
-          <span
-            key={`${wordIndex}-${i}`}
-            ref={(el) => { charsRef.current[currentIndex] = el; }}
-            className={`inline-block ${isHighlight ? 'gradient-text' : ''}`}
-            style={{
-              transformStyle: 'preserve-3d',
-              willChange: 'transform, opacity',
-            }}
-          >
-            {char}
-          </span>
-        );
-      });
-
-      return (
-        <span key={wordIndex} className="inline-block whitespace-nowrap mr-4">
-          {chars}
-        </span>
-      );
-    });
-  }, [tagline]);
-
   return (
     <section
       ref={heroRef}
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
-      style={{ perspective: '1000px' }}
     >
-      {/* Glitch overlay */}
-      <div
-        ref={glitchOverlayRef}
-        className="absolute inset-0 z-50 pointer-events-none"
-        style={{
-          background: 'linear-gradient(45deg, rgba(220, 38, 38, 0.3), rgba(59, 130, 246, 0.3), rgba(220, 38, 38, 0.3))',
-          mixBlendMode: 'screen',
-          opacity: 0,
-        }}
-      />
-
       {/* Animated background gradient that follows mouse */}
       <div
         className="absolute inset-0 overflow-hidden"
@@ -331,22 +197,40 @@ export function Hero() {
       {/* Grid pattern overlay */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
 
+      {/* Accent line */}
+      <div
+        ref={lineRef}
+        className="absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent origin-center"
+        style={{ transform: 'scaleX(0)' }}
+      />
+
       <div ref={titleContainerRef} className="container-custom relative z-10 pt-32 pb-20">
         <div className="max-w-5xl mx-auto text-center">
-          {/* Main title with 3D character animation */}
+          {/* Main title with word animation */}
           <h1
-            className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-foreground leading-tight mb-8 flex flex-wrap justify-center"
-            style={{
-              perspective: '1000px',
-              transformStyle: 'preserve-3d',
-            }}
+            className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-foreground leading-tight mb-8"
+            style={{ perspective: '1000px' }}
           >
-            {renderChars()}
+            {words.map((word, i) => {
+              const isHighlight = word.includes('&') || word === 'Convert' || word === 'Convertem';
+              return (
+                <span
+                  key={i}
+                  ref={(el) => { wordsRef.current[i] = el; }}
+                  className={`inline-block mr-4 ${isHighlight ? 'gradient-text' : ''}`}
+                  style={{
+                    transformStyle: 'preserve-3d',
+                  }}
+                >
+                  {word}
+                </span>
+              );
+            })}
           </h1>
 
           <p
             ref={subtitleRef}
-            className="text-lg md:text-xl text-muted max-w-4xl text-nowrap mx-auto mb-10"
+            className="text-lg md:text-xl text-muted max-w-2xl mx-auto mb-10"
           >
             {t('subtitle')}
           </p>
@@ -354,7 +238,6 @@ export function Hero() {
           <div
             ref={ctaRef}
             className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-            style={{ perspective: '1000px' }}
           >
             <Button href={`/${locale}/contact`} size="lg" className="group magnetic-btn">
               {t('cta')}

@@ -15,18 +15,17 @@ import {
 } from 'lucide-react';
 import { SectionTitle } from '@/components/ui/SectionTitle';
 import { Button } from '@/components/ui/Button';
-import { cn } from '@/lib/utils';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const services = [
-  { key: 'websites', icon: Globe, color: 'from-blue-500/20 to-cyan-500/20' },
-  { key: 'ecommerce', icon: ShoppingCart, color: 'from-green-500/20 to-emerald-500/20' },
-  { key: 'saas', icon: Server, color: 'from-purple-500/20 to-violet-500/20' },
-  { key: 'ai', icon: Bot, color: 'from-red-500/20 to-orange-500/20' },
-  { key: 'design', icon: Palette, color: 'from-pink-500/20 to-rose-500/20' },
-  { key: 'marketing', icon: Megaphone, color: 'from-yellow-500/20 to-amber-500/20' },
-  { key: 'consulting', icon: Lightbulb, color: 'from-indigo-500/20 to-blue-500/20' },
+  { key: 'websites', icon: Globe },
+  { key: 'ecommerce', icon: ShoppingCart },
+  { key: 'saas', icon: Server },
+  { key: 'ai', icon: Bot },
+  { key: 'design', icon: Palette },
+  { key: 'marketing', icon: Megaphone },
+  { key: 'consulting', icon: Lightbulb },
 ];
 
 export function ServicesPreview() {
@@ -43,11 +42,10 @@ export function ServicesPreview() {
       if (numberRef.current) {
         gsap.fromTo(
           numberRef.current,
-          { opacity: 0, x: -100, rotateY: -90 },
+          { opacity: 0, x: -100 },
           {
             opacity: 0.05,
             x: 0,
-            rotateY: 0,
             duration: 1,
             ease: 'power3.out',
             scrollTrigger: {
@@ -78,50 +76,34 @@ export function ServicesPreview() {
         );
       }
 
-      // 3D Card animations
+      // Cards animation - staggered entrance without parallax offset
       cardsRef.current.forEach((card, index) => {
         if (!card) return;
 
-        // Initial entrance with 3D rotation
+        // Entrance animation
         gsap.fromTo(
           card,
           {
             opacity: 0,
-            y: 100,
-            rotateX: 45,
-            rotateY: index % 2 === 0 ? -25 : 25,
-            scale: 0.8,
-            transformPerspective: 1000,
+            y: 60,
+            scale: 0.95,
           },
           {
             opacity: 1,
             y: 0,
-            rotateX: 0,
-            rotateY: 0,
             scale: 1,
-            duration: 0.8,
-            ease: 'back.out(1.2)',
+            duration: 0.6,
+            ease: 'power3.out',
             scrollTrigger: {
               trigger: card,
               start: 'top 90%',
               toggleActions: 'play none none reverse',
             },
-            delay: index * 0.1,
+            delay: index * 0.08,
           }
         );
 
-        // Parallax effect on scroll
-        gsap.to(card, {
-          y: (index % 3 - 1) * 30,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1,
-          },
-        });
-
-        // Hover effect with mouse tracking
+        // Hover 3D effect
         const handleMouseMove = (e: MouseEvent) => {
           const rect = card.getBoundingClientRect();
           const centerX = rect.left + rect.width / 2;
@@ -129,23 +111,16 @@ export function ServicesPreview() {
           const mouseX = e.clientX - centerX;
           const mouseY = e.clientY - centerY;
 
-          const rotateX = (mouseY / rect.height) * -20;
-          const rotateY = (mouseX / rect.width) * 20;
+          const rotateX = (mouseY / rect.height) * -15;
+          const rotateY = (mouseX / rect.width) * 15;
 
           gsap.to(card, {
             rotateX,
             rotateY,
-            scale: 1.05,
+            scale: 1.02,
             duration: 0.3,
             ease: 'power2.out',
-            transformPerspective: 1000,
           });
-
-          // Glow effect
-          const glowX = (mouseX / rect.width) * 100 + 50;
-          const glowY = (mouseY / rect.height) * 100 + 50;
-          card.style.setProperty('--glow-x', `${glowX}%`);
-          card.style.setProperty('--glow-y', `${glowY}%`);
         };
 
         const handleMouseLeave = () => {
@@ -182,6 +157,7 @@ export function ServicesPreview() {
 
       <div className="container-custom relative">
         <div ref={titleRef}>
+          <span className="text-accent font-mono text-sm mb-4 block text-center">02 / SERVICES</span>
           <SectionTitle title={t('title')} subtitle={t('subtitle')} />
         </div>
 
@@ -190,60 +166,32 @@ export function ServicesPreview() {
             <div
               key={service.key}
               ref={(el) => { cardsRef.current[index] = el; }}
-              className={cn(
-                'group relative p-6 bg-card rounded-2xl border border-card-border cursor-pointer',
-                'hover:border-accent/50 transition-colors duration-300',
-                'before:absolute before:inset-0 before:rounded-2xl before:opacity-0 before:transition-opacity',
-                'hover:before:opacity-100',
-              )}
+              className="group relative p-6 bg-card rounded-2xl border border-card-border cursor-pointer hover:border-accent/50 transition-colors duration-300"
               style={{
                 transformStyle: 'preserve-3d',
-                willChange: 'transform',
-                // @ts-ignore
-                '--glow-x': '50%',
-                '--glow-y': '50%',
+                perspective: '1000px',
               }}
             >
-              {/* Gradient glow on hover */}
-              <div
-                className={cn(
-                  'absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300',
-                  `bg-gradient-radial ${service.color}`
-                )}
-                style={{
-                  background: `radial-gradient(circle at var(--glow-x) var(--glow-y), rgba(220, 38, 38, 0.15), transparent 50%)`,
-                }}
-              />
+              {/* Glow effect on hover */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
               {/* Content */}
-              <div className="relative z-10" style={{ transform: 'translateZ(20px)' }}>
-                <div
-                  className="w-14 h-14 bg-accent/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-accent/20 transition-all duration-300 group-hover:scale-110"
-                  style={{ transform: 'translateZ(30px)' }}
-                >
+              <div className="relative z-10">
+                <div className="w-14 h-14 bg-accent/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-300">
                   <service.icon className="w-7 h-7 text-accent" />
                 </div>
 
-                <h3
-                  className="text-lg font-semibold text-foreground mb-2 group-hover:text-accent transition-colors"
-                  style={{ transform: 'translateZ(25px)' }}
-                >
+                <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-accent transition-colors">
                   {t(`${service.key}.title`)}
                 </h3>
 
-                <p
-                  className="text-sm text-muted leading-relaxed"
-                  style={{ transform: 'translateZ(15px)' }}
-                >
+                <p className="text-sm text-muted leading-relaxed">
                   {t(`${service.key}.description`)}
                 </p>
               </div>
 
               {/* Index number */}
-              <div
-                className="absolute top-4 right-4 text-xs font-mono text-muted/30 group-hover:text-accent/50 transition-colors"
-                style={{ transform: 'translateZ(40px)' }}
-              >
+              <div className="absolute top-4 right-4 text-xs font-mono text-muted/30 group-hover:text-accent/50 transition-colors">
                 0{index + 1}
               </div>
             </div>
@@ -252,12 +200,8 @@ export function ServicesPreview() {
 
         <div className="mt-16 text-center">
           <Button href={`/${locale}/services`} variant="outline" className="group">
-            <span className="group-hover:translate-x-[-4px] transition-transform">
-              {t('viewAll')}
-            </span>
-            <span className="ml-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 translate-x-[-10px] transition-all">
-              →
-            </span>
+            <span>{t('viewAll')}</span>
+            <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
           </Button>
         </div>
       </div>

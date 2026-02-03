@@ -34,65 +34,26 @@ export function CTA() {
         });
       }
 
-      // Title animation with wave effect
+      // Title animation - simple and clean
       if (titleRef.current) {
-        const title = titleRef.current;
-        const text = title.textContent || '';
-        title.innerHTML = '';
-
-        text.split(' ').forEach((word, wordIndex) => {
-          const wordSpan = document.createElement('span');
-          wordSpan.style.display = 'inline-block';
-          wordSpan.style.marginRight = '0.3em';
-
-          word.split('').forEach((char) => {
-            const span = document.createElement('span');
-            span.textContent = char;
-            span.style.display = 'inline-block';
-            span.style.opacity = '0';
-            wordSpan.appendChild(span);
-          });
-
-          title.appendChild(wordSpan);
-        });
-
-        const allChars = title.querySelectorAll('span > span');
-
         gsap.fromTo(
-          allChars,
+          titleRef.current,
           {
             opacity: 0,
-            y: 80,
-            rotateX: -90,
-            scale: 0.5,
+            y: 60,
           },
           {
             opacity: 1,
             y: 0,
-            rotateX: 0,
-            scale: 1,
-            duration: 0.6,
-            stagger: 0.02,
-            ease: 'back.out(1.5)',
+            duration: 0.8,
+            ease: 'power3.out',
             scrollTrigger: {
-              trigger: title,
+              trigger: titleRef.current,
               start: 'top 85%',
               toggleActions: 'play none none reverse',
             },
           }
         );
-
-        // Add floating effect after animation
-        Array.from(allChars).forEach((char, i) => {
-          gsap.to(char, {
-            y: Math.sin(i * 0.3) * 3,
-            duration: 2 + (i % 3) * 0.3,
-            repeat: -1,
-            yoyo: true,
-            ease: 'sine.inOut',
-            delay: 1,
-          });
-        });
       }
 
       // Subtitle animation
@@ -102,12 +63,10 @@ export function CTA() {
           {
             opacity: 0,
             y: 30,
-            filter: 'blur(10px)',
           },
           {
             opacity: 1,
             y: 0,
-            filter: 'blur(0px)',
             duration: 0.8,
             ease: 'power3.out',
             scrollTrigger: {
@@ -125,8 +84,8 @@ export function CTA() {
           buttonsRef.current.children,
           {
             opacity: 0,
-            y: 50,
-            scale: 0.8,
+            y: 40,
+            scale: 0.9,
           },
           {
             opacity: 1,
@@ -196,7 +155,6 @@ export function CTA() {
           <h2
             ref={titleRef}
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6"
-            style={{ perspective: '1000px' }}
           >
             {t('title')}
           </h2>
