@@ -819,6 +819,24 @@ export function CosmicBackground() {
         spawnVortex(width, height);
       }
 
+      // Broadcast active vortex positions for logo particle interaction
+      if (vortexes.length > 0) {
+        const activeVortexes = vortexes
+          .filter(v => v.alpha > 0.3 && v.pullStrength > 0.3)
+          .map(v => ({
+            x: v.x,
+            y: v.y,
+            radius: v.radius,
+            pullStrength: v.pullStrength,
+          }));
+
+        if (activeVortexes.length > 0) {
+          window.dispatchEvent(new CustomEvent('vortexUpdate', {
+            detail: { vortexes: activeVortexes }
+          }));
+        }
+      }
+
       // Spawn beams periodically
       if (!isMobile && time - lastBeamTimeRef.current > 3) {
         lastBeamTimeRef.current = time;
@@ -872,64 +890,154 @@ export function CosmicBackground() {
         }
       }
 
-      // Draw vortexes (black holes)
+      // Draw vortexes (black holes) - Interstellar style
       for (const vortex of vortexes) {
         if (vortex.alpha > 0 && vortex.radius > 0) {
           ctx.save();
           ctx.translate(vortex.x, vortex.y);
+
+          const r = vortex.radius;
+          const alpha = vortex.alpha;
+
+          // Accretion disk parameters (tilted ellipse for 3D effect)
+          const diskTilt = 0.3; // How much the disk is tilted (0 = edge-on, 1 = face-on)
+          const diskWidth = r * 1.8;
+          const diskHeight = r * 1.8 * diskTilt;
+
+          // Draw outer glow / gravitational lensing effect
+          const lensGlow = ctx.createRadialGradient(0, 0, r * 0.3, 0, 0, r * 2);
+          lensGlow.addColorStop(0, 'rgba(0, 0, 0, 0)');
+          lensGlow.addColorStop(0.3, `rgba(40, 10, 20, ${alpha * 0.3})`);
+          lensGlow.addColorStop(0.6, `rgba(20, 5, 15, ${alpha * 0.15})`);
+          lensGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          ctx.fillStyle = lensGlow;
+          ctx.beginPath();
+          ctx.arc(0, 0, r * 2, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Draw back part of accretion disk (behind the black hole)
+          ctx.save();
+          ctx.rotate(vortex.rotation * 0.1); // Slow rotation for the disk
+
+          // Back disk (top arc - gravitational lensing makes it visible above)
+          ctx.beginPath();
+          ctx.ellipse(0, -r * 0.15, diskWidth, diskHeight, 0, Math.PI, 0, true);
+          const backDiskGradient = ctx.createLinearGradient(-diskWidth, 0, diskWidth, 0);
+          backDiskGradient.addColorStop(0, `rgba(255, 100, 50, ${alpha * 0.2})`);
+          backDiskGradient.addColorStop(0.3, `rgba(255, 150, 80, ${alpha * 0.4})`);
+          backDiskGradient.addColorStop(0.5, `rgba(255, 200, 120, ${alpha * 0.5})`);
+          backDiskGradient.addColorStop(0.7, `rgba(255, 150, 80, ${alpha * 0.4})`);
+          backDiskGradient.addColorStop(1, `rgba(255, 80, 40, ${alpha * 0.15})`);
+          ctx.strokeStyle = backDiskGradient;
+          ctx.lineWidth = r * 0.25;
+          ctx.stroke();
+
+          // Photon ring (bright ring very close to event horizon) - back
+          ctx.beginPath();
+          ctx.ellipse(0, -r * 0.05, r * 0.45, r * 0.45 * diskTilt, 0, Math.PI * 1.1, Math.PI * 1.9, true);
+          const photonBack = ctx.createLinearGradient(-r * 0.5, 0, r * 0.5, 0);
+          photonBack.addColorStop(0, `rgba(255, 220, 180, ${alpha * 0.3})`);
+          photonBack.addColorStop(0.5, `rgba(255, 255, 220, ${alpha * 0.7})`);
+          photonBack.addColorStop(1, `rgba(255, 200, 150, ${alpha * 0.2})`);
+          ctx.strokeStyle = photonBack;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          ctx.restore();
+
+          // Draw event horizon (the black sphere)
+          const eventHorizonSize = r * 0.35;
+          const horizonGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, eventHorizonSize);
+          horizonGradient.addColorStop(0, `rgba(0, 0, 0, ${alpha})`);
+          horizonGradient.addColorStop(0.7, `rgba(0, 0, 0, ${alpha})`);
+          horizonGradient.addColorStop(0.85, `rgba(10, 5, 10, ${alpha * 0.9})`);
+          horizonGradient.addColorStop(1, `rgba(30, 10, 20, ${alpha * 0.5})`);
+          ctx.fillStyle = horizonGradient;
+          ctx.beginPath();
+          ctx.arc(0, 0, eventHorizonSize, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Draw front part of accretion disk (in front of black hole)
+          ctx.save();
+          ctx.rotate(vortex.rotation * 0.1);
+
+          // Front disk (bottom arc)
+          ctx.beginPath();
+          ctx.ellipse(0, r * 0.1, diskWidth, diskHeight, 0, 0, Math.PI, false);
+          const frontDiskGradient = ctx.createLinearGradient(-diskWidth, 0, diskWidth, 0);
+          // Doppler effect - left side brighter (approaching), right side dimmer (receding)
+          frontDiskGradient.addColorStop(0, `rgba(255, 200, 100, ${alpha * 0.9})`);
+          frontDiskGradient.addColorStop(0.2, `rgba(255, 180, 80, ${alpha * 0.95})`);
+          frontDiskGradient.addColorStop(0.4, `rgba(255, 220, 150, ${alpha})`);
+          frontDiskGradient.addColorStop(0.6, `rgba(255, 150, 60, ${alpha * 0.8})`);
+          frontDiskGradient.addColorStop(0.8, `rgba(200, 80, 30, ${alpha * 0.5})`);
+          frontDiskGradient.addColorStop(1, `rgba(150, 50, 20, ${alpha * 0.3})`);
+          ctx.strokeStyle = frontDiskGradient;
+          ctx.lineWidth = r * 0.3;
+          ctx.stroke();
+
+          // Inner hot ring (closer to event horizon)
+          ctx.beginPath();
+          ctx.ellipse(0, r * 0.05, r * 0.55, r * 0.55 * diskTilt, 0, 0.1, Math.PI - 0.1, false);
+          const innerRingGradient = ctx.createLinearGradient(-r * 0.6, 0, r * 0.6, 0);
+          innerRingGradient.addColorStop(0, `rgba(255, 255, 200, ${alpha * 0.8})`);
+          innerRingGradient.addColorStop(0.3, `rgba(255, 240, 180, ${alpha})`);
+          innerRingGradient.addColorStop(0.5, `rgba(255, 255, 230, ${alpha})`);
+          innerRingGradient.addColorStop(0.7, `rgba(255, 220, 150, ${alpha * 0.7})`);
+          innerRingGradient.addColorStop(1, `rgba(255, 180, 100, ${alpha * 0.4})`);
+          ctx.strokeStyle = innerRingGradient;
+          ctx.lineWidth = r * 0.08;
+          ctx.stroke();
+
+          // Photon ring - front (very bright, thin)
+          ctx.beginPath();
+          ctx.ellipse(0, r * 0.02, r * 0.42, r * 0.42 * diskTilt, 0, 0.05, Math.PI - 0.05, false);
+          const photonFront = ctx.createLinearGradient(-r * 0.5, 0, r * 0.5, 0);
+          photonFront.addColorStop(0, `rgba(255, 250, 230, ${alpha})`);
+          photonFront.addColorStop(0.5, `rgba(255, 255, 255, ${alpha})`);
+          photonFront.addColorStop(1, `rgba(255, 230, 200, ${alpha * 0.6})`);
+          ctx.strokeStyle = photonFront;
+          ctx.lineWidth = 2.5;
+          ctx.stroke();
+
+          ctx.restore();
+
+          // Draw swirling matter particles being pulled in
+          ctx.save();
           ctx.rotate(vortex.rotation);
+          const numParticles = 12;
+          for (let i = 0; i < numParticles; i++) {
+            const angle = (i / numParticles) * Math.PI * 2 + vortex.rotation * 2;
+            const spiralProgress = ((vortex.rotation * 3 + i * 0.5) % 3) / 3;
+            const particleR = r * 0.4 + (1 - spiralProgress) * r * 1.2;
+            const particleX = Math.cos(angle + spiralProgress * Math.PI) * particleR;
+            const particleY = Math.sin(angle + spiralProgress * Math.PI) * particleR * diskTilt;
+            const particleSize = (1 - spiralProgress) * 3 + 1;
+            const particleAlpha = (1 - spiralProgress) * alpha * 0.8;
 
-          // Draw swirling arms
-          const numArms = 4;
-          for (let arm = 0; arm < numArms; arm++) {
-            const armAngle = (arm / numArms) * Math.PI * 2;
-            ctx.save();
-            ctx.rotate(armAngle);
-
-            // Create spiral gradient
-            const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, vortex.radius);
-            gradient.addColorStop(0, `rgba(180, 50, 50, ${vortex.alpha * 0.8})`);
-            gradient.addColorStop(0.3, `rgba(120, 30, 60, ${vortex.alpha * 0.5})`);
-            gradient.addColorStop(0.7, `rgba(60, 20, 40, ${vortex.alpha * 0.2})`);
-            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-
-            // Draw spiral arm
-            ctx.beginPath();
-            ctx.moveTo(0, 0);
-            for (let i = 0; i <= 30; i++) {
-              const t = i / 30;
-              const spiralAngle = t * Math.PI * 1.5;
-              const r = t * vortex.radius;
-              const x = Math.cos(spiralAngle) * r;
-              const y = Math.sin(spiralAngle) * r;
-              ctx.lineTo(x, y);
+            if (particleAlpha > 0.05) {
+              const particleGlow = ctx.createRadialGradient(particleX, particleY, 0, particleX, particleY, particleSize * 3);
+              particleGlow.addColorStop(0, `rgba(255, 200, 150, ${particleAlpha})`);
+              particleGlow.addColorStop(0.5, `rgba(255, 150, 100, ${particleAlpha * 0.5})`);
+              particleGlow.addColorStop(1, 'rgba(255, 100, 50, 0)');
+              ctx.fillStyle = particleGlow;
+              ctx.beginPath();
+              ctx.arc(particleX, particleY, particleSize * 3, 0, Math.PI * 2);
+              ctx.fill();
             }
-            ctx.strokeStyle = gradient;
-            ctx.lineWidth = 3 + (1 - vortex.radius / vortex.maxRadius) * 5;
-            ctx.lineCap = 'round';
-            ctx.stroke();
-
-            ctx.restore();
           }
+          ctx.restore();
 
-          // Draw center glow
-          const centerGlow = ctx.createRadialGradient(0, 0, 0, 0, 0, vortex.radius * 0.4);
-          centerGlow.addColorStop(0, `rgba(255, 100, 100, ${vortex.alpha * 0.9})`);
-          centerGlow.addColorStop(0.5, `rgba(150, 40, 60, ${vortex.alpha * 0.4})`);
-          centerGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
-          ctx.fillStyle = centerGlow;
-          ctx.beginPath();
-          ctx.arc(0, 0, vortex.radius * 0.4, 0, Math.PI * 2);
-          ctx.fill();
-
-          // Draw event horizon (dark center)
-          const eventHorizon = ctx.createRadialGradient(0, 0, 0, 0, 0, vortex.radius * 0.15);
-          eventHorizon.addColorStop(0, `rgba(0, 0, 0, ${vortex.alpha})`);
-          eventHorizon.addColorStop(1, 'rgba(0, 0, 0, 0)');
-          ctx.fillStyle = eventHorizon;
-          ctx.beginPath();
-          ctx.arc(0, 0, vortex.radius * 0.15, 0, Math.PI * 2);
-          ctx.fill();
+          // Subtle outer distortion rings
+          for (let ring = 0; ring < 3; ring++) {
+            const ringRadius = r * (1.3 + ring * 0.25);
+            const ringAlpha = alpha * (0.15 - ring * 0.04);
+            ctx.strokeStyle = `rgba(100, 50, 70, ${ringAlpha})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(0, 0, ringRadius, 0, Math.PI * 2);
+            ctx.stroke();
+          }
 
           ctx.restore();
         }
