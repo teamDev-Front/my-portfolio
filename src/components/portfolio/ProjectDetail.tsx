@@ -57,9 +57,12 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
           <div className="aspect-video bg-card rounded-2xl border border-card-border mb-16 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-accent/20 to-transparent" />
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-6xl font-bold text-muted/30">
-                {translation.title.substring(0, 2).toUpperCase()}
-              </span>
+              <img
+                src={project.image}
+                alt={project.translations[locale].title}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+
             </div>
           </div>
         </FadeIn>

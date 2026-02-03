@@ -93,10 +93,10 @@
     "pageSubtitle": "Learn about my journey and values",
     "bio": {
       "title": "My Story",
-      "p1": "My journey in technology began in technical support and hospital administration, where I developed a strong foundation in problem-solving and customer service.",
-      "p2": "I evolved into front-end development, where I discovered my passion for creating intuitive interfaces and memorable digital experiences. I worked as a Product Owner at Ericsson and led development at Deploy Experience.",
-      "p3": "Currently, I work remotely at Quantflow while running Habaeb Creative Solutions, my freelance studio focused on landing pages, websites, custom systems and SaaS solutions.",
-      "p4": "I believe technology should solve real business problems. My differentiator is combining deep technical knowledge with product vision and user-centered design."
+      "p1": "My journey in technology began in technical support and hospital administration, which gave me a solid foundation in empathy, user service and problem-solving.",
+      "p2": "When I moved into software development, I found my true passion: transforming complex ideas into simple, memorable digital experiences. I started as an intern at Ericsson, where I worked with .NET and process automation. Shortly afterward, I founded Habaeb Creative Solutions, my freelance studio focused on landing pages, websites and custom systems.",
+      "p3": "In 2024, I took the lead of the development team at Deploy Experience, coordinating front-end and full-stack projects for diverse clients. Today, I work as a front-end developer at Quantflow (Heerbrugg, St Gallen), combining React, Next.js and TypeScript with robust Django back-ends, and integrating language models (LLMs) to add intelligence to applications.",
+      "p4": "What sets me apart is the ability to combine deep technical knowledge with a user‑oriented product vision. I believe technology should solve real business problems and deliver intuitive experiences. Outside of work, I love exploring design, studying new languages and collaborating with the community. I'm always open to conversations about projects, partnerships and ways to apply technology strategically."
     },
     "skills": {
       "title": "Technical Skills",
@@ -118,7 +118,7 @@
       "improvement": "Continuous Improvement",
       "improvementDesc": "Always seeking to learn and evolve as a professional",
       "quality": "Quality",
-      "qualityDesc": "Commitment to clean code and scalable solutions"
+      "qualityDesc": "Commitment to clean code, security and scalable solutions"
     }
   },
   "servicesPage": {
@@ -241,7 +241,7 @@
     },
     "info": {
       "title": "Contact Information",
-      "email": "contact@habaeb.dev",
+      "email": "contact@habaeb.com",
       "location": "São Paulo, Brazil",
       "availability": "Available for remote projects globally"
     },

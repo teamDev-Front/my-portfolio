@@ -97,7 +97,7 @@ export function PortfolioHero() {
           </div>
 
           {/* Large title with mask effect */}
-          <h1 className="text-5xl md:text-7xl lg:text-[8rem] font-bold leading-[1.1] mb-8">
+          <h1 className="text-5xl md:text-7xl lg:text-[8rem] font-bold leading-[1.35] mb-8">
             <span className="block overflow-hidden pb-2">
               <span ref={line1Ref} className="block text-foreground">
                 {t('title').split(' ')[0] || 'My'}
@@ -121,7 +121,7 @@ export function PortfolioHero() {
       <div className="absolute bottom-0 left-0 right-0 py-8 border-t border-card-border/50 overflow-hidden">
         <div ref={marqueeRef} className="flex gap-16 whitespace-nowrap" style={{ width: 'fit-content' }}>
           {[...marqueeWords, ...marqueeWords, ...marqueeWords, ...marqueeWords].map((word, i) => (
-            <span key={i} className="text-6xl md:text-8xl font-bold text-accent/5 flex items-center gap-16">
+            <span key={i} className="text-6xl md:text-8xl font-bold text-accent/10 flex items-center gap-16">
               {word}
               <span className="w-4 h-4 bg-accent/10 rounded-full" />
             </span>

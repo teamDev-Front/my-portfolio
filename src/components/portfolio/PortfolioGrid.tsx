@@ -98,16 +98,16 @@ export function PortfolioGrid() {
           ease: 'power4.out',
           delay: index * 0.1,
         })
-        .to(content, {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          ease: 'power3.out',
-        }, '-=0.5')
-        .to(overlay, {
-          opacity: 1,
-          duration: 0.4,
-        }, '-=0.4');
+          .to(content, {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            ease: 'power3.out',
+          }, '-=0.5')
+          .to(overlay, {
+            opacity: 1,
+            duration: 0.4,
+          }, '-=0.4');
       });
     }, sectionRef);
 
@@ -137,12 +137,12 @@ export function PortfolioGrid() {
       <div
         ref={cursorRef}
         className={cn(
-          'fixed top-0 left-0 w-32 h-32 pointer-events-none z-50 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-300',
+          'fixed top-0 left-0 w-14 h-14 pointer-events-none z-50 -translate-x-1/2 -translate-y-1/2 transition-opacity duration-300',
           hoveredProject ? 'opacity-100' : 'opacity-0'
         )}
       >
-        <div className="w-full h-full rounded-full bg-accent/90 flex items-center justify-center">
-          <span className="text-white text-sm font-medium">VIEW</span>
+        <div className="w-full h-full rounded-full bg-accent/80 flex items-center justify-center">
+          <span className="text-white text-xs font-medium">VIEW</span>
         </div>
       </div>
 
@@ -182,6 +182,11 @@ export function PortfolioGrid() {
               <div className="project-image relative aspect-[4/3] bg-hcs-gray rounded-2xl overflow-hidden">
                 {/* Placeholder gradient */}
                 <div className="absolute inset-0 bg-gradient-to-br from-accent/30 via-accent/10 to-transparent" />
+                <img
+                  src={project.image}
+                  alt={project.translations[locale].title}
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
 
                 {/* Project initials */}
                 <div className="absolute inset-0 flex items-center justify-center">

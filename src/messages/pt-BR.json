@@ -93,10 +93,10 @@
     "pageSubtitle": "Conheça minha trajetória e valores",
     "bio": {
       "title": "Minha História",
-      "p1": "Minha jornada na tecnologia começou em suporte técnico e administração hospitalar, onde desenvolvi uma base sólida em resolução de problemas e atendimento ao cliente.",
-      "p2": "Evoluí para o desenvolvimento front-end, onde descobri minha paixão por criar interfaces intuitivas e experiências digitais memoráveis. Trabalhei como Product Owner na Ericsson e liderei o desenvolvimento na Deploy Experience.",
-      "p3": "Atualmente, trabalho remotamente na Quantflow enquanto conduzo a Habaeb Creative Solutions, meu estúdio freelance focado em landing pages, sites, sistemas customizados e soluções SaaS.",
-      "p4": "Acredito que tecnologia deve resolver problemas reais de negócios. Meu diferencial é combinar conhecimento técnico profundo com visão de produto e design centrado no usuário."
+      "p1": "Minha jornada na tecnologia começou em ambientes de suporte técnico e administração hospitalar, o que me proporcionou uma base sólida em empatia, atendimento ao usuário e resolução de problemas.",
+      "p2": "Ao migrar para o desenvolvimento de software, encontrei minha verdadeira paixão: transformar ideias complexas em experiências digitais simples e memoráveis. Comecei como estagiário na Ericsson, onde trabalhei com .NET e automação de processos. Pouco depois, fundei a Habaeb Creative Solutions, meu estúdio freelance focado em landing pages, sites e sistemas sob medida.",
+      "p3": "Em 2024, assumi a liderança do time de desenvolvimento da Deploy Experience, onde coordenei projetos front‑end e full‑stack para clientes diversos. Hoje, atuo como front‑end developer na Quantflow (Heerbrugg, St Gallen), combinando React, Next.js e TypeScript a back‑ends robustos em Django, além de integrar modelos de linguagem (LLMs) para agregar inteligência às aplicações.",
+      "p4": "O que me diferencia é a capacidade de unir profundo conhecimento técnico a uma visão de produto orientada ao usuário. Acredito que a tecnologia deve resolver problemas reais de negócios e proporcionar experiências intuitivas. Fora do trabalho, adoro explorar design, estudar novas linguagens e colaborar com a comunidade. Estou sempre aberto a conversas sobre projetos, parcerias e formas de aplicar tecnologia de forma estratégica."
     },
     "skills": {
       "title": "Habilidades Técnicas",
@@ -118,7 +118,7 @@
       "improvement": "Melhoria Contínua",
       "improvementDesc": "Sempre buscando aprender e evoluir como profissional",
       "quality": "Qualidade",
-      "qualityDesc": "Compromisso com código limpo e soluções escaláveis"
+      "qualityDesc": "Compromisso com código limpo, segurança e soluções escaláveis"
     }
   },
   "servicesPage": {
@@ -241,7 +241,7 @@
     },
     "info": {
       "title": "Informações de Contato",
-      "email": "contato@habaeb.dev",
+      "email": "contato@habaeb.com",
       "location": "São Paulo, Brasil",
       "availability": "Disponível para projetos remotos globalmente"
     },

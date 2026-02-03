@@ -33,9 +33,9 @@ export const projects: Project[] = [
     id: '1',
     slug: 'sara-bula-digital',
     category: 'healthPharma',
-    image: '/images/projects/sara.jpg',
-    technologies: ['React', 'Next.js', 'TypeScript', 'Accessibility APIs', 'Libras Integration'],
-    liveUrl: 'https://sara.grupocimed.com.br',
+    image: '/images/projects/sara.png',
+    technologies: ['Angular', 'TypeScript', 'MongoDB'],
+    liveUrl: 'https://www.sara.com.br/bula-digital',
     featured: true,
     translations: {
       en: {
@@ -84,7 +84,7 @@ export const projects: Project[] = [
     id: '2',
     slug: 'bymen-ecommerce',
     category: 'retailEcommerce',
-    image: '/images/projects/bymen.jpg',
+    image: '/images/projects/hcs-bymen-ecommerce-criacao-de-ecommerce-loja-virtual.png',
     technologies: ['Shopify', 'Liquid', 'JavaScript', 'CSS3', 'Payment Integration'],
     liveUrl: 'https://bymen.com.br',
     featured: true,
@@ -135,9 +135,9 @@ export const projects: Project[] = [
     id: '3',
     slug: 'x-fitness-shop',
     category: 'retailEcommerce',
-    image: '/images/projects/xfitness.jpg',
+    image: '/images/projects/xtriplefitness-shop-shopify-ecommerce-criacao-de-ecommerce-loja-virtual.png',
     technologies: ['Shopify', 'Multi-language', 'JavaScript', 'Logistics Integration'],
-    liveUrl: 'https://xfitness.ch',
+    liveUrl: 'https://xfitnessshop.ch',
     featured: true,
     translations: {
       en: {
@@ -184,111 +184,92 @@ export const projects: Project[] = [
   },
   {
     id: '4',
-    slug: 'staydepot',
-    category: 'aiData',
-    image: '/images/projects/staydepot.jpg',
-    technologies: ['Next.js', 'TypeScript', 'Python', 'AI/ML', 'Data Analytics', 'Supabase'],
-    liveUrl: 'https://shortstaydepot.com',
-    featured: true,
+    slug: 'vidget',
+    category: 'retailEcommerce',
+    image: '/images/projects/vidget-sites-vendas-habaeb-creative-solutions-criacao-de-sites-consultoria-saas-webapp.png',
+    technologies: ['React', 'Video API', 'E-commerce Integration', 'Interactive UI'],
+    liveUrl: 'https://www.vidget.com.br',
+    featured: false,
     translations: {
       en: {
-        title: 'StayDepot',
-        shortDescription: 'AI-powered short-stay listing performance analytics',
-        fullDescription: 'StayDepot is an AI-powered platform that compares a host\'s short-stay listing performance with regional benchmarks and provides actionable recommendations to increase bookings, reviews and profits.',
-        problem: 'Short-stay hosts struggle to optimize their listings without data-driven insights and regional benchmarking.',
-        solution: 'Developed an AI analytics platform that processes listing data, compares against regional benchmarks, and generates personalized improvement recommendations.',
+        title: 'Vidget',
+        shortDescription: 'Instagram Stories/Reels experience for e-commerce',
+        fullDescription: 'Vidget brings the Instagram Stories/Reels experience to e-commerce, turning videos into interactive shoppable content that engages customers and drives conversions.',
+        problem: 'E-commerce sites struggle to engage users with static product images. Video content is underutilized in the shopping experience.',
+        solution: 'Created an embeddable widget that transforms product videos into interactive, shoppable content similar to social media stories.',
         features: [
-          'AI-powered performance analysis',
-          'Regional benchmark comparisons',
-          'Actionable recommendations engine',
-          'Booking optimization insights',
-          'Review analysis and suggestions',
-          'Profit maximization strategies'
-        ],
-        results: [
-          '+20% average booking increase',
-          'Improved host satisfaction',
-          'Data-driven decision making'
+          'Stories/Reels style interface',
+          'Shoppable video content',
+          'Easy e-commerce integration',
+          'Analytics and engagement tracking',
+          'Mobile-optimized experience',
+          'Customizable design'
         ]
       },
       'pt-BR': {
-        title: 'StayDepot',
-        shortDescription: 'Analytics de performance de hospedagens curtas com IA',
-        fullDescription: 'StayDepot é uma plataforma com IA que compara a performance de anúncios de hospedagem curta com benchmarks regionais e fornece recomendações acionáveis para aumentar reservas, avaliações e lucros.',
-        problem: 'Anfitriões de estadias curtas têm dificuldade em otimizar seus anúncios sem insights baseados em dados e benchmarking regional.',
-        solution: 'Desenvolvemos uma plataforma de analytics com IA que processa dados de anúncios, compara com benchmarks regionais e gera recomendações personalizadas de melhoria.',
+        title: 'Vidget',
+        shortDescription: 'Experiência Instagram Stories/Reels para e-commerce',
+        fullDescription: 'Vidget traz a experiência do Instagram Stories/Reels para e-commerce, transformando vídeos em conteúdo interativo de compras que engaja clientes e impulsiona conversões.',
+        problem: 'Sites de e-commerce têm dificuldade em engajar usuários com imagens estáticas de produtos. Conteúdo de vídeo é subutilizado na experiência de compra.',
+        solution: 'Criamos um widget embarcável que transforma vídeos de produtos em conteúdo interativo de compras similar aos stories de redes sociais.',
         features: [
-          'Análise de performance com IA',
-          'Comparações com benchmarks regionais',
-          'Motor de recomendações acionáveis',
-          'Insights de otimização de reservas',
-          'Análise de avaliações e sugestões',
-          'Estratégias de maximização de lucro'
-        ],
-        results: [
-          '+20% de aumento médio em reservas',
-          'Melhoria na satisfação dos anfitriões',
-          'Tomada de decisão baseada em dados'
+          'Interface estilo Stories/Reels',
+          'Conteúdo de vídeo comprável',
+          'Fácil integração com e-commerce',
+          'Analytics e rastreamento de engajamento',
+          'Experiência otimizada para mobile',
+          'Design personalizável'
         ]
       }
     }
   },
   {
     id: '5',
-    slug: 'aion-solution',
-    category: 'aiData',
-    image: '/images/projects/aion.jpg',
-    technologies: ['React', 'Node.js', 'AI/LLM Integration', 'Marketing Automation', 'Analytics'],
-    liveUrl: 'https://aionsolution.com.br',
-    featured: true,
+    slug: 'saf-swiss-armsport',
+    category: 'corporate',
+    image: '/images/projects/saf-website-zurich-armwrestling-federation-habaeb-creative-solutions.png',
+    technologies: ['React', 'Next.js', 'Event Management', 'Countdown Timer'],
+    liveUrl: 'https://swissarmwrestling.ch/',
+    featured: false,
     translations: {
       en: {
-        title: 'AION Solution',
-        shortDescription: 'AI-driven sales and marketing tools for SMBs',
-        fullDescription: 'AION Solution offers AI-driven sales and marketing tools for small and medium businesses. Their platform includes intelligent sales funnels, chatbots, marketing automation and business intelligence.',
-        problem: 'Small and medium businesses lack access to enterprise-level AI-powered marketing and sales tools.',
-        solution: 'Created an accessible platform with AI tools that automate marketing, optimize sales funnels, and provide actionable business intelligence.',
+        title: 'Swiss Armsport Federation (SAF)',
+        shortDescription: 'Federation website promoting arm wrestling in Switzerland',
+        fullDescription: 'The Swiss Armsport Federation website features event countdowns and mission statements promoting fair play and growth of the arm wrestling sport in Switzerland.',
+        problem: 'The federation needed a professional online presence to promote events, attract new members, and communicate their mission.',
+        solution: 'Built a dynamic website with event management features, countdown timers for upcoming competitions, and content showcasing the sport\'s values.',
         features: [
-          'Intelligent sales funnels',
-          'AI-powered chatbots',
-          'Marketing automation workflows',
-          'Business intelligence dashboards',
-          'Lead scoring and qualification',
-          'Performance analytics'
-        ],
-        results: [
-          '+15% profit improvement',
-          '+30% revenue increase',
-          'Automated lead qualification'
+          'Event countdown timers',
+          'Mission and values showcase',
+          'Event calendar and management',
+          'Member information portal',
+          'News and updates section',
+          'Competition results display'
         ]
       },
       'pt-BR': {
-        title: 'AION Solution',
-        shortDescription: 'Ferramentas de vendas e marketing com IA para PMEs',
-        fullDescription: 'AION Solution oferece ferramentas de vendas e marketing com IA para pequenas e médias empresas. A plataforma inclui funis de vendas inteligentes, chatbots, automação de marketing e business intelligence.',
-        problem: 'Pequenas e médias empresas não têm acesso a ferramentas de marketing e vendas com IA de nível empresarial.',
-        solution: 'Criamos uma plataforma acessível com ferramentas de IA que automatizam marketing, otimizam funis de vendas e fornecem business intelligence acionável.',
+        title: 'Federação Suíça de Armsport (SAF)',
+        shortDescription: 'Site da federação promovendo luta de braço na Suíça',
+        fullDescription: 'O site da Federação Suíça de Armsport apresenta contagens regressivas de eventos e declarações de missão promovendo fair play e crescimento do esporte de luta de braço na Suíça.',
+        problem: 'A federação precisava de uma presença online profissional para promover eventos, atrair novos membros e comunicar sua missão.',
+        solution: 'Construímos um site dinâmico com recursos de gestão de eventos, contagens regressivas para competições e conteúdo destacando os valores do esporte.',
         features: [
-          'Funis de vendas inteligentes',
-          'Chatbots com IA',
-          'Fluxos de automação de marketing',
-          'Dashboards de business intelligence',
-          'Pontuação e qualificação de leads',
-          'Analytics de performance'
-        ],
-        results: [
-          '+15% de melhoria no lucro',
-          '+30% de aumento na receita',
-          'Qualificação automatizada de leads'
+          'Contagens regressivas de eventos',
+          'Showcase de missão e valores',
+          'Calendário e gestão de eventos',
+          'Portal de informações para membros',
+          'Seção de notícias e atualizações',
+          'Exibição de resultados de competições'
         ]
       }
     }
   },
+
   {
     id: '6',
     slug: 'coquim',
     category: 'sustainability',
-    image: '/images/projects/coquim.jpg',
+    image: '/images/projects/coquim-site-institucional-website-hcs-habaeb-creative-solutions-criar-site-saas-criamos-seu-site.png',
     technologies: ['WordPress', 'WooCommerce', 'PHP', 'SEO Optimization'],
     liveUrl: 'https://coquim.com.br',
     featured: true,
@@ -339,7 +320,7 @@ export const projects: Project[] = [
     id: '7',
     slug: 'smart-controller',
     category: 'corporate',
-    image: '/images/projects/smartcontroller.jpg',
+    image: '/images/projects/smart-cont-hcs-criacao-de-sites-institucionais-ecommerce-habaeb-creative-solutions-ia-contabilidade-juridico.png',
     technologies: ['React', 'Next.js', 'TypeScript', 'Contact Forms', 'SEO'],
     liveUrl: 'https://smartcontroller.com.br',
     featured: false,
@@ -388,80 +369,102 @@ export const projects: Project[] = [
   },
   {
     id: '8',
-    slug: 'saf-swiss-armsport',
-    category: 'corporate',
-    image: '/images/projects/saf.jpg',
-    technologies: ['React', 'Next.js', 'Event Management', 'Countdown Timer'],
-    featured: false,
+    slug: 'aion-solution',
+    category: 'aiData',
+    image: '/images/projects/aion-solution-consultoria-habaeb-hcs-creative-solutions.png',
+    technologies: ['React', 'Node.js', 'AI/LLM Integration', 'Marketing Automation', 'Analytics'],
+    liveUrl: 'https://aionsolution.com.br',
+    featured: true,
     translations: {
       en: {
-        title: 'Swiss Armsport Federation (SAF)',
-        shortDescription: 'Federation website promoting arm wrestling in Switzerland',
-        fullDescription: 'The Swiss Armsport Federation website features event countdowns and mission statements promoting fair play and growth of the arm wrestling sport in Switzerland.',
-        problem: 'The federation needed a professional online presence to promote events, attract new members, and communicate their mission.',
-        solution: 'Built a dynamic website with event management features, countdown timers for upcoming competitions, and content showcasing the sport\'s values.',
+        title: 'AION Solution',
+        shortDescription: 'AI-driven sales and marketing tools for SMBs',
+        fullDescription: 'AION Solution offers AI-driven sales and marketing tools for small and medium businesses. Their platform includes intelligent sales funnels, chatbots, marketing automation and business intelligence.',
+        problem: 'Small and medium businesses lack access to enterprise-level AI-powered marketing and sales tools.',
+        solution: 'Created an accessible platform with AI tools that automate marketing, optimize sales funnels, and provide actionable business intelligence.',
         features: [
-          'Event countdown timers',
-          'Mission and values showcase',
-          'Event calendar and management',
-          'Member information portal',
-          'News and updates section',
-          'Competition results display'
+          'Intelligent sales funnels',
+          'AI-powered chatbots',
+          'Marketing automation workflows',
+          'Business intelligence dashboards',
+          'Lead scoring and qualification',
+          'Performance analytics'
+        ],
+        results: [
+          '+15% profit improvement',
+          '+30% revenue increase',
+          'Automated lead qualification'
         ]
       },
       'pt-BR': {
-        title: 'Federação Suíça de Armsport (SAF)',
-        shortDescription: 'Site da federação promovendo luta de braço na Suíça',
-        fullDescription: 'O site da Federação Suíça de Armsport apresenta contagens regressivas de eventos e declarações de missão promovendo fair play e crescimento do esporte de luta de braço na Suíça.',
-        problem: 'A federação precisava de uma presença online profissional para promover eventos, atrair novos membros e comunicar sua missão.',
-        solution: 'Construímos um site dinâmico com recursos de gestão de eventos, contagens regressivas para competições e conteúdo destacando os valores do esporte.',
+        title: 'AION Solution',
+        shortDescription: 'Ferramentas de vendas e marketing com IA para PMEs',
+        fullDescription: 'AION Solution oferece ferramentas de vendas e marketing com IA para pequenas e médias empresas. A plataforma inclui funis de vendas inteligentes, chatbots, automação de marketing e business intelligence.',
+        problem: 'Pequenas e médias empresas não têm acesso a ferramentas de marketing e vendas com IA de nível empresarial.',
+        solution: 'Criamos uma plataforma acessível com ferramentas de IA que automatizam marketing, otimizam funis de vendas e fornecem business intelligence acionável.',
         features: [
-          'Contagens regressivas de eventos',
-          'Showcase de missão e valores',
-          'Calendário e gestão de eventos',
-          'Portal de informações para membros',
-          'Seção de notícias e atualizações',
-          'Exibição de resultados de competições'
+          'Funis de vendas inteligentes',
+          'Chatbots com IA',
+          'Fluxos de automação de marketing',
+          'Dashboards de business intelligence',
+          'Pontuação e qualificação de leads',
+          'Analytics de performance'
+        ],
+        results: [
+          '+15% de melhoria no lucro',
+          '+30% de aumento na receita',
+          'Qualificação automatizada de leads'
         ]
       }
     }
   },
   {
     id: '9',
-    slug: 'vidget',
-    category: 'retailEcommerce',
-    image: '/images/projects/vidget.jpg',
-    technologies: ['React', 'Video API', 'E-commerce Integration', 'Interactive UI'],
-    featured: false,
+    slug: 'staydepot',
+    category: 'aiData',
+    image: '/images/projects/staydepot.jpg',
+    technologies: ['Next.js', 'TypeScript', 'Python', 'AI/ML', 'Data Analytics', 'Supabase'],
+    liveUrl: 'https://shortstaydepot.com',
+    featured: true,
     translations: {
       en: {
-        title: 'Vidget',
-        shortDescription: 'Instagram Stories/Reels experience for e-commerce',
-        fullDescription: 'Vidget brings the Instagram Stories/Reels experience to e-commerce, turning videos into interactive shoppable content that engages customers and drives conversions.',
-        problem: 'E-commerce sites struggle to engage users with static product images. Video content is underutilized in the shopping experience.',
-        solution: 'Created an embeddable widget that transforms product videos into interactive, shoppable content similar to social media stories.',
+        title: 'StayDepot',
+        shortDescription: 'AI-powered short-stay listing performance analytics',
+        fullDescription: 'StayDepot is an AI-powered platform that compares a host\'s short-stay listing performance with regional benchmarks and provides actionable recommendations to increase bookings, reviews and profits.',
+        problem: 'Short-stay hosts struggle to optimize their listings without data-driven insights and regional benchmarking.',
+        solution: 'Developed an AI analytics platform that processes listing data, compares against regional benchmarks, and generates personalized improvement recommendations.',
         features: [
-          'Stories/Reels style interface',
-          'Shoppable video content',
-          'Easy e-commerce integration',
-          'Analytics and engagement tracking',
-          'Mobile-optimized experience',
-          'Customizable design'
+          'AI-powered performance analysis',
+          'Regional benchmark comparisons',
+          'Actionable recommendations engine',
+          'Booking optimization insights',
+          'Review analysis and suggestions',
+          'Profit maximization strategies'
+        ],
+        results: [
+          '+20% average booking increase',
+          'Improved host satisfaction',
+          'Data-driven decision making'
         ]
       },
       'pt-BR': {
-        title: 'Vidget',
-        shortDescription: 'Experiência Instagram Stories/Reels para e-commerce',
-        fullDescription: 'Vidget traz a experiência do Instagram Stories/Reels para e-commerce, transformando vídeos em conteúdo interativo de compras que engaja clientes e impulsiona conversões.',
-        problem: 'Sites de e-commerce têm dificuldade em engajar usuários com imagens estáticas de produtos. Conteúdo de vídeo é subutilizado na experiência de compra.',
-        solution: 'Criamos um widget embarcável que transforma vídeos de produtos em conteúdo interativo de compras similar aos stories de redes sociais.',
+        title: 'StayDepot',
+        shortDescription: 'Analytics de performance de hospedagens curtas com IA',
+        fullDescription: 'StayDepot é uma plataforma com IA que compara a performance de anúncios de hospedagem curta com benchmarks regionais e fornece recomendações acionáveis para aumentar reservas, avaliações e lucros.',
+        problem: 'Anfitriões de estadias curtas têm dificuldade em otimizar seus anúncios sem insights baseados em dados e benchmarking regional.',
+        solution: 'Desenvolvemos uma plataforma de analytics com IA que processa dados de anúncios, compara com benchmarks regionais e gera recomendações personalizadas de melhoria.',
         features: [
-          'Interface estilo Stories/Reels',
-          'Conteúdo de vídeo comprável',
-          'Fácil integração com e-commerce',
-          'Analytics e rastreamento de engajamento',
-          'Experiência otimizada para mobile',
-          'Design personalizável'
+          'Análise de performance com IA',
+          'Comparações com benchmarks regionais',
+          'Motor de recomendações acionáveis',
+          'Insights de otimização de reservas',
+          'Análise de avaliações e sugestões',
+          'Estratégias de maximização de lucro'
+        ],
+        results: [
+          '+20% de aumento médio em reservas',
+          'Melhoria na satisfação dos anfitriões',
+          'Tomada de decisão baseada em dados'
         ]
       }
     }
@@ -470,8 +473,9 @@ export const projects: Project[] = [
     id: '10',
     slug: 'mydose-app',
     category: 'healthPharma',
-    image: '/images/projects/mydose.jpg',
+    image: '/images/projects/my-dose-app-aplicativo-bem-estar-gamificacao-habitos-saudaveis-fit-habaeb-criacao-de-saas-app-site.png',
     technologies: ['React Native', 'Gamification', 'Health APIs', 'Social Features'],
+    liveUrl: 'https://mydoseapp.com',
     featured: false,
     translations: {
       en: {

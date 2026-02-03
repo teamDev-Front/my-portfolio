@@ -32,7 +32,7 @@ export function Footer() {
     { href: 'https://linkedin.com/in/luizhabaeb', icon: Linkedin, label: 'LinkedIn' },
     { href: 'https://github.com/luizhabaeb', icon: Github, label: 'GitHub' },
     { href: 'https://instagram.com/luizhabaeb', icon: Instagram, label: 'Instagram' },
-    { href: 'mailto:contact@habaeb.dev', icon: Mail, label: 'Email' },
+    { href: 'mailto:contato@habaeb.com', icon: Mail, label: 'Email' },
   ];
 
   return (

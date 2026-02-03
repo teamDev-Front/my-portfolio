@@ -198,9 +198,12 @@ export function PortfolioPreview() {
               <div className="relative h-1/2 bg-hcs-gray overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-accent/20 to-transparent" />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-6xl font-bold text-muted/20 group-hover:text-accent/30 transition-colors duration-500">
-                    {project.translations[locale].title.substring(0, 2).toUpperCase()}
-                  </span>
+                  <img
+                    src={project.image}
+                    alt={project.translations[locale].title}
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+
                 </div>
 
                 {/* Hover overlay */}
