@@ -55,13 +55,14 @@ export function ServicesGrid() {
         const number = cardEl.querySelector('.card-number');
         const line = cardEl.querySelector('.card-line');
 
-        // Set initial states
-        gsap.set(inner, { rotateY: -15, scale: 0.9, opacity: 0.5 });
-        gsap.set(icon, { scale: 0, rotation: -180 });
-        gsap.set([title, desc], { opacity: 0, y: 30 });
-        gsap.set(features, { opacity: 0, x: -20 });
-        gsap.set(number, { opacity: 0, scale: 0.5 });
-        gsap.set(line, { scaleX: 0 });
+        // Set initial states (with null checks)
+        if (inner) gsap.set(inner, { rotateY: -15, scale: 0.9, opacity: 0.5 });
+        if (icon) gsap.set(icon, { scale: 0, rotation: -180 });
+        if (title) gsap.set(title, { opacity: 0, y: 30 });
+        if (desc) gsap.set(desc, { opacity: 0, y: 30 });
+        if (features.length) gsap.set(features, { opacity: 0, x: -20 });
+        if (number) gsap.set(number, { opacity: 0, scale: 0.5 });
+        if (line) gsap.set(line, { scaleX: 0 });
 
         // Create timeline for each card
         const cardTL = gsap.timeline({

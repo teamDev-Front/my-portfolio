@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ArrowUpRight, ExternalLink } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -19,6 +19,7 @@ const categories: Category[] = ['all', 'healthPharma', 'retailEcommerce', 'susta
 export function PortfolioGrid() {
   const t = useTranslations('portfolio');
   const locale = useLocale() as Locale;
+  const router = useRouter();
   const [activeCategory, setActiveCategory] = useState<Category>('all');
   const [hoveredProject, setHoveredProject] = useState<string | null>(null);
 
@@ -170,12 +171,12 @@ export function PortfolioGrid() {
         {/* Projects Grid */}
         <div ref={gridRef} className="grid md:grid-cols-2 gap-8">
           {filteredProjects.map((project, index) => (
-            <Link
+            <div
               key={project.id}
-              href={`/${locale}/portfolio/${project.slug}`}
-              className="project-card group relative block"
+              className="project-card group relative block cursor-pointer"
               onMouseEnter={() => setHoveredProject(project.id)}
               onMouseLeave={() => setHoveredProject(null)}
+              onClick={() => router.push(`/${locale}/portfolio/${project.slug}`)}
             >
               {/* Image container with clip-path */}
               <div className="project-image relative aspect-[4/3] bg-hcs-gray rounded-2xl overflow-hidden">
@@ -257,7 +258,7 @@ export function PortfolioGrid() {
 
               {/* Decorative line */}
               <div className="project-overlay absolute -bottom-4 left-0 right-0 h-[2px] bg-gradient-to-r from-accent via-accent/50 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-            </Link>
+            </div>
           ))}
         </div>
       </div>
