@@ -278,76 +278,6 @@ export function CosmicBackground() {
     }, '-=0.5');
   }, []);
 
-  // Spawn click particles explosion
-  const spawnClickExplosion = useCallback((x: number, y: number) => {
-    const particleCount = isMobile ? 15 : 25;
-    const colors = [
-      'rgba(255, 150, 150, 1)',
-      'rgba(255, 100, 100, 1)',
-      'rgba(255, 200, 200, 1)',
-      'rgba(255, 80, 80, 1)',
-      'rgba(255, 255, 255, 1)',
-    ];
-
-    for (let i = 0; i < particleCount; i++) {
-      const angle = (Math.PI * 2 * i) / particleCount + (Math.random() - 0.5) * 0.5;
-      const speed = 3 + Math.random() * 6;
-      const particle: ClickParticle = {
-        x,
-        y,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed,
-        size: 2 + Math.random() * 3,
-        alpha: 1,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        life: 0,
-        maxLife: 60 + Math.random() * 40,
-        trail: [],
-      };
-      clickParticlesRef.current.push(particle);
-    }
-
-    // Spawn additional spark particles
-    const sparkCount = isMobile ? 8 : 15;
-    for (let i = 0; i < sparkCount; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const speed = 5 + Math.random() * 10;
-      const particle: ClickParticle = {
-        x,
-        y,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed,
-        size: 1 + Math.random() * 1.5,
-        alpha: 1,
-        color: 'rgba(255, 255, 255, 1)',
-        life: 0,
-        maxLife: 30 + Math.random() * 20,
-        trail: [],
-      };
-      clickParticlesRef.current.push(particle);
-    }
-
-    // Spawn click flash
-    const flash: ClickFlash = {
-      x,
-      y,
-      radius: 0,
-      alpha: 0.8,
-    };
-    clickFlashRef.current.push(flash);
-
-    gsap.to(flash, {
-      radius: 80,
-      alpha: 0,
-      duration: 0.3,
-      ease: 'power2.out',
-      onComplete: () => {
-        const index = clickFlashRef.current.indexOf(flash);
-        if (index > -1) clickFlashRef.current.splice(index, 1);
-      },
-    });
-  }, [isMobile]);
-
   // Generate lightning segments with natural jagged paths
   const generateLightningSegments = useCallback((
     start: { x: number; y: number },
@@ -445,6 +375,84 @@ export function CosmicBackground() {
       });
     }
   }, [generateLightningSegments]);
+
+  // Spawn electric burst on click - lightning rays to nearby grid points
+  const spawnClickExplosion = useCallback((x: number, y: number) => {
+    const grid = gridRef.current;
+    const burstRadius = isMobile ? 180 : 250;
+    const maxRays = isMobile ? 6 : 10;
+
+    // Find nearby grid points and sort by distance
+    const nearbyPoints: { point: GridPoint; dist: number }[] = [];
+    for (const point of grid) {
+      const dist = Math.sqrt(Math.pow(point.x - x, 2) + Math.pow(point.y - y, 2));
+      if (dist < burstRadius && dist > 20) {
+        nearbyPoints.push({ point, dist });
+      }
+    }
+
+    // Sort by distance and take the closest ones
+    nearbyPoints.sort((a, b) => a.dist - b.dist);
+    const selectedPoints = nearbyPoints.slice(0, maxRays);
+
+    // Spawn lightning to each selected point with staggered timing
+    selectedPoints.forEach((item, index) => {
+      setTimeout(() => {
+        spawnLightning(
+          { x, y },
+          { x: item.point.x, y: item.point.y },
+          { intense: true }
+        );
+
+        // Boost the grid point energy
+        gsap.to(item.point, {
+          energy: item.point.energy + 0.4,
+          duration: 0.2,
+          ease: 'power2.out',
+        });
+      }, index * 15); // Stagger each ray by 15ms
+    });
+
+    // Central flash
+    const flash: ClickFlash = {
+      x,
+      y,
+      radius: 0,
+      alpha: 1,
+    };
+    clickFlashRef.current.push(flash);
+
+    gsap.to(flash, {
+      radius: 100,
+      alpha: 0,
+      duration: 0.35,
+      ease: 'power2.out',
+      onComplete: () => {
+        const idx = clickFlashRef.current.indexOf(flash);
+        if (idx > -1) clickFlashRef.current.splice(idx, 1);
+      },
+    });
+
+    // Secondary pulse flash
+    const pulse: ClickFlash = {
+      x,
+      y,
+      radius: 0,
+      alpha: 0.5,
+    };
+    clickFlashRef.current.push(pulse);
+
+    gsap.to(pulse, {
+      radius: 60,
+      alpha: 0,
+      duration: 0.2,
+      ease: 'power1.out',
+      onComplete: () => {
+        const idx = clickFlashRef.current.indexOf(pulse);
+        if (idx > -1) clickFlashRef.current.splice(idx, 1);
+      },
+    });
+  }, [isMobile, spawnLightning]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
