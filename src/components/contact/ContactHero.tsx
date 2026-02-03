@@ -120,13 +120,13 @@ export function ContactHero() {
       <div className="container-custom relative z-10 py-32">
         <div ref={titleRef} className="max-w-5xl mx-auto text-center">
           {/* Large title with mask effect */}
-          <h1 className="text-5xl md:text-7xl lg:text-[8rem] font-bold leading-[0.9] mb-8">
-            <span className="block overflow-hidden">
+          <h1 className="text-5xl md:text-7xl lg:text-[8rem] font-bold leading-[1.1] mb-8">
+            <span className="block overflow-hidden pb-2">
               <span ref={line1Ref} className="block text-foreground">
                 Let&apos;s Work
               </span>
             </span>
-            <span className="block overflow-hidden">
+            <span className="block overflow-hidden pb-4">
               <span ref={line2Ref} className="block text-transparent bg-clip-text bg-gradient-to-r from-accent via-accent to-accent/50">
                 Together
               </span>

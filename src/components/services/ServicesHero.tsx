@@ -136,10 +136,10 @@ export function ServicesHero() {
           </div>
 
           {/* Title with mask */}
-          <div ref={maskRef} className="overflow-hidden mb-8">
+          <div ref={maskRef} className="overflow-hidden mb-8 pb-2">
             <h1
               ref={titleRef}
-              className="text-5xl md:text-7xl lg:text-8xl font-bold text-foreground leading-[0.9]"
+              className="text-5xl md:text-7xl lg:text-8xl font-bold text-foreground leading-[1.1]"
             >
               {t('pageTitle')}
             </h1>

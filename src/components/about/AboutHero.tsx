@@ -159,13 +159,13 @@ export function AboutHero() {
           </div>
 
           {/* Large title with mask effect */}
-          <h1 className="text-5xl md:text-7xl lg:text-[8rem] font-bold leading-[0.85] mb-8">
-            <span className="block overflow-hidden">
+          <h1 className="text-5xl md:text-7xl lg:text-[8rem] font-bold leading-[1.1] mb-8">
+            <span className="block overflow-hidden pb-2">
               <span ref={line1Ref} className="block text-foreground">
                 {t('pageTitle').split(' ')[0] || 'About'}
               </span>
             </span>
-            <span className="block overflow-hidden">
+            <span className="block overflow-hidden pb-4">
               <span ref={line2Ref} className="block text-transparent bg-clip-text bg-gradient-to-r from-accent via-accent to-accent/50">
                 {t('pageTitle').split(' ').slice(1).join(' ') || 'Me'}
               </span>
