@@ -560,7 +560,6 @@ export function CosmicBackground() {
 
       // Spawn click effects
       spawnClickExplosion(e.clientX, e.clientY);
-      spawnWave(width, height, e.clientX, e.clientY, true);
 
       // Boost energy of nearby grid points
       const grid = gridRef.current;
@@ -652,7 +651,6 @@ export function CosmicBackground() {
         dragTrailRef.current.alpha = 1;
 
         spawnClickExplosion(touch.clientX, touch.clientY);
-        spawnWave(width, height, touch.clientX, touch.clientY, true);
       }
     };
 
