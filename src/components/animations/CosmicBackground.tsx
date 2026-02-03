@@ -13,9 +13,6 @@ interface GridPoint {
   connections: number[];
   energy: number;
   pulsePhase: number;
-  eaten: boolean;
-  eatenAlpha: number;
-  respawnTime: number;
 }
 
 interface FloatingOrb {
@@ -28,16 +25,6 @@ interface FloatingOrb {
   vy: number;
   pulseSpeed: number;
   pulsePhase: number;
-}
-
-interface EnergyWave {
-  x: number;
-  y: number;
-  radius: number;
-  maxRadius: number;
-  alpha: number;
-  color: string;
-  speed: number;
 }
 
 interface LightBeam {
@@ -84,15 +71,16 @@ interface ClickFlash {
   alpha: number;
 }
 
-interface Vortex {
+interface AmbientParticle {
   x: number;
   y: number;
-  radius: number;
-  maxRadius: number;
-  rotation: number;
+  size: number;
   alpha: number;
-  pullStrength: number;
-  eatenPointIndices: number[];
+  baseAlpha: number;
+  vx: number;
+  vy: number;
+  pulsePhase: number;
+  pulseSpeed: number;
 }
 
 export function CosmicBackground() {
@@ -100,16 +88,14 @@ export function CosmicBackground() {
   const animationRef = useRef<number | null>(null);
   const gridRef = useRef<GridPoint[]>([]);
   const orbsRef = useRef<FloatingOrb[]>([]);
-  const wavesRef = useRef<EnergyWave[]>([]);
   const beamsRef = useRef<LightBeam[]>([]);
   const clickParticlesRef = useRef<ClickParticle[]>([]);
   const dragTrailRef = useRef<DragTrail>({ points: [], alpha: 0 });
   const lightningsRef = useRef<Lightning[]>([]);
   const clickFlashRef = useRef<ClickFlash[]>([]);
-  const vortexesRef = useRef<Vortex[]>([]);
+  const ambientParticlesRef = useRef<AmbientParticle[]>([]);
   const mouseRef = useRef({ x: -9999, y: -9999, active: false, dragging: false });
   const timeRef = useRef(0);
-  const lastVortexTimeRef = useRef(0);
   const lastBeamTimeRef = useRef(0);
   const lastDragLightningRef = useRef(0);
 
@@ -143,9 +129,6 @@ export function CosmicBackground() {
           connections: [],
           energy: 0.3 + Math.random() * 0.3,
           pulsePhase: Math.random() * Math.PI * 2,
-          eaten: false,
-          eatenAlpha: 1,
-          respawnTime: 0,
         });
       }
     }
@@ -219,131 +202,40 @@ export function CosmicBackground() {
     });
   }, [isMobile]);
 
-  // Spawn energy wave
-  const spawnWave = useCallback((width: number, height: number, x?: number, y?: number, isClick?: boolean) => {
-    const colors = isClick
-      ? ['rgba(255, 120, 120, 0.6)', 'rgba(255, 80, 80, 0.5)']
-      : ['rgba(220, 50, 50, 0.4)', 'rgba(180, 40, 40, 0.35)', 'rgba(255, 80, 80, 0.3)'];
+  // Initialize ambient floating particles
+  const initAmbientParticles = useCallback((width: number, height: number) => {
+    const particles: AmbientParticle[] = [];
+    const count = isMobile ? 30 : 60;
 
-    const wave: EnergyWave = {
-      x: x ?? Math.random() * width,
-      y: y ?? Math.random() * height,
-      radius: 0,
-      maxRadius: isClick ? Math.max(width, height) * 0.4 : Math.max(width, height) * 0.6,
-      alpha: 1,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      speed: isClick ? 4 : 2 + Math.random() * 2,
-    };
-
-    wavesRef.current.push(wave);
-
-    // Animate wave expansion
-    gsap.to(wave, {
-      radius: wave.maxRadius,
-      alpha: 0,
-      duration: isClick ? 1.5 : 4,
-      ease: isClick ? 'power2.out' : 'power1.out',
-      onComplete: () => {
-        const index = wavesRef.current.indexOf(wave);
-        if (index > -1) wavesRef.current.splice(index, 1);
-      },
-    });
-  }, []);
-
-  // Spawn vortex (black hole effect)
-  const spawnVortex = useCallback((width: number, height: number) => {
-    const grid = gridRef.current;
-    const time = timeRef.current;
-
-    // Random position with some margin from edges
-    const margin = isMobile ? 100 : 150;
-    const x = margin + Math.random() * (width - margin * 2);
-    const y = margin + Math.random() * (height - margin * 2);
-
-    const maxRadius = isMobile ? 120 : 180;
-
-    // Find grid points within range that aren't already eaten
-    const eatenPointIndices: number[] = [];
-    const pullRadius = maxRadius * 1.5;
-
-    for (let i = 0; i < grid.length; i++) {
-      const point = grid[i];
-      if (point.eaten) continue;
-
-      const dist = Math.sqrt(Math.pow(point.ox - x, 2) + Math.pow(point.oy - y, 2));
-      if (dist < pullRadius) {
-        eatenPointIndices.push(i);
-      }
+    for (let i = 0; i < count; i++) {
+      const baseAlpha = 0.1 + Math.random() * 0.25;
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        size: 0.5 + Math.random() * 1.5,
+        alpha: 0,
+        baseAlpha,
+        vx: (Math.random() - 0.5) * 0.15,
+        vy: (Math.random() - 0.5) * 0.1 - 0.05, // Slight upward drift
+        pulsePhase: Math.random() * Math.PI * 2,
+        pulseSpeed: 0.3 + Math.random() * 0.5,
+      });
     }
 
-    const vortex: Vortex = {
-      x,
-      y,
-      radius: 0,
-      maxRadius,
-      rotation: 0,
-      alpha: 0,
-      pullStrength: 0,
-      eatenPointIndices,
-    };
+    ambientParticlesRef.current = particles;
 
-    vortexesRef.current.push(vortex);
-
-    // Phase 1: Vortex appears and grows
-    gsap.to(vortex, {
-      radius: maxRadius,
-      alpha: 1,
-      pullStrength: 1,
-      duration: 1.5,
+    // Fade in particles
+    gsap.to(particles, {
+      alpha: (i: number) => particles[i].baseAlpha,
+      duration: 2,
+      stagger: 0.05,
       ease: 'power2.out',
-    });
-
-    // Animate rotation continuously
-    gsap.to(vortex, {
-      rotation: Math.PI * 8,
-      duration: 6,
-      ease: 'none',
-    });
-
-    // Animate points being pulled toward vortex center
-    eatenPointIndices.forEach((pointIndex, i) => {
-      const point = grid[pointIndex];
-      const delay = 0.3 + Math.random() * 1.2;
-
-      // First, animate the point spiraling toward the center
-      gsap.to(point, {
-        x: x,
-        y: y,
-        eatenAlpha: 0,
-        duration: 1.5,
-        delay: delay,
-        ease: 'power2.in',
-        onComplete: () => {
-          point.eaten = true;
-          point.respawnTime = time + 5 + Math.random() * 3; // Respawn after 5-8 seconds
-        },
-      });
-    });
-
-    // Phase 2: Vortex shrinks and disappears
-    gsap.to(vortex, {
-      radius: 0,
-      alpha: 0,
-      pullStrength: 0,
-      duration: 1.5,
-      delay: 3.5,
-      ease: 'power2.in',
-      onComplete: () => {
-        const index = vortexesRef.current.indexOf(vortex);
-        if (index > -1) vortexesRef.current.splice(index, 1);
-      },
     });
   }, [isMobile]);
 
   // Spawn light beam (shooting star)
   const spawnBeam = useCallback((width: number, height: number) => {
     const isVertical = Math.random() > 0.5;
-    // Alternate between white and red beams
     const isWhite = Math.random() > 0.5;
     const beam: LightBeam = {
       x: isVertical ? Math.random() * width : -100,
@@ -358,7 +250,6 @@ export function CosmicBackground() {
 
     beamsRef.current.push(beam);
 
-    // Animate beam
     const tl = gsap.timeline({
       onComplete: () => {
         const index = beamsRef.current.indexOf(beam);
@@ -386,7 +277,7 @@ export function CosmicBackground() {
     }, '-=0.5');
   }, []);
 
-  // Generate lightning segments with natural jagged paths
+  // Generate lightning segments
   const generateLightningSegments = useCallback((
     start: { x: number; y: number },
     end: { x: number; y: number }
@@ -396,10 +287,7 @@ export function CosmicBackground() {
     const dy = end.y - start.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
 
-    // Moderate segment count for cleaner look
     const segmentCount = Math.max(3, Math.floor(dist / 25));
-
-    // Perpendicular vector for offsets
     const perpX = -dy / dist;
     const perpY = dx / dist;
 
@@ -407,8 +295,6 @@ export function CosmicBackground() {
       const t = i / segmentCount;
       const targetX = start.x + dx * t;
       const targetY = start.y + dy * t;
-
-      // Subtle jaggedness - peaks in the middle
       const jaggedness = (1 - Math.pow(Math.abs(t - 0.5) * 2, 2)) * 15;
       const offset = (Math.random() - 0.5) * jaggedness;
 
@@ -422,7 +308,7 @@ export function CosmicBackground() {
     return segments;
   }, []);
 
-  // Spawn lightning between two points
+  // Spawn lightning
   const spawnLightning = useCallback((
     start: { x: number; y: number },
     end: { x: number; y: number },
@@ -449,7 +335,6 @@ export function CosmicBackground() {
       },
     });
 
-    // Branch occasionally - more likely when intense
     const branchChance = intense ? 0.4 : 0.7;
     if (Math.random() > branchChance) {
       const mainAngle = Math.atan2(end.y - start.y, end.x - start.x);
@@ -484,13 +369,12 @@ export function CosmicBackground() {
     }
   }, [generateLightningSegments]);
 
-  // Spawn electric burst on click - lightning rays to nearby grid points
+  // Spawn click explosion (electric burst)
   const spawnClickExplosion = useCallback((x: number, y: number) => {
     const grid = gridRef.current;
     const burstRadius = isMobile ? 180 : 250;
     const maxRays = isMobile ? 6 : 10;
 
-    // Find nearby grid points and sort by distance
     const nearbyPoints: { point: GridPoint; dist: number }[] = [];
     for (const point of grid) {
       const dist = Math.sqrt(Math.pow(point.x - x, 2) + Math.pow(point.y - y, 2));
@@ -499,11 +383,9 @@ export function CosmicBackground() {
       }
     }
 
-    // Sort by distance and take the closest ones
     nearbyPoints.sort((a, b) => a.dist - b.dist);
     const selectedPoints = nearbyPoints.slice(0, maxRays);
 
-    // Spawn lightning to each selected point with staggered timing
     selectedPoints.forEach((item, index) => {
       setTimeout(() => {
         spawnLightning(
@@ -512,22 +394,15 @@ export function CosmicBackground() {
           { intense: true }
         );
 
-        // Boost the grid point energy
         gsap.to(item.point, {
           energy: item.point.energy + 0.4,
           duration: 0.2,
           ease: 'power2.out',
         });
-      }, index * 15); // Stagger each ray by 15ms
+      }, index * 15);
     });
 
-    // Central flash
-    const flash: ClickFlash = {
-      x,
-      y,
-      radius: 0,
-      alpha: 1,
-    };
+    const flash: ClickFlash = { x, y, radius: 0, alpha: 1 };
     clickFlashRef.current.push(flash);
 
     gsap.to(flash, {
@@ -541,13 +416,7 @@ export function CosmicBackground() {
       },
     });
 
-    // Secondary pulse flash
-    const pulse: ClickFlash = {
-      x,
-      y,
-      radius: 0,
-      alpha: 0.5,
-    };
+    const pulse: ClickFlash = { x, y, radius: 0, alpha: 0.5 };
     clickFlashRef.current.push(pulse);
 
     gsap.to(pulse, {
@@ -583,11 +452,12 @@ export function CosmicBackground() {
       ctx.scale(dpr, dpr);
       initGrid(width, height);
       initOrbs(width, height);
+      initAmbientParticles(width, height);
     };
 
     resize();
 
-    // Mouse interaction
+    // Mouse handlers
     const handleMouseMove = (e: MouseEvent) => {
       const prevX = mouseRef.current.x;
       const prevY = mouseRef.current.y;
@@ -595,29 +465,24 @@ export function CosmicBackground() {
       mouseRef.current.y = e.clientY;
       mouseRef.current.active = true;
 
-      // Handle drag trail
       if (mouseRef.current.dragging) {
         const trail = dragTrailRef.current;
         trail.points.push({ x: e.clientX, y: e.clientY, time: timeRef.current });
 
-        // Limit trail length
         if (trail.points.length > 30) {
           trail.points.shift();
         }
 
-        // Calculate drag speed for intensity
         const dragSpeed = Math.sqrt(
           Math.pow(e.clientX - prevX, 2) + Math.pow(e.clientY - prevY, 2)
         );
         const isIntenseDrag = dragSpeed > 20;
         const isMediumDrag = dragSpeed > 12;
 
-        // Spawn lightning during drag
         const spawnInterval = isIntenseDrag ? 0.04 : isMediumDrag ? 0.06 : 0.09;
         if (timeRef.current - lastDragLightningRef.current > spawnInterval && prevX > 0) {
           lastDragLightningRef.current = timeRef.current;
 
-          // Find nearby grid points
           const lightningRadius = isIntenseDrag ? 140 : isMediumDrag ? 110 : 90;
           const spawnChance = isIntenseDrag ? 0.82 : isMediumDrag ? 0.88 : 0.92;
 
@@ -635,7 +500,6 @@ export function CosmicBackground() {
             }
           }
 
-          // Spawn trailing particles
           if (Math.random() > 0.6) {
             const angle = Math.atan2(e.clientY - prevY, e.clientX - prevX) + Math.PI;
             const particle: ClickParticle = {
@@ -666,10 +530,8 @@ export function CosmicBackground() {
       mouseRef.current.dragging = true;
       dragTrailRef.current.alpha = 1;
 
-      // Spawn click effects
       spawnClickExplosion(e.clientX, e.clientY);
 
-      // Boost energy of nearby grid points
       const grid = gridRef.current;
       for (const point of grid) {
         const dist = Math.sqrt(
@@ -689,7 +551,6 @@ export function CosmicBackground() {
     const handleMouseUp = () => {
       mouseRef.current.dragging = false;
 
-      // Fade out trail
       gsap.to(dragTrailRef.current, {
         alpha: 0,
         duration: 0.5,
@@ -717,13 +578,11 @@ export function CosmicBackground() {
             trail.points.shift();
           }
 
-          // Calculate drag speed for intensity
           const dragSpeed = Math.sqrt(
             Math.pow(touch.clientX - prevX, 2) + Math.pow(touch.clientY - prevY, 2)
           );
           const isIntenseDrag = dragSpeed > 25;
 
-          // Spawn lightning during drag
           const spawnInterval = isIntenseDrag ? 0.07 : 0.1;
           if (timeRef.current - lastDragLightningRef.current > spawnInterval && prevX > 0) {
             lastDragLightningRef.current = timeRef.current;
@@ -776,7 +635,6 @@ export function CosmicBackground() {
       });
     };
 
-    // Listen on document to receive events even when other elements are on top
     document.addEventListener('mousemove', handleMouseMove, { passive: true });
     document.addEventListener('mouseleave', handleMouseLeave);
     document.addEventListener('mousedown', handleMouseDown);
@@ -798,19 +656,18 @@ export function CosmicBackground() {
       timeRef.current += 0.016;
       const time = timeRef.current;
 
-      // Clear with subtle fade
       ctx.fillStyle = 'rgba(10, 10, 10, 1)';
       ctx.fillRect(0, 0, width, height);
 
       const mouse = mouseRef.current;
       const grid = gridRef.current;
       const orbs = orbsRef.current;
-      const waves = wavesRef.current;
       const beams = beamsRef.current;
       const clickParticles = clickParticlesRef.current;
       const dragTrail = dragTrailRef.current;
       const lightnings = lightningsRef.current;
       const clickFlashes = clickFlashRef.current;
+      const ambientParticles = ambientParticlesRef.current;
 
       // Spawn beams periodically
       if (!isMobile && time - lastBeamTimeRef.current > 3) {
@@ -850,24 +707,46 @@ export function CosmicBackground() {
         ctx.fill();
       }
 
-      // Draw energy waves
-      for (const wave of waves) {
-        if (wave.radius > 0 && wave.alpha > 0) {
-          ctx.strokeStyle = wave.color.replace(/[\d.]+\)$/, `${wave.alpha * 0.3})`);
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          ctx.arc(wave.x, wave.y, wave.radius, 0, Math.PI * 2);
-          ctx.stroke();
+      // Draw ambient particles (cosmic dust)
+      for (const particle of ambientParticles) {
+        // Update position
+        particle.x += particle.vx;
+        particle.y += particle.vy;
 
-          ctx.strokeStyle = wave.color.replace(/[\d.]+\)$/, `${wave.alpha * 0.15})`);
-          ctx.lineWidth = 8;
-          ctx.stroke();
+        // Wrap around screen
+        if (particle.x < -10) particle.x = width + 10;
+        if (particle.x > width + 10) particle.x = -10;
+        if (particle.y < -10) particle.y = height + 10;
+        if (particle.y > height + 10) particle.y = -10;
+
+        // Pulsing alpha
+        const pulse = Math.sin(time * particle.pulseSpeed + particle.pulsePhase) * 0.5 + 0.5;
+        const currentAlpha = particle.alpha * (0.5 + pulse * 0.5);
+
+        if (currentAlpha > 0.01) {
+          // Subtle glow
+          const glowSize = particle.size * 3;
+          const glow = ctx.createRadialGradient(
+            particle.x, particle.y, 0,
+            particle.x, particle.y, glowSize
+          );
+          glow.addColorStop(0, `rgba(255, 200, 200, ${currentAlpha * 0.3})`);
+          glow.addColorStop(1, 'rgba(255, 200, 200, 0)');
+          ctx.fillStyle = glow;
+          ctx.beginPath();
+          ctx.arc(particle.x, particle.y, glowSize, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Core
+          ctx.fillStyle = `rgba(255, 255, 255, ${currentAlpha})`;
+          ctx.beginPath();
+          ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+          ctx.fill();
         }
       }
 
       // Update grid points
       for (const point of grid) {
-
         if (mouse.active) {
           const dx = point.x - mouse.x;
           const dy = point.y - mouse.y;
@@ -877,7 +756,6 @@ export function CosmicBackground() {
             const dist = Math.sqrt(distSq);
             const force = (1 - dist / gravitationalRadius) * gravitationalStrength;
             const angle = Math.atan2(dy, dx);
-            // Stronger force when dragging
             const dragMultiplier = mouse.dragging ? 2 : 1;
             point.vx += Math.cos(angle) * force * gravitationalRadius * dragMultiplier;
             point.vy += Math.sin(angle) * force * gravitationalRadius * dragMultiplier;
@@ -889,8 +767,9 @@ export function CosmicBackground() {
         point.vx += (point.ox - point.x) * returnSpeed;
         point.vy += (point.oy - point.y) * returnSpeed;
 
-        const breathX = Math.sin(time * 0.5 + point.pulsePhase) * 3;
-        const breathY = Math.cos(time * 0.4 + point.pulsePhase) * 3;
+        // Enhanced breathing effect
+        const breathX = Math.sin(time * 0.5 + point.pulsePhase) * 4;
+        const breathY = Math.cos(time * 0.4 + point.pulsePhase) * 4;
 
         point.x = point.ox + point.vx + breathX;
         point.y = point.oy + point.vy + breathY;
@@ -986,23 +865,21 @@ export function CosmicBackground() {
           const p2 = dragTrail.points[i];
           const progress = i / dragTrail.points.length;
           const alpha = progress * dragTrail.alpha * 0.6;
-          const width = progress * 4;
+          const lineWidth = progress * 4;
 
-          // Main trail
           const trailGradient = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
           trailGradient.addColorStop(0, `rgba(255, 100, 100, ${alpha * 0.5})`);
           trailGradient.addColorStop(1, `rgba(255, 150, 150, ${alpha})`);
 
           ctx.strokeStyle = trailGradient;
-          ctx.lineWidth = width;
+          ctx.lineWidth = lineWidth;
           ctx.beginPath();
           ctx.moveTo(p1.x, p1.y);
           ctx.lineTo(p2.x, p2.y);
           ctx.stroke();
 
-          // Glow
           ctx.strokeStyle = `rgba(255, 200, 200, ${alpha * 0.3})`;
-          ctx.lineWidth = width + 4;
+          ctx.lineWidth = lineWidth + 4;
           ctx.stroke();
         }
       }
@@ -1010,7 +887,6 @@ export function CosmicBackground() {
       // Draw lightnings
       for (const lightning of lightnings) {
         if (lightning.alpha > 0 && lightning.segments.length > 1) {
-          // Glow
           ctx.strokeStyle = `rgba(255, 150, 150, ${lightning.alpha * 0.3})`;
           ctx.lineWidth = lightning.width + 4;
           ctx.lineCap = 'round';
@@ -1022,7 +898,6 @@ export function CosmicBackground() {
           }
           ctx.stroke();
 
-          // Core
           ctx.strokeStyle = `rgba(255, 255, 255, ${lightning.alpha})`;
           ctx.lineWidth = lightning.width;
           ctx.stroke();
@@ -1051,25 +926,21 @@ export function CosmicBackground() {
         const p = clickParticles[i];
         p.life++;
 
-        // Add to trail
         if (p.trail.length === 0 || Math.random() > 0.5) {
           p.trail.push({ x: p.x, y: p.y, alpha: p.alpha });
         }
         if (p.trail.length > 8) p.trail.shift();
 
-        // Apply gravity and friction
         p.vy += 0.1;
         p.vx *= 0.98;
         p.vy *= 0.98;
         p.x += p.vx;
         p.y += p.vy;
 
-        // Fade based on life
         const lifeProgress = p.life / p.maxLife;
         p.alpha = 1 - lifeProgress;
         p.size *= 0.99;
 
-        // Draw trail
         for (let j = 0; j < p.trail.length; j++) {
           const t = p.trail[j];
           const trailAlpha = (j / p.trail.length) * p.alpha * 0.3;
@@ -1079,9 +950,7 @@ export function CosmicBackground() {
           ctx.fill();
         }
 
-        // Draw particle
         if (p.alpha > 0.01) {
-          // Glow
           const glowGradient = ctx.createRadialGradient(
             p.x, p.y, 0,
             p.x, p.y, p.size * 3
@@ -1093,14 +962,12 @@ export function CosmicBackground() {
           ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
           ctx.fill();
 
-          // Core
           ctx.fillStyle = p.color.replace(/[\d.]+\)$/, `${p.alpha})`);
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
           ctx.fill();
         }
 
-        // Remove dead particles
         if (p.life >= p.maxLife || p.alpha <= 0.01) {
           clickParticles.splice(i, 1);
         }
@@ -1160,7 +1027,7 @@ export function CosmicBackground() {
       document.removeEventListener('touchend', handleTouchEnd);
       window.removeEventListener('resize', resize);
     };
-  }, [isMobile, initGrid, initOrbs, spawnVortex, spawnBeam, spawnClickExplosion, spawnLightning]);
+  }, [isMobile, initGrid, initOrbs, initAmbientParticles, spawnBeam, spawnClickExplosion, spawnLightning]);
 
   return (
     <canvas
