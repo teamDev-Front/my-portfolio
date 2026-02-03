@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations, useLocale } from 'next-intl';
-import { GraduationCap, Heart, Languages } from 'lucide-react';
+import { GraduationCap, Briefcase, Languages } from 'lucide-react';
 import { FadeIn } from '@/components/animations/FadeIn';
 import { Button } from '@/components/ui/Button';
 
@@ -10,7 +10,7 @@ export function Intro() {
   const locale = useLocale();
 
   const highlights = [
-    { icon: Heart, text: t('highlight1') },
+    { icon: Briefcase, text: t('highlight1') },
     { icon: GraduationCap, text: t('highlight2') },
     { icon: Languages, text: t('highlight3') },
   ];
