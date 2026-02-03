@@ -811,13 +811,6 @@ export function CosmicBackground() {
       const dragTrail = dragTrailRef.current;
       const lightnings = lightningsRef.current;
       const clickFlashes = clickFlashRef.current;
-      const vortexes = vortexesRef.current;
-
-      // Spawn vortex periodically
-      if (time - lastVortexTimeRef.current > (isMobile ? 12 : 8)) {
-        lastVortexTimeRef.current = time;
-        spawnVortex(width, height);
-      }
 
       // Spawn beams periodically
       if (!isMobile && time - lastBeamTimeRef.current > 3) {
@@ -872,81 +865,8 @@ export function CosmicBackground() {
         }
       }
 
-      // Draw vortexes (black holes) - Simple elegant style
-      for (const vortex of vortexes) {
-        if (vortex.alpha > 0 && vortex.radius > 0) {
-          ctx.save();
-          ctx.translate(vortex.x, vortex.y);
-
-          const r = vortex.radius;
-          const alpha = vortex.alpha;
-
-          // Outer glow - soft gravitational distortion
-          const outerGlow = ctx.createRadialGradient(0, 0, r * 0.2, 0, 0, r * 1.5);
-          outerGlow.addColorStop(0, 'rgba(0, 0, 0, 0)');
-          outerGlow.addColorStop(0.4, `rgba(60, 20, 40, ${alpha * 0.15})`);
-          outerGlow.addColorStop(0.7, `rgba(40, 15, 30, ${alpha * 0.08})`);
-          outerGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
-          ctx.fillStyle = outerGlow;
-          ctx.beginPath();
-          ctx.arc(0, 0, r * 1.5, 0, Math.PI * 2);
-          ctx.fill();
-
-          // Subtle ring glow
-          const ringGlow = ctx.createRadialGradient(0, 0, r * 0.5, 0, 0, r * 0.8);
-          ringGlow.addColorStop(0, 'rgba(0, 0, 0, 0)');
-          ringGlow.addColorStop(0.5, `rgba(150, 60, 80, ${alpha * 0.2})`);
-          ringGlow.addColorStop(0.8, `rgba(100, 40, 60, ${alpha * 0.1})`);
-          ringGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
-          ctx.fillStyle = ringGlow;
-          ctx.beginPath();
-          ctx.arc(0, 0, r * 0.8, 0, Math.PI * 2);
-          ctx.fill();
-
-          // Dark center (event horizon)
-          const centerGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, r * 0.4);
-          centerGradient.addColorStop(0, `rgba(0, 0, 0, ${alpha})`);
-          centerGradient.addColorStop(0.6, `rgba(0, 0, 0, ${alpha * 0.95})`);
-          centerGradient.addColorStop(0.85, `rgba(20, 10, 15, ${alpha * 0.7})`);
-          centerGradient.addColorStop(1, 'rgba(30, 15, 25, 0)');
-          ctx.fillStyle = centerGradient;
-          ctx.beginPath();
-          ctx.arc(0, 0, r * 0.4, 0, Math.PI * 2);
-          ctx.fill();
-
-          // Thin bright edge (photon sphere)
-          ctx.strokeStyle = `rgba(200, 100, 120, ${alpha * 0.4})`;
-          ctx.lineWidth = 1.5;
-          ctx.beginPath();
-          ctx.arc(0, 0, r * 0.38, 0, Math.PI * 2);
-          ctx.stroke();
-
-          ctx.restore();
-        }
-      }
-
-      // Handle respawning of eaten points
-      for (const point of grid) {
-        if (point.eaten && point.respawnTime > 0 && time >= point.respawnTime) {
-          point.eaten = false;
-          point.respawnTime = 0;
-          point.x = point.ox;
-          point.y = point.oy;
-          point.vx = 0;
-          point.vy = 0;
-          // Animate alpha back in
-          gsap.to(point, {
-            eatenAlpha: 1,
-            duration: 1.5,
-            ease: 'power2.out',
-          });
-        }
-      }
-
       // Update grid points
       for (const point of grid) {
-        // Skip eaten points - GSAP handles their animation
-        if (point.eaten || point.eatenAlpha < 0.1) continue;
 
         if (mouse.active) {
           const dx = point.x - mouse.x;
@@ -979,13 +899,8 @@ export function CosmicBackground() {
       // Draw grid connections
       ctx.lineCap = 'round';
       for (const point of grid) {
-        // Skip if point is fully eaten
-        if (point.eaten && point.eatenAlpha <= 0) continue;
-
         for (const connIndex of point.connections) {
           const connPoint = grid[connIndex];
-          // Skip if connected point is fully eaten
-          if (connPoint.eaten && connPoint.eatenAlpha <= 0) continue;
 
           const dx = point.x - connPoint.x;
           const dy = point.y - connPoint.y;
@@ -995,9 +910,7 @@ export function CosmicBackground() {
           if (dist < maxDist) {
             const distAlpha = 1 - dist / maxDist;
             const energyPulse = Math.sin(time * 2 + point.pulsePhase) * 0.5 + 0.5;
-            // Apply eatenAlpha to both points
-            const eatenFactor = Math.min(point.eatenAlpha, connPoint.eatenAlpha);
-            const alpha = distAlpha * connectionBaseAlpha * (point.energy + connPoint.energy) * (0.7 + energyPulse * 0.3) * eatenFactor;
+            const alpha = distAlpha * connectionBaseAlpha * (point.energy + connPoint.energy) * (0.7 + energyPulse * 0.3);
 
             let highlight = 0;
             if (mouse.active) {
@@ -1029,13 +942,9 @@ export function CosmicBackground() {
 
       // Draw grid points
       for (const point of grid) {
-        // Skip fully eaten points
-        if (point.eaten && point.eatenAlpha <= 0) continue;
-
         const pulse = Math.sin(time * 1.5 + point.pulsePhase) * 0.5 + 0.5;
         const size = 1.5 + pulse * 1;
-        // Apply eatenAlpha to base alpha
-        const alpha = (0.2 + point.energy * 0.3 + pulse * 0.1) * point.eatenAlpha;
+        const alpha = 0.2 + point.energy * 0.3 + pulse * 0.1;
 
         let isNearMouse = false;
         if (mouse.active) {
@@ -1045,7 +954,7 @@ export function CosmicBackground() {
           isNearMouse = dist < gravitationalRadius;
         }
 
-        if (isNearMouse && point.eatenAlpha > 0.5) {
+        if (isNearMouse) {
           const glowGradient = ctx.createRadialGradient(
             point.x, point.y, 0,
             point.x, point.y, size * (mouse.dragging ? 6 : 4)
