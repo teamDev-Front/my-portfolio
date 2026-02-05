@@ -136,7 +136,7 @@ export const projects: Project[] = [
     slug: 'x-fitness-shop',
     category: 'retailEcommerce',
     image: '/images/projects/xtriplefitness-shop-shopify-ecommerce-criacao-de-ecommerce-loja-virtual.png',
-    technologies: ['Shopify', 'Multi-language', 'JavaScript', 'Logistics Integration'],
+    technologies: ['Shopify', 'Multi-language', 'JavaScript', 'Liquid', 'Logistics Integration'],
     liveUrl: 'https://xfitnessshop.ch',
     featured: true,
     translations: {
@@ -187,7 +187,7 @@ export const projects: Project[] = [
     slug: 'vidget',
     category: 'retailEcommerce',
     image: '/images/projects/vidget-sites-vendas-habaeb-creative-solutions-criacao-de-sites-consultoria-saas-webapp.png',
-    technologies: ['React', 'Video API', 'E-commerce Integration', 'Interactive UI'],
+    technologies: ['Next.js', 'Framer',  'AI Integration', 'Supabase', 'E-commerce Integration', 'Interactive UI', 'Google Analytics'],
     liveUrl: 'https://www.vidget.com.br',
     featured: false,
     translations: {
@@ -228,7 +228,7 @@ export const projects: Project[] = [
     slug: 'saf-swiss-armsport',
     category: 'corporate',
     image: '/images/projects/saf-website-zurich-armwrestling-federation-habaeb-creative-solutions.png',
-    technologies: ['React', 'Next.js', 'Event Management', 'Countdown Timer'],
+    technologies: ['React', 'Next.js', 'Render', 'Tailwind', 'Event Management', 'Countdown Timer'],
     liveUrl: 'https://swissarmwrestling.ch/',
     featured: false,
     translations: {
@@ -270,7 +270,7 @@ export const projects: Project[] = [
     slug: 'coquim',
     category: 'sustainability',
     image: '/images/projects/coquim-site-institucional-website-hcs-habaeb-creative-solutions-criar-site-saas-criamos-seu-site.png',
-    technologies: ['WordPress', 'WooCommerce', 'PHP', 'SEO Optimization'],
+    technologies: ['HTML', 'CSS', 'JavaScript', 'PHP', 'SEO Optimization'],
     liveUrl: 'https://coquim.com.br',
     featured: true,
     translations: {
@@ -283,7 +283,6 @@ export const projects: Project[] = [
         features: [
           'Sustainability-focused design',
           'Product education content',
-          'E-commerce with WooCommerce',
           'Environmental impact storytelling',
           'SEO optimization for gardening keywords',
           'Mobile-responsive catalog'
@@ -303,7 +302,6 @@ export const projects: Project[] = [
         features: [
           'Design focado em sustentabilidade',
           'Conteúdo educacional sobre produtos',
-          'E-commerce com WooCommerce',
           'Storytelling de impacto ambiental',
           'Otimização SEO para palavras-chave de jardinagem',
           'Catálogo responsivo para mobile'
@@ -321,7 +319,7 @@ export const projects: Project[] = [
     slug: 'smart-controller',
     category: 'corporate',
     image: '/images/projects/smart-cont-hcs-criacao-de-sites-institucionais-ecommerce-habaeb-creative-solutions-ia-contabilidade-juridico.png',
-    technologies: ['React', 'Next.js', 'TypeScript', 'Contact Forms', 'SEO'],
+    technologies: ['React', 'Next.js', 'TypeScript', 'MailSender', 'SEO'],
     liveUrl: 'https://smartcontroller.com.br',
     featured: false,
     translations: {
@@ -372,7 +370,7 @@ export const projects: Project[] = [
     slug: 'aion-solution',
     category: 'aiData',
     image: '/images/projects/aion-solution-consultoria-habaeb-hcs-creative-solutions.png',
-    technologies: ['React', 'Node.js', 'AI/LLM Integration', 'Marketing Automation', 'Analytics'],
+    technologies: ['React', 'Node.js', 'AI Integration', 'Marketing Automation', 'Analytics'],
     liveUrl: 'https://aionsolution.com.br',
     featured: true,
     translations: {
@@ -423,7 +421,7 @@ export const projects: Project[] = [
     slug: 'staydepot',
     category: 'aiData',
     image: '/images/projects/staydepot.jpg',
-    technologies: ['Next.js', 'TypeScript', 'Python', 'AI/ML', 'Data Analytics', 'Supabase'],
+    technologies: ['Next.js', 'TypeScript', 'n8n', 'Python', 'AI',  'Data Analytics', 'Supabase'],
     liveUrl: 'https://shortstaydepot.com',
     featured: true,
     translations: {
