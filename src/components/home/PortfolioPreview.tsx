@@ -185,65 +185,67 @@ export function PortfolioPreview() {
               key={project.id}
               ref={(el) => { cardsRef.current[index] = el; }}
               href={`/${locale}/portfolio/${project.slug}`}
-              className="group block w-[70vw] md:w-[45vw] lg:w-[35vw] h-[70vh] bg-card rounded-3xl border border-card-border overflow-hidden flex-shrink-0 relative"
+              className="group block w-[70vw] md:w-[45vw] lg:w-[35vw] h-[70vh] rounded-3xl border border-card-border flex-shrink-0 relative"
               style={{
                 transformStyle: 'preserve-3d',
                 willChange: 'transform',
               }}
             >
-              {/* Background gradient */}
-              <div className="absolute inset-0 bg-gradient-to-br from-accent/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              {/* Inner wrapper handles clipping independently from 3D transforms */}
+              <div className="w-full h-full rounded-3xl overflow-hidden bg-card relative">
+                {/* Background gradient */}
+                <div className="absolute inset-0 bg-gradient-to-br from-accent/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-              {/* Image placeholder */}
-              <div className="relative h-1/2 bg-hcs-gray overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-accent/20 to-transparent" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <img
-                    src={project.image}
-                    alt={project.translations[locale].title}
-                    className="absolute inset-0 h-full w-full object-cover"
-                  />
+                {/* Image placeholder */}
+                <div className="relative h-1/2 bg-hcs-gray overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-accent/20 to-transparent" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <img
+                      src={project.image}
+                      alt={project.translations[locale].title}
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
+                  </div>
 
+                  {/* Hover overlay */}
+                  <div className="absolute inset-0 bg-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                  {/* Arrow icon */}
+                  <div className="absolute top-4 right-4 w-12 h-12 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                    <ArrowUpRight className="w-5 h-5 text-accent" />
+                  </div>
+
+                  {/* Project number */}
+                  <div className="absolute bottom-4 left-4 text-7xl font-bold text-foreground/10 group-hover:text-accent/20 transition-colors">
+                    0{index + 1}
+                  </div>
                 </div>
 
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                {/* Arrow icon */}
-                <div className="absolute top-4 right-4 w-12 h-12 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                  <ArrowUpRight className="w-5 h-5 text-accent" />
-                </div>
-
-                {/* Project number */}
-                <div className="absolute bottom-4 left-4 text-7xl font-bold text-foreground/10 group-hover:text-accent/20 transition-colors">
-                  0{index + 1}
-                </div>
-              </div>
-
-              {/* Content */}
-              <div className="p-8 h-1/2 flex flex-col justify-between">
-                <div>
-                  <span className="text-xs text-accent font-medium uppercase tracking-wider">
-                    {t(`filters.${project.category}`)}
-                  </span>
-                  <h3 className="text-2xl font-semibold text-foreground mt-2 mb-3 group-hover:text-accent transition-colors duration-300">
-                    {project.translations[locale].title}
-                  </h3>
-                  <p className="text-muted line-clamp-3">
-                    {project.translations[locale].shortDescription}
-                  </p>
-                </div>
-
-                {/* Tech tags */}
-                <div className="flex flex-wrap gap-2 mt-4">
-                  {project.technologies.slice(0, 4).map((tech) => (
-                    <span
-                      key={tech}
-                      className="px-3 py-1 bg-hcs-gray rounded-full text-xs text-muted group-hover:bg-accent/10 group-hover:text-accent transition-colors duration-300"
-                    >
-                      {tech}
+                {/* Content */}
+                <div className="p-8 h-1/2 flex flex-col justify-between">
+                  <div>
+                    <span className="text-xs text-accent font-medium uppercase tracking-wider">
+                      {t(`filters.${project.category}`)}
                     </span>
-                  ))}
+                    <h3 className="text-2xl font-semibold text-foreground mt-2 mb-3 group-hover:text-accent transition-colors duration-300">
+                      {project.translations[locale].title}
+                    </h3>
+                    <p className="text-muted line-clamp-3">
+                      {project.translations[locale].shortDescription}
+                    </p>
+                  </div>
+
+                  {/* Tech tags */}
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    {project.technologies.slice(0, 4).map((tech) => (
+                      <span
+                        key={tech}
+                        className="px-3 py-1 bg-hcs-gray rounded-full text-xs text-muted group-hover:bg-accent/10 group-hover:text-accent transition-colors duration-300"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
             </Link>

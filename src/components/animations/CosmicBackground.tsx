@@ -570,6 +570,9 @@ export function CosmicBackground() {
         mouseRef.current.y = touch.clientY;
         mouseRef.current.active = true;
 
+        // On mobile, only use gentle gravitational pull (no drag lightning/trails)
+        if (isMobile) return;
+
         if (mouseRef.current.dragging) {
           const trail = dragTrailRef.current;
           trail.points.push({ x: touch.clientX, y: touch.clientY, time: timeRef.current });
@@ -614,9 +617,12 @@ export function CosmicBackground() {
         mouseRef.current.x = touch.clientX;
         mouseRef.current.y = touch.clientY;
         mouseRef.current.active = true;
+
+        // On mobile, only activate gravitational pull (no explosions/dragging)
+        if (isMobile) return;
+
         mouseRef.current.dragging = true;
         dragTrailRef.current.alpha = 1;
-
         spawnClickExplosion(touch.clientX, touch.clientY);
       }
     };
@@ -625,14 +631,16 @@ export function CosmicBackground() {
       mouseRef.current.active = false;
       mouseRef.current.dragging = false;
 
-      gsap.to(dragTrailRef.current, {
-        alpha: 0,
-        duration: 0.3,
-        ease: 'power2.out',
-        onComplete: () => {
-          dragTrailRef.current.points = [];
-        },
-      });
+      if (!isMobile) {
+        gsap.to(dragTrailRef.current, {
+          alpha: 0,
+          duration: 0.3,
+          ease: 'power2.out',
+          onComplete: () => {
+            dragTrailRef.current.points = [];
+          },
+        });
+      }
     };
 
     document.addEventListener('mousemove', handleMouseMove, { passive: true });

@@ -81,8 +81,8 @@ export function LogoParticles({
       const offsetX = (rect.width - logoWidth) / 2;
       const offsetY = (rect.height - logoHeight) / 2;
 
-      // Particle sampling - larger step = fewer particles = better performance
-      const step = isMobile ? 3 : 2;
+      // Particle sampling - step 2 for sharp logo on all devices
+      const step = 2;
       const particles: Particle[] = [];
 
       for (let y = 0; y < tempCanvas.height; y += step) {
@@ -105,7 +105,7 @@ export function LogoParticles({
               vx: 0,
               vy: 0,
               color: `rgb(${r}, ${g}, ${b})`,
-              size: isMobile ? 2 : 2.5,
+              size: 2.5,
               alpha: a / 255,
             });
           }
@@ -241,6 +241,17 @@ export function LogoParticles({
       mouseRef.current.y = -9999;
     };
 
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const rect = canvas.getBoundingClientRect();
+        mouseRef.current.x = e.touches[0].clientX - rect.left;
+        mouseRef.current.y = e.touches[0].clientY - rect.top;
+        mouseRef.current.active = true;
+      }
+    };
+
     const handleTouchMove = (e: TouchEvent) => {
       if (e.touches.length > 0) {
         const canvas = canvasRef.current;
@@ -260,6 +271,7 @@ export function LogoParticles({
     if (container) {
       container.addEventListener('mousemove', handleMouseMove);
       container.addEventListener('mouseleave', handleMouseLeave);
+      container.addEventListener('touchstart', handleTouchStart, { passive: true });
       container.addEventListener('touchmove', handleTouchMove, { passive: true });
       container.addEventListener('touchend', handleTouchEnd);
     }
@@ -271,6 +283,7 @@ export function LogoParticles({
       if (container) {
         container.removeEventListener('mousemove', handleMouseMove);
         container.removeEventListener('mouseleave', handleMouseLeave);
+        container.removeEventListener('touchstart', handleTouchStart);
         container.removeEventListener('touchmove', handleTouchMove);
         container.removeEventListener('touchend', handleTouchEnd);
       }
