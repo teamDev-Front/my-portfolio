@@ -420,7 +420,7 @@ export const projects: Project[] = [
     id: '9',
     slug: 'staydepot',
     category: 'aiData',
-    image: '/images/projects/staydepot.jpg',
+    image: '/images/projects/staydepot-ai-n8n-webapp-admin-panel-ecommerce-criacao-de-ecommerce-loja-virtual.png',
     technologies: ['Next.js', 'TypeScript', 'n8n', 'Python', 'AI',  'Data Analytics', 'Supabase'],
     liveUrl: 'https://shortstaydepot.com',
     featured: true,
