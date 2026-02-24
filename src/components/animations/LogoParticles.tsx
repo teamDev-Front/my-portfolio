@@ -48,7 +48,7 @@ export function LogoParticles({
     if (!ctx) return;
     ctxRef.current = ctx;
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, 3);
     const rect = container.getBoundingClientRect();
 
     canvas.width = rect.width * dpr;
@@ -67,13 +67,15 @@ export function LogoParticles({
       const logoWidth = Math.min(rect.width * logoScale, maxWidth);
       const logoHeight = (logoWidth / img.width) * img.height;
 
+      // Render SVG at 2x for crisp particle sampling on all screens
+      const sampleScale = 2;
       const tempCanvas = document.createElement('canvas');
       const tempCtx = tempCanvas.getContext('2d');
       if (!tempCtx) return;
 
-      tempCanvas.width = Math.ceil(logoWidth);
-      tempCanvas.height = Math.ceil(logoHeight);
-      tempCtx.drawImage(img, 0, 0, logoWidth, logoHeight);
+      tempCanvas.width = Math.ceil(logoWidth * sampleScale);
+      tempCanvas.height = Math.ceil(logoHeight * sampleScale);
+      tempCtx.drawImage(img, 0, 0, tempCanvas.width, tempCanvas.height);
 
       const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
       const pixels = imageData.data;
@@ -81,12 +83,13 @@ export function LogoParticles({
       const offsetX = (rect.width - logoWidth) / 2;
       const offsetY = (rect.height - logoHeight) / 2;
 
-      // Particle sampling - larger step = fewer particles = better performance
-      const step = isMobile ? 3 : 2;
+      // Particle sampling - step is in CSS-pixel space (independent of sampleScale)
+      const step = isMobile ? 2 : 2;
+      const sampleStep = step * sampleScale;
       const particles: Particle[] = [];
 
-      for (let y = 0; y < tempCanvas.height; y += step) {
-        for (let x = 0; x < tempCanvas.width; x += step) {
+      for (let y = 0; y < tempCanvas.height; y += sampleStep) {
+        for (let x = 0; x < tempCanvas.width; x += sampleStep) {
           const i = (Math.floor(y) * tempCanvas.width + Math.floor(x)) * 4;
           const r = pixels[i];
           const g = pixels[i + 1];
@@ -94,8 +97,8 @@ export function LogoParticles({
           const a = pixels[i + 3];
 
           if (a > 50) {
-            const px = offsetX + x;
-            const py = offsetY + y;
+            const px = offsetX + x / sampleScale;
+            const py = offsetY + y / sampleScale;
 
             particles.push({
               x: px,
@@ -105,7 +108,7 @@ export function LogoParticles({
               vx: 0,
               vy: 0,
               color: `rgb(${r}, ${g}, ${b})`,
-              size: isMobile ? 2 : 2.5,
+              size: isMobile ? 2.5 : 2.5,
               alpha: a / 255,
             });
           }
@@ -122,7 +125,11 @@ export function LogoParticles({
           alpha: 0,
         },
         {
-          alpha: (i) => pixels[(Math.floor(particles[i].oy - offsetY) * tempCanvas.width + Math.floor(particles[i].ox - offsetX)) * 4 + 3] / 255,
+          alpha: (i) => {
+            const sx = Math.floor((particles[i].ox - offsetX) * sampleScale);
+            const sy = Math.floor((particles[i].oy - offsetY) * sampleScale);
+            return pixels[(sy * tempCanvas.width + sx) * 4 + 3] / 255;
+          },
           duration: 1.5,
           stagger: {
             each: 0.0005,
