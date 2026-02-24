@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { gsap } from 'gsap';
-import Image from 'next/image';
 
 interface Particle {
   x: number;
@@ -73,8 +72,6 @@ export function LogoParticles({
   }, []);
 
   const initParticles = useCallback(async () => {
-    if (isMobile) return;
-
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
@@ -83,7 +80,7 @@ export function LogoParticles({
     if (!ctx) return;
     ctxRef.current = ctx;
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 3);
+    const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 2 : 3);
     const rect = container.getBoundingClientRect();
 
     canvas.width = rect.width * dpr;
@@ -97,8 +94,9 @@ export function LogoParticles({
     img.crossOrigin = 'anonymous';
 
     img.onload = () => {
-      const logoScale = 0.45;
-      const maxWidth = 500;
+      // Mobile: larger relative scale so logo is clearly visible
+      const logoScale = isMobile ? 0.6 : 0.45;
+      const maxWidth = isMobile ? 280 : 500;
       const logoWidth = Math.min(rect.width * logoScale, maxWidth);
       const logoHeight = (logoWidth / img.width) * img.height;
 
@@ -115,10 +113,10 @@ export function LogoParticles({
       const pixels = imageData.data;
 
       const offsetX = (rect.width - logoWidth) / 2;
-      const offsetY = (rect.height - logoHeight) / 2;
+      const offsetY = (rect.height - logoHeight) / 2 - (isMobile ? 30 : 0);
 
-      // Particle sampling - smaller step = more particles = sharper logo
-      const step = 2;
+      // Mobile: step=3 for performance, desktop: step=2 for sharpness
+      const step = isMobile ? 3 : 2;
       const particles: Particle[] = [];
 
       for (let y = 0; y < tempCanvas.height; y += step) {
@@ -141,7 +139,7 @@ export function LogoParticles({
               vx: 0,
               vy: 0,
               color: `rgb(${r}, ${g}, ${b})`,
-              size: isMobile ? 1.8 : 2.5,
+              size: isMobile ? 1.5 : 2.5,
               alpha: a / 255,
             });
           }
@@ -162,9 +160,9 @@ export function LogoParticles({
             const sy = Math.floor((particles[i].oy - offsetY) * sampleScale);
             return pixels[(sy * tempCanvas.width + sx) * 4 + 3] / 255;
           },
-          duration: 1.5,
+          duration: isMobile ? 1.2 : 1.5,
           stagger: {
-            each: 0.0005,
+            each: isMobile ? 0.0003 : 0.0005,
             from: 'center',
           },
           ease: 'power2.out',
@@ -192,12 +190,12 @@ export function LogoParticles({
     const ctx = ctxRef.current;
     if (!ctx) return;
 
-    const distortionRadius = 100;
+    const distortionRadius = isMobile ? 70 : 100;
     const distortionRadiusSq = distortionRadius * distortionRadius;
-    const forceStrength = 0.15;
-    const maxDisplacement = 50;
+    const forceStrength = isMobile ? 0.12 : 0.15;
+    const maxDisplacement = isMobile ? 35 : 50;
     const friction = 0.9;
-    const returnSpeed = 0.08;
+    const returnSpeed = isMobile ? 0.1 : 0.08;
 
     const animate = () => {
       if (!ctx) return;
@@ -228,13 +226,11 @@ export function LogoParticles({
 
         if (isMobile) {
           // --- GYROSCOPE PARALLAX ---
-          // Particles shift based on phone tilt (like a snow globe)
           const gyro = gyroRef.current;
           homeX += gyro.x * 20;
           homeY += gyro.y * 15;
 
           // --- AUTO-BREATHING WAVE ---
-          // Very subtle wave keeps logo alive without blurring text
           const waveOffsetX =
             Math.sin(time * 0.8 + p.oy * 0.012 + p.ox * 0.005) * 0.8;
           const waveOffsetY =
@@ -243,7 +239,6 @@ export function LogoParticles({
           homeY += waveOffsetY;
 
           // --- TAP RIPPLE EFFECT ---
-          // Expanding ring pushes particles outward from tap point
           for (let r = 0; r < activeRipples.length; r++) {
             const ripple = activeRipples[r];
             const elapsed = time - ripple.startTime;
@@ -286,7 +281,7 @@ export function LogoParticles({
           }
         }
 
-        // Apply friction and return force (toward dynamic home position)
+        // Apply friction and return force
         p.vx *= friction;
         p.vy *= friction;
         p.vx += (homeX - p.x) * returnSpeed;
@@ -324,11 +319,9 @@ export function LogoParticles({
     };
 
     animate();
-  }, []);
+  }, [isMobile]);
 
   useEffect(() => {
-    if (isMobile) return;
-
     initParticles();
 
     // --- DESKTOP: Mouse handlers ---
@@ -408,14 +401,12 @@ export function LogoParticles({
     // --- MOBILE: Gyroscope handler ---
     const handleOrientation = (e: DeviceOrientationEvent) => {
       if (!isMobile) return;
-      const gamma = e.gamma || 0; // left/right tilt (-90 to 90)
-      const beta = e.beta || 0; // front/back tilt (-180 to 180)
+      const gamma = e.gamma || 0;
+      const beta = e.beta || 0;
 
-      // Normalize to -1..1, centered at ~50 degrees (typical phone holding angle)
       const targetX = Math.max(-1, Math.min(1, gamma / 25));
       const targetY = Math.max(-1, Math.min(1, (beta - 50) / 25));
 
-      // Smooth interpolation to avoid jittery movement
       gyroRef.current.x += (targetX - gyroRef.current.x) * 0.1;
       gyroRef.current.y += (targetY - gyroRef.current.y) * 0.1;
     };
@@ -431,11 +422,9 @@ export function LogoParticles({
       );
       const now = Date.now();
 
-      // Threshold above gravity (~9.8) + shake force, with cooldown
       if (totalForce > 25 && now - lastShakeRef.current > 1500) {
         lastShakeRef.current = now;
 
-        // Scatter all particles with random velocities
         const particles = particlesRef.current;
         for (let i = 0; i < particles.length; i++) {
           particles[i].vx += (Math.random() - 0.5) * 80;

@@ -17,6 +17,25 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const loadingStartTime = useRef(Date.now());
 
+  // Lock body scroll while loading screen is visible
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    const originalPosition = document.body.style.position;
+    const originalWidth = document.body.style.width;
+    const originalHeight = document.body.style.height;
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+    document.body.style.height = '100%';
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.body.style.position = originalPosition;
+      document.body.style.width = originalWidth;
+      document.body.style.height = originalHeight;
+    };
+  }, []);
+
   // Handle mobile viewport height
   useEffect(() => {
     const updateHeight = () => {
@@ -102,7 +121,12 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
     <div
       ref={containerRef}
       className="fixed inset-0 z-[100] bg-hcs-black"
-      style={{ height: viewportHeight }}
+      style={{
+        height: viewportHeight,
+        overflow: 'hidden',
+        touchAction: 'none',
+        overscrollBehavior: 'none',
+      }}
     >
       {/* Cosmic Background */}
       <CosmicBackground />
