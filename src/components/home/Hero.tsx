@@ -298,9 +298,7 @@ export function Hero() {
         style={{ opacity: 0 }}
       >
         <div className="flex flex-col items-center gap-2 group cursor-pointer">
-          <span className="text-xs text-muted tracking-widest uppercase group-hover:text-accent transition-colors">
-            Scroll
-          </span>
+        
           <div className="w-6 h-10 border-2 border-muted/50 rounded-full flex items-start justify-center p-2 group-hover:border-accent/50 transition-colors">
             <div className="w-1.5 h-3 bg-accent rounded-full animate-bounce" />
           </div>
