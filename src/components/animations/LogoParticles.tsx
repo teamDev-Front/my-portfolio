@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { gsap } from 'gsap';
+import Image from 'next/image';
 
 interface Particle {
   x: number;
@@ -72,6 +73,8 @@ export function LogoParticles({
   }, []);
 
   const initParticles = useCallback(async () => {
+    if (isMobile) return;
+
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
@@ -80,7 +83,7 @@ export function LogoParticles({
     if (!ctx) return;
     ctxRef.current = ctx;
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, 3);
     const rect = container.getBoundingClientRect();
 
     canvas.width = rect.width * dpr;
@@ -90,22 +93,23 @@ export function LogoParticles({
     ctx.scale(dpr, dpr);
 
     // Load and process logo
-    const img = new Image();
+    const img = new window.Image();
     img.crossOrigin = 'anonymous';
 
     img.onload = () => {
-      const logoScale = isMobile ? 0.7 : 0.45;
-      const maxWidth = isMobile ? 320 : 500;
+      const logoScale = 0.45;
+      const maxWidth = 500;
       const logoWidth = Math.min(rect.width * logoScale, maxWidth);
       const logoHeight = (logoWidth / img.width) * img.height;
 
+      const sampleScale = 2;
       const tempCanvas = document.createElement('canvas');
       const tempCtx = tempCanvas.getContext('2d');
       if (!tempCtx) return;
 
-      tempCanvas.width = Math.ceil(logoWidth);
-      tempCanvas.height = Math.ceil(logoHeight);
-      tempCtx.drawImage(img, 0, 0, logoWidth, logoHeight);
+      tempCanvas.width = Math.ceil(logoWidth * sampleScale);
+      tempCanvas.height = Math.ceil(logoHeight * sampleScale);
+      tempCtx.drawImage(img, 0, 0, tempCanvas.width, tempCanvas.height);
 
       const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
       const pixels = imageData.data;
@@ -117,8 +121,8 @@ export function LogoParticles({
       const step = 2;
       const particles: Particle[] = [];
 
-      for (let y = 0; y < tempCanvas.height; y += step) {
-        for (let x = 0; x < tempCanvas.width; x += step) {
+      for (let y = 0; y < tempCanvas.height; y += sampleStep) {
+        for (let x = 0; x < tempCanvas.width; x += sampleStep) {
           const i = (Math.floor(y) * tempCanvas.width + Math.floor(x)) * 4;
           const r = pixels[i];
           const g = pixels[i + 1];
@@ -126,8 +130,8 @@ export function LogoParticles({
           const a = pixels[i + 3];
 
           if (a > 50) {
-            const px = offsetX + x;
-            const py = offsetY + y;
+            const px = offsetX + x / sampleScale;
+            const py = offsetY + y / sampleScale;
 
             particles.push({
               x: px,
@@ -153,7 +157,11 @@ export function LogoParticles({
           alpha: 0,
         },
         {
-          alpha: (i) => pixels[(Math.floor(particles[i].oy - offsetY) * tempCanvas.width + Math.floor(particles[i].ox - offsetX)) * 4 + 3] / 255,
+          alpha: (i) => {
+            const sx = Math.floor((particles[i].ox - offsetX) * sampleScale);
+            const sy = Math.floor((particles[i].oy - offsetY) * sampleScale);
+            return pixels[(sy * tempCanvas.width + sx) * 4 + 3] / 255;
+          },
           duration: 1.5,
           stagger: {
             each: 0.0005,
@@ -184,10 +192,10 @@ export function LogoParticles({
     const ctx = ctxRef.current;
     if (!ctx) return;
 
-    const distortionRadius = isMobile ? 60 : 100;
+    const distortionRadius = 100;
     const distortionRadiusSq = distortionRadius * distortionRadius;
     const forceStrength = 0.15;
-    const maxDisplacement = isMobile ? 30 : 50;
+    const maxDisplacement = 50;
     const friction = 0.9;
     const returnSpeed = 0.08;
 
@@ -316,9 +324,11 @@ export function LogoParticles({
     };
 
     animate();
-  }, [isMobile]);
+  }, []);
 
   useEffect(() => {
+    if (isMobile) return;
+
     initParticles();
 
     // --- DESKTOP: Mouse handlers ---

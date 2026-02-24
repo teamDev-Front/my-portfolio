@@ -143,12 +143,6 @@ export function ContactHero() {
       {/* Decorative elements */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-hcs-dark to-transparent" />
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-        <div className="w-6 h-10 border-2 border-accent/30 rounded-full flex justify-center pt-2">
-          <div className="w-1 h-3 bg-accent rounded-full animate-bounce" />
-        </div>
-      </div>
     </section>
   );
 }

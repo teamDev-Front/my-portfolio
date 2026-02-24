@@ -177,7 +177,7 @@ export function PortfolioPreview() {
         {/* Cards container */}
         <div
           ref={horizontalRef}
-          className="flex items-center gap-8 h-full pl-[10vw] pr-[30vw]"
+          className="flex items-center gap-4 md:gap-8 h-full pl-[5vw] md:pl-[10vw] pr-[15vw] md:pr-[30vw]"
           style={{ width: 'max-content' }}
         >
           {featuredProjects.map((project, index) => (
@@ -185,7 +185,7 @@ export function PortfolioPreview() {
               key={project.id}
               ref={(el) => { cardsRef.current[index] = el; }}
               href={`/${locale}/portfolio/${project.slug}`}
-              className="group block w-[70vw] md:w-[45vw] lg:w-[35vw] h-[70vh] bg-card rounded-3xl border border-card-border overflow-hidden flex-shrink-0 relative"
+              className="group block w-[75vw] md:w-[45vw] lg:w-[35vw] h-[55vh] md:h-[70vh] bg-card rounded-2xl md:rounded-3xl border border-card-border overflow-hidden flex-shrink-0 relative"
               style={{
                 transformStyle: 'preserve-3d',
                 willChange: 'transform',
@@ -215,21 +215,21 @@ export function PortfolioPreview() {
                 </div>
 
                 {/* Project number */}
-                <div className="absolute bottom-4 left-4 text-7xl font-bold text-foreground/10 group-hover:text-accent/20 transition-colors">
+                <div className="absolute bottom-4 left-4 text-5xl md:text-7xl font-bold text-foreground/10 group-hover:text-accent/20 transition-colors">
                   0{index + 1}
                 </div>
               </div>
 
               {/* Content */}
-              <div className="p-8 h-1/2 flex flex-col justify-between">
+              <div className="p-4 md:p-8 h-1/2 flex flex-col justify-between">
                 <div>
                   <span className="text-xs text-accent font-medium uppercase tracking-wider">
                     {t(`filters.${project.category}`)}
                   </span>
-                  <h3 className="text-2xl font-semibold text-foreground mt-2 mb-3 group-hover:text-accent transition-colors duration-300">
+                  <h3 className="text-lg md:text-2xl font-semibold text-foreground mt-2 mb-2 md:mb-3 group-hover:text-accent transition-colors duration-300">
                     {project.translations[locale].title}
                   </h3>
-                  <p className="text-muted line-clamp-3">
+                  <p className="text-muted text-sm md:text-base line-clamp-2 md:line-clamp-3">
                     {project.translations[locale].shortDescription}
                   </p>
                 </div>
@@ -252,7 +252,7 @@ export function PortfolioPreview() {
           {/* Final CTA card */}
           <Link
             href={`/${locale}/portfolio`}
-            className="group flex items-center justify-center w-[40vw] md:w-[30vw] h-[70vh] bg-card rounded-3xl border border-card-border border-dashed flex-shrink-0 hover:border-accent/50 transition-colors"
+            className="group flex items-center justify-center w-[60vw] md:w-[30vw] h-[55vh] md:h-[70vh] bg-card rounded-2xl md:rounded-3xl border border-card-border border-dashed flex-shrink-0 hover:border-accent/50 transition-colors"
           >
             <div className="text-center">
               <div className="w-20 h-20 mx-auto mb-6 rounded-full border-2 border-dashed border-muted/50 flex items-center justify-center group-hover:border-accent group-hover:scale-110 transition-all duration-300">
@@ -268,12 +268,6 @@ export function PortfolioPreview() {
           </Link>
         </div>
 
-        {/* Scroll hint */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 text-muted text-sm">
-          <span className="w-8 h-[2px] bg-muted/50" />
-          <span>Scroll</span>
-          <span className="w-8 h-[2px] bg-muted/50" />
-        </div>
       </div>
     </section>
   );

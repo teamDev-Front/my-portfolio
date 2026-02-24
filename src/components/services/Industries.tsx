@@ -141,12 +141,12 @@ export function Industries() {
           <SectionTitle title={t('title')} subtitle={t('subtitle')} />
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-12">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4 mt-12">
           {industries.map((item, i) => (
             <div
               key={i}
               ref={(el) => { cardsRef.current[i] = el; }}
-              className="relative bg-card rounded-xl border border-card-border p-6 text-center cursor-default group"
+              className="relative bg-card rounded-xl border border-card-border p-4 md:p-6 text-center cursor-default group"
               style={{
                 transformStyle: 'preserve-3d',
                 perspective: '500px',

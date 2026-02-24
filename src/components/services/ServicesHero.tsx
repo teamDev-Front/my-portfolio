@@ -151,28 +151,23 @@ export function ServicesHero() {
           </p>
 
           {/* Animated stats */}
-          <div ref={numbersRef} className="grid grid-cols-3 gap-8 max-w-xl" style={{ perspective: '1000px' }}>
+          <div ref={numbersRef} className="grid grid-cols-3 gap-4 md:gap-8 max-w-xl" style={{ perspective: '1000px' }}>
             <div className="number-item text-center" style={{ transformStyle: 'preserve-3d' }}>
-              <div className="number-value text-5xl md:text-6xl font-bold text-accent mb-2" data-value="50">0+</div>
-              <div className="text-sm text-muted uppercase tracking-wider">Projects</div>
+              <div className="number-value text-3xl md:text-6xl font-bold text-accent mb-2" data-value="50">0+</div>
+              <div className="text-xs md:text-sm text-muted uppercase tracking-wider">Projects</div>
             </div>
             <div className="number-item text-center" style={{ transformStyle: 'preserve-3d' }}>
-              <div className="number-value text-5xl md:text-6xl font-bold text-accent mb-2" data-value="8">0+</div>
-              <div className="text-sm text-muted uppercase tracking-wider">Years</div>
+              <div className="number-value text-3xl md:text-6xl font-bold text-accent mb-2" data-value="8">0+</div>
+              <div className="text-xs md:text-sm text-muted uppercase tracking-wider">Years</div>
             </div>
             <div className="number-item text-center" style={{ transformStyle: 'preserve-3d' }}>
-              <div className="number-value text-5xl md:text-6xl font-bold text-accent mb-2" data-value="6">0+</div>
-              <div className="text-sm text-muted uppercase tracking-wider">Services</div>
+              <div className="number-value text-3xl md:text-6xl font-bold text-accent mb-2" data-value="6">0+</div>
+              <div className="text-xs md:text-sm text-muted uppercase tracking-wider">Services</div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-        <span className="text-xs text-muted uppercase tracking-widest">Scroll</span>
-        <div className="w-[1px] h-16 bg-gradient-to-b from-accent to-transparent animate-pulse" />
-      </div>
     </section>
   );
 }

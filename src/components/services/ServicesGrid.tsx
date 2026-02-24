@@ -112,22 +112,22 @@ export function ServicesGrid() {
 
         <div
           ref={cardsRef}
-          className="flex gap-8 px-[10vw] py-20 min-h-screen items-center"
+          className="flex gap-4 md:gap-8 px-[5vw] md:px-[10vw] py-12 md:py-20 min-h-screen items-center"
           style={{ width: 'fit-content' }}
         >
           {services.map((service, index) => (
             <div
               key={service.key}
               id={service.id}
-              className="w-[80vw] md:w-[60vw] lg:w-[45vw] flex-shrink-0"
+              className="w-[85vw] md:w-[60vw] lg:w-[45vw] flex-shrink-0"
               style={{ perspective: '1500px' }}
             >
               <div
-                className="card-inner relative bg-card/80 backdrop-blur-sm rounded-3xl border border-card-border p-8 lg:p-12 h-full"
+                className="card-inner relative bg-card/80 backdrop-blur-sm rounded-2xl md:rounded-3xl border border-card-border p-5 md:p-8 lg:p-12 h-full"
                 style={{ transformStyle: 'preserve-3d' }}
               >
                 {/* Large number background */}
-                <div className="card-number absolute top-4 right-4 text-[12rem] font-bold text-accent/5 leading-none pointer-events-none">
+                <div className="card-number absolute top-4 right-4 text-[6rem] md:text-[12rem] font-bold text-accent/5 leading-none pointer-events-none">
                   {String(index + 1).padStart(2, '0')}
                 </div>
 

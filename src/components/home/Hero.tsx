@@ -19,7 +19,6 @@ export function Hero() {
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const techRef = useRef<HTMLDivElement>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const gyroRef = useRef({ x: 0, y: 0 });
@@ -151,14 +150,6 @@ export function Hero() {
         '-=0.3'
       );
 
-      // Scroll indicator
-      masterTL.fromTo(
-        scrollRef.current,
-        { opacity: 0, y: -20 },
-        { opacity: 1, y: 0, duration: 0.6 },
-        '-=0.2'
-      );
-
       // Parallax scroll effect
       ScrollTrigger.create({
         trigger: heroRef.current,
@@ -232,20 +223,20 @@ export function Hero() {
         style={{ transform: 'scaleX(0)' }}
       />
 
-      <div ref={titleContainerRef} className="container-custom relative z-10 pt-32 pb-20">
+      <div ref={titleContainerRef} className="container-custom relative z-10 pt-28 md:pt-36 lg:pt-40 pb-12 md:pb-20">
         <div className="max-w-5xl mx-auto text-center">
           {/* Main title with word animation */}
           <h1
-            className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-foreground leading-tight mb-8"
+            className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-foreground leading-tight mb-8"
             style={{ perspective: '1000px' }}
           >
             {words.map((word, i) => {
-              const isHighlight = word.includes('&') || word === 'Convert' || word === 'Convertem';
+              const isHighlight = word.includes('&') || word === 'IA' || word === 'Automations';
               return (
                 <span
                   key={i}
                   ref={(el) => { wordsRef.current[i] = el; }}
-                  className={`inline-block mr-4 ${isHighlight ? 'gradient-text' : ''}`}
+                  className={`inline-block mr-2 md:mr-4 ${isHighlight ? 'gradient-text' : ''}`}
                   style={{
                     transformStyle: 'preserve-3d',
                   }}
@@ -278,11 +269,11 @@ export function Hero() {
           </div>
 
           {/* Tech stack badges */}
-          <div ref={techRef} className="mt-16 flex flex-wrap justify-center gap-3">
+          <div ref={techRef} className="mt-10 md:mt-16 flex flex-wrap justify-center gap-2 md:gap-3">
             {['React', 'Next.js', 'TypeScript', 'Node.js', 'Python', 'AI/LLM'].map((tech) => (
               <span
                 key={tech}
-                className="px-4 py-2 bg-card/50 border border-card-border rounded-full text-sm text-muted hover:border-accent/50 hover:text-accent hover:scale-110 transition-all duration-300 cursor-default backdrop-blur-sm"
+                className="px-3 py-1.5 md:px-4 md:py-2 bg-card/50 border border-card-border rounded-full text-xs md:text-sm text-muted hover:border-accent/50 hover:text-accent hover:scale-110 transition-all duration-300 cursor-default backdrop-blur-sm"
               >
                 {tech}
               </span>
@@ -291,25 +282,11 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div
-        ref={scrollRef}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2"
-        style={{ opacity: 0 }}
-      >
-        <div className="flex flex-col items-center gap-2 group cursor-pointer">
-        
-          <div className="w-6 h-10 border-2 border-muted/50 rounded-full flex items-start justify-center p-2 group-hover:border-accent/50 transition-colors">
-            <div className="w-1.5 h-3 bg-accent rounded-full animate-bounce" />
-          </div>
-        </div>
-      </div>
-
-      {/* Decorative corner elements */}
-      <div className="absolute top-8 left-8 w-20 h-20 border-l-2 border-t-2 border-accent/20 rounded-tl-lg" />
-      <div className="absolute top-8 right-8 w-20 h-20 border-r-2 border-t-2 border-accent/20 rounded-tr-lg" />
-      <div className="absolute bottom-8 left-8 w-20 h-20 border-l-2 border-b-2 border-accent/20 rounded-bl-lg" />
-      <div className="absolute bottom-8 right-8 w-20 h-20 border-r-2 border-b-2 border-accent/20 rounded-br-lg" />
+      {/* Decorative corner elements - hidden on mobile */}
+      <div className="hidden md:block absolute top-8 left-8 w-20 h-20 border-l-2 border-t-2 border-accent/20 rounded-tl-lg" />
+      <div className="hidden md:block absolute top-8 right-8 w-20 h-20 border-r-2 border-t-2 border-accent/20 rounded-tr-lg" />
+      <div className="hidden md:block absolute bottom-8 left-8 w-20 h-20 border-l-2 border-b-2 border-accent/20 rounded-bl-lg" />
+      <div className="hidden md:block absolute bottom-8 right-8 w-20 h-20 border-r-2 border-b-2 border-accent/20 rounded-br-lg" />
     </section>
   );
 }

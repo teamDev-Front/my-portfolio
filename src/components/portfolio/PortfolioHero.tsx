@@ -118,10 +118,10 @@ export function PortfolioHero() {
       </div>
 
       {/* Infinite marquee */}
-      <div className="absolute bottom-0 left-0 right-0 py-8 border-t border-card-border/50 overflow-hidden">
-        <div ref={marqueeRef} className="flex gap-16 whitespace-nowrap" style={{ width: 'fit-content' }}>
+      <div className="absolute bottom-0 left-0 right-0 py-4 md:py-8 border-t border-card-border/50 overflow-hidden">
+        <div ref={marqueeRef} className="flex gap-8 md:gap-16 whitespace-nowrap" style={{ width: 'fit-content' }}>
           {[...marqueeWords, ...marqueeWords, ...marqueeWords, ...marqueeWords].map((word, i) => (
-            <span key={i} className="text-6xl md:text-8xl font-bold text-accent/10 flex items-center gap-16">
+            <span key={i} className="text-4xl md:text-8xl font-bold text-accent/10 flex items-center gap-8 md:gap-16">
               {word}
               <span className="w-4 h-4 bg-accent/10 rounded-full" />
             </span>
@@ -129,11 +129,6 @@ export function PortfolioHero() {
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-32 right-8 flex flex-col items-center gap-2">
-        <div className="w-[1px] h-20 bg-gradient-to-b from-accent to-transparent" />
-        <span className="text-xs text-muted uppercase tracking-widest rotate-90 origin-center translate-y-8">Scroll</span>
-      </div>
     </section>
   );
 }
