@@ -226,11 +226,11 @@ export function LogoParticles({
           homeY += gyro.y * 15;
 
           // --- AUTO-BREATHING WAVE ---
-          // Subtle sine wave ripples through particles, keeping logo sharp but alive
+          // Very subtle wave keeps logo alive without blurring text
           const waveOffsetX =
-            Math.sin(time * 0.8 + p.oy * 0.012 + p.ox * 0.005) * 1.5;
+            Math.sin(time * 0.8 + p.oy * 0.012 + p.ox * 0.005) * 0.8;
           const waveOffsetY =
-            Math.cos(time * 0.6 + p.ox * 0.012 + p.oy * 0.005) * 1.5;
+            Math.cos(time * 0.6 + p.ox * 0.012 + p.oy * 0.005) * 0.8;
           homeX += waveOffsetX;
           homeY += waveOffsetY;
 
@@ -300,9 +300,14 @@ export function LogoParticles({
         if (p.alpha > 0.01) {
           ctx.globalAlpha = p.alpha;
           ctx.fillStyle = p.color;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          ctx.fill();
+          if (isMobile) {
+            // Square pixels + integer snap = pixel-perfect, no anti-alias blur
+            ctx.fillRect(Math.round(p.x), Math.round(p.y), 2, 2);
+          } else {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+          }
         }
       }
 
