@@ -113,8 +113,8 @@ export function LogoParticles({
       const offsetX = (rect.width - logoWidth) / 2;
       const offsetY = (rect.height - logoHeight) / 2;
 
-      // Particle sampling - larger step = fewer particles = better performance
-      const step = isMobile ? 3 : 2;
+      // Particle sampling - smaller step = more particles = sharper logo
+      const step = 2;
       const particles: Particle[] = [];
 
       for (let y = 0; y < tempCanvas.height; y += step) {
@@ -137,7 +137,7 @@ export function LogoParticles({
               vx: 0,
               vy: 0,
               color: `rgb(${r}, ${g}, ${b})`,
-              size: isMobile ? 2 : 2.5,
+              size: isMobile ? 1.8 : 2.5,
               alpha: a / 255,
             });
           }
@@ -226,11 +226,11 @@ export function LogoParticles({
           homeY += gyro.y * 15;
 
           // --- AUTO-BREATHING WAVE ---
-          // Continuous sine wave ripples through particles, making logo feel alive
+          // Subtle sine wave ripples through particles, keeping logo sharp but alive
           const waveOffsetX =
-            Math.sin(time * 0.8 + p.oy * 0.012 + p.ox * 0.005) * 4;
+            Math.sin(time * 0.8 + p.oy * 0.012 + p.ox * 0.005) * 1.5;
           const waveOffsetY =
-            Math.cos(time * 0.6 + p.ox * 0.012 + p.oy * 0.005) * 4;
+            Math.cos(time * 0.6 + p.ox * 0.012 + p.oy * 0.005) * 1.5;
           homeX += waveOffsetX;
           homeY += waveOffsetY;
 
