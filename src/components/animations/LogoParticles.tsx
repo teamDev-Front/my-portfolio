@@ -15,6 +15,13 @@ interface Particle {
   alpha: number;
 }
 
+interface Ripple {
+  x: number;
+  y: number;
+  startTime: number;
+  strength: number;
+}
+
 interface LogoParticlesProps {
   logoPath?: string;
   onReady?: () => void;
@@ -32,12 +39,37 @@ export function LogoParticles({
   const isReadyRef = useRef(false);
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
 
+  // Mobile-specific refs
+  const gyroRef = useRef({ x: 0, y: 0 });
+  const ripplesRef = useRef<Ripple[]>([]);
+  const gyroPermissionRequestedRef = useRef(false);
+  const lastShakeRef = useRef(0);
+
   const [isMobile] = useState(() => {
     if (typeof window !== 'undefined') {
       return window.innerWidth < 768;
     }
     return false;
   });
+
+  // Request gyroscope permission (iOS 13+ requires user gesture)
+  const requestGyroPermission = useCallback(() => {
+    if (gyroPermissionRequestedRef.current) return;
+    gyroPermissionRequestedRef.current = true;
+
+    try {
+      const DOE = DeviceOrientationEvent as unknown as {
+        requestPermission?: () => Promise<string>;
+      };
+      if (typeof DOE.requestPermission === 'function') {
+        DOE.requestPermission().catch(() => {
+          // Permission denied - gyroscope won't work, but other effects will
+        });
+      }
+    } catch {
+      // DeviceOrientationEvent not available
+    }
+  }, []);
 
   const initParticles = useCallback(async () => {
     const canvas = canvasRef.current;
@@ -113,7 +145,6 @@ export function LogoParticles({
       }
 
       particlesRef.current = particles;
-      console.log(`Logo particles created: ${particles.length}`);
 
       // Entrance animation with GSAP
       gsap.fromTo(
@@ -165,34 +196,93 @@ export function LogoParticles({
 
       const particles = particlesRef.current;
       const mouse = mouseRef.current;
+      const time = performance.now() * 0.001;
 
       // Clear canvas
       ctx.clearRect(0, 0, width, height);
+
+      // Clean up expired ripples (mobile)
+      if (isMobile) {
+        ripplesRef.current = ripplesRef.current.filter(
+          (r) => time - r.startTime < 1.2
+        );
+      }
+
+      const activeRipples = ripplesRef.current;
 
       // Update and draw particles
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
 
-        // Mouse interaction
-        if (mouse.active) {
-          const dx = p.x - mouse.x;
-          const dy = p.y - mouse.y;
-          const distSq = dx * dx + dy * dy;
+        // Calculate dynamic home position
+        let homeX = p.ox;
+        let homeY = p.oy;
 
-          if (distSq < distortionRadiusSq && distSq > 1) {
-            const dist = Math.sqrt(distSq);
-            const force = (1 - dist / distortionRadius) * forceStrength * distortionRadius;
-            const angle = Math.atan2(dy, dx);
-            p.vx += Math.cos(angle) * force;
-            p.vy += Math.sin(angle) * force;
+        if (isMobile) {
+          // --- GYROSCOPE PARALLAX ---
+          // Particles shift based on phone tilt (like a snow globe)
+          const gyro = gyroRef.current;
+          homeX += gyro.x * 20;
+          homeY += gyro.y * 15;
+
+          // --- AUTO-BREATHING WAVE ---
+          // Continuous sine wave ripples through particles, making logo feel alive
+          const waveOffsetX =
+            Math.sin(time * 0.8 + p.oy * 0.012 + p.ox * 0.005) * 4;
+          const waveOffsetY =
+            Math.cos(time * 0.6 + p.ox * 0.012 + p.oy * 0.005) * 4;
+          homeX += waveOffsetX;
+          homeY += waveOffsetY;
+
+          // --- TAP RIPPLE EFFECT ---
+          // Expanding ring pushes particles outward from tap point
+          for (let r = 0; r < activeRipples.length; r++) {
+            const ripple = activeRipples[r];
+            const elapsed = time - ripple.startTime;
+            const rippleRadius = elapsed * 280;
+            const ringWidth = 50;
+            const fadeFactor = Math.max(0, 1 - elapsed / 1.2);
+
+            const dx = p.x - ripple.x;
+            const dy = p.y - ripple.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            const distFromRing = Math.abs(dist - rippleRadius);
+            if (distFromRing < ringWidth && dist > 1) {
+              const ringForce =
+                (1 - distFromRing / ringWidth) *
+                ripple.strength *
+                fadeFactor;
+              const angle = Math.atan2(dy, dx);
+              p.vx += Math.cos(angle) * ringForce;
+              p.vy += Math.sin(angle) * ringForce;
+            }
+          }
+        } else {
+          // --- DESKTOP: Mouse interaction ---
+          if (mouse.active) {
+            const dx = p.x - mouse.x;
+            const dy = p.y - mouse.y;
+            const distSq = dx * dx + dy * dy;
+
+            if (distSq < distortionRadiusSq && distSq > 1) {
+              const dist = Math.sqrt(distSq);
+              const force =
+                (1 - dist / distortionRadius) *
+                forceStrength *
+                distortionRadius;
+              const angle = Math.atan2(dy, dx);
+              p.vx += Math.cos(angle) * force;
+              p.vy += Math.sin(angle) * force;
+            }
           }
         }
 
-        // Apply friction and return force
+        // Apply friction and return force (toward dynamic home position)
         p.vx *= friction;
         p.vy *= friction;
-        p.vx += (p.ox - p.x) * returnSpeed;
-        p.vy += (p.oy - p.y) * returnSpeed;
+        p.vx += (homeX - p.x) * returnSpeed;
+        p.vy += (homeY - p.y) * returnSpeed;
 
         // Clamp velocity
         const vel = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
@@ -226,6 +316,7 @@ export function LogoParticles({
   useEffect(() => {
     initParticles();
 
+    // --- DESKTOP: Mouse handlers ---
     const handleMouseMove = (e: MouseEvent) => {
       const canvas = canvasRef.current;
       if (!canvas) return;
@@ -241,11 +332,54 @@ export function LogoParticles({
       mouseRef.current.y = -9999;
     };
 
-    const handleTouchMove = (e: TouchEvent) => {
+    // --- MOBILE: Touch handlers ---
+    const handleTouchStart = (e: TouchEvent) => {
+      if (!isMobile) return;
+
+      // Request gyroscope permission on first touch (iOS 13+ needs user gesture)
+      if (!gyroPermissionRequestedRef.current) {
+        requestGyroPermission();
+      }
+
+      // Create ripple at tap point
       if (e.touches.length > 0) {
         const canvas = canvasRef.current;
         if (!canvas) return;
         const rect = canvas.getBoundingClientRect();
+        ripplesRef.current.push({
+          x: e.touches[0].clientX - rect.left,
+          y: e.touches[0].clientY - rect.top,
+          startTime: performance.now() * 0.001,
+          strength: 6,
+        });
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length === 0) return;
+
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+
+      if (isMobile) {
+        // Create trail ripples along drag path (throttled)
+        const now = performance.now() * 0.001;
+        const lastRipple = ripplesRef.current[ripplesRef.current.length - 1];
+        if (!lastRipple || now - lastRipple.startTime > 0.06) {
+          ripplesRef.current.push({
+            x: e.touches[0].clientX - rect.left,
+            y: e.touches[0].clientY - rect.top,
+            startTime: now,
+            strength: 3,
+          });
+          // Prevent memory buildup
+          if (ripplesRef.current.length > 25) {
+            ripplesRef.current = ripplesRef.current.slice(-18);
+          }
+        }
+      } else {
+        // Desktop touch: treat as mouse
         mouseRef.current.x = e.touches[0].clientX - rect.left;
         mouseRef.current.y = e.touches[0].clientY - rect.top;
         mouseRef.current.active = true;
@@ -256,12 +390,63 @@ export function LogoParticles({
       mouseRef.current.active = false;
     };
 
+    // --- MOBILE: Gyroscope handler ---
+    const handleOrientation = (e: DeviceOrientationEvent) => {
+      if (!isMobile) return;
+      const gamma = e.gamma || 0; // left/right tilt (-90 to 90)
+      const beta = e.beta || 0; // front/back tilt (-180 to 180)
+
+      // Normalize to -1..1, centered at ~50 degrees (typical phone holding angle)
+      const targetX = Math.max(-1, Math.min(1, gamma / 25));
+      const targetY = Math.max(-1, Math.min(1, (beta - 50) / 25));
+
+      // Smooth interpolation to avoid jittery movement
+      gyroRef.current.x += (targetX - gyroRef.current.x) * 0.1;
+      gyroRef.current.y += (targetY - gyroRef.current.y) * 0.1;
+    };
+
+    // --- MOBILE: Shake detection ---
+    const handleMotion = (e: DeviceMotionEvent) => {
+      if (!isMobile) return;
+      const acc = e.accelerationIncludingGravity;
+      if (!acc || acc.x === null || acc.y === null || acc.z === null) return;
+
+      const totalForce = Math.sqrt(
+        acc.x ** 2 + acc.y ** 2 + acc.z ** 2
+      );
+      const now = Date.now();
+
+      // Threshold above gravity (~9.8) + shake force, with cooldown
+      if (totalForce > 25 && now - lastShakeRef.current > 1500) {
+        lastShakeRef.current = now;
+
+        // Scatter all particles with random velocities
+        const particles = particlesRef.current;
+        for (let i = 0; i < particles.length; i++) {
+          particles[i].vx += (Math.random() - 0.5) * 80;
+          particles[i].vy += (Math.random() - 0.5) * 80;
+        }
+      }
+    };
+
+    // Attach event listeners
     const container = containerRef.current;
     if (container) {
       container.addEventListener('mousemove', handleMouseMove);
       container.addEventListener('mouseleave', handleMouseLeave);
-      container.addEventListener('touchmove', handleTouchMove, { passive: true });
+      container.addEventListener('touchstart', handleTouchStart, {
+        passive: true,
+      });
+      container.addEventListener('touchmove', handleTouchMove, {
+        passive: true,
+      });
       container.addEventListener('touchend', handleTouchEnd);
+    }
+
+    // Mobile device sensor listeners
+    if (isMobile) {
+      window.addEventListener('deviceorientation', handleOrientation);
+      window.addEventListener('devicemotion', handleMotion);
     }
 
     return () => {
@@ -271,11 +456,16 @@ export function LogoParticles({
       if (container) {
         container.removeEventListener('mousemove', handleMouseMove);
         container.removeEventListener('mouseleave', handleMouseLeave);
+        container.removeEventListener('touchstart', handleTouchStart);
         container.removeEventListener('touchmove', handleTouchMove);
         container.removeEventListener('touchend', handleTouchEnd);
       }
+      if (isMobile) {
+        window.removeEventListener('deviceorientation', handleOrientation);
+        window.removeEventListener('devicemotion', handleMotion);
+      }
     };
-  }, [initParticles]);
+  }, [initParticles, isMobile, requestGyroPermission]);
 
   return (
     <div

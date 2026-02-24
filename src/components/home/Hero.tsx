@@ -22,21 +22,49 @@ export function Hero() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const gyroRef = useRef({ x: 0, y: 0 });
+
+  const [isMobile] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 768;
+    }
+    return false;
+  });
 
   const tagline = t('tagline');
   const words = tagline.split(' ');
 
-  // Mouse tracking for parallax
+  // Mouse/Gyroscope tracking for parallax
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 2;
-      const y = (e.clientY / window.innerHeight - 0.5) * 2;
-      setMousePosition({ x, y });
-    };
+    if (isMobile) {
+      // Mobile: use gyroscope for background parallax
+      const handleOrientation = (e: DeviceOrientationEvent) => {
+        const gamma = e.gamma || 0;
+        const beta = e.beta || 0;
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+        const targetX = Math.max(-1, Math.min(1, gamma / 25));
+        const targetY = Math.max(-1, Math.min(1, (beta - 50) / 25));
+
+        gyroRef.current.x += (targetX - gyroRef.current.x) * 0.1;
+        gyroRef.current.y += (targetY - gyroRef.current.y) * 0.1;
+
+        setMousePosition({ x: gyroRef.current.x, y: gyroRef.current.y });
+      };
+
+      window.addEventListener('deviceorientation', handleOrientation);
+      return () => window.removeEventListener('deviceorientation', handleOrientation);
+    } else {
+      // Desktop: use mouse
+      const handleMouseMove = (e: MouseEvent) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 2;
+        const y = (e.clientY / window.innerHeight - 0.5) * 2;
+        setMousePosition({ x, y });
+      };
+
+      window.addEventListener('mousemove', handleMouseMove);
+      return () => window.removeEventListener('mousemove', handleMouseMove);
+    }
+  }, [isMobile]);
 
   // Main animation sequence
   useEffect(() => {

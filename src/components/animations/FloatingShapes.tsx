@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 
 interface Shape {
@@ -26,6 +26,14 @@ const shapes: Shape[] = [
 export function FloatingShapes() {
   const containerRef = useRef<HTMLDivElement>(null);
   const shapeRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const gyroRef = useRef({ x: 0, y: 0 });
+
+  const [isMobile] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 768;
+    }
+    return false;
+  });
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -60,8 +68,9 @@ export function FloatingShapes() {
       });
     }, containerRef);
 
-    // Mouse parallax effect
+    // Desktop: Mouse parallax effect
     const handleMouseMove = (e: MouseEvent) => {
+      if (isMobile) return;
       const { clientX, clientY } = e;
       const xPercent = (clientX / window.innerWidth - 0.5) * 2;
       const yPercent = (clientY / window.innerHeight - 0.5) * 2;
@@ -78,13 +87,42 @@ export function FloatingShapes() {
       });
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    // Mobile: Gyroscope parallax effect
+    const handleOrientation = (e: DeviceOrientationEvent) => {
+      if (!isMobile) return;
+      const gamma = e.gamma || 0;
+      const beta = e.beta || 0;
+
+      const targetX = Math.max(-1, Math.min(1, gamma / 25));
+      const targetY = Math.max(-1, Math.min(1, (beta - 50) / 25));
+
+      gyroRef.current.x += (targetX - gyroRef.current.x) * 0.1;
+      gyroRef.current.y += (targetY - gyroRef.current.y) * 0.1;
+
+      shapeRefs.current.forEach((shape, i) => {
+        if (!shape) return;
+        const depth = (i + 1) * 8;
+        gsap.to(shape, {
+          x: gyroRef.current.x * depth,
+          y: gyroRef.current.y * depth,
+          duration: 0.8,
+          ease: 'power2.out',
+        });
+      });
+    };
+
+    if (isMobile) {
+      window.addEventListener('deviceorientation', handleOrientation);
+    } else {
+      window.addEventListener('mousemove', handleMouseMove);
+    }
 
     return () => {
       ctx.revert();
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('deviceorientation', handleOrientation);
     };
-  }, []);
+  }, [isMobile]);
 
   const renderShape = (shape: Shape) => {
     switch (shape.type) {
