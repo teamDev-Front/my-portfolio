@@ -203,7 +203,7 @@ export function Hero() {
             style={{ perspective: '1000px' }}
           >
             {words.map((word, i) => {
-              const isHighlight = word === 'Completas' || word === 'Complete' || word === 'Convertem' || word === 'Convert';
+              const isHighlight = word.includes('&') || word === 'IA' || word === 'Automations';
               return (
                 <span
                   key={i}
