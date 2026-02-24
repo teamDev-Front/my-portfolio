@@ -195,11 +195,11 @@ export function Hero() {
         style={{ transform: 'scaleX(0)' }}
       />
 
-      <div ref={titleContainerRef} className="container-custom relative z-10 pt-24 md:pt-32 pb-12 md:pb-20">
+      <div ref={titleContainerRef} className="container-custom relative z-10 pt-28 md:pt-36 lg:pt-40 pb-12 md:pb-20">
         <div className="max-w-5xl mx-auto text-center">
           {/* Main title with word animation */}
           <h1
-            className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-foreground leading-tight mb-8"
+            className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-foreground leading-tight mb-8"
             style={{ perspective: '1000px' }}
           >
             {words.map((word, i) => {
