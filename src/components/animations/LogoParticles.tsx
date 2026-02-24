@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { gsap } from 'gsap';
+import Image from 'next/image';
 
 interface Particle {
   x: number;
@@ -31,6 +32,7 @@ export function LogoParticles({
   const mouseRef = useRef({ x: -9999, y: -9999, active: false });
   const isReadyRef = useRef(false);
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
+  const mobileLogoRef = useRef<HTMLImageElement | null>(null);
 
   const [isMobile] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -39,7 +41,34 @@ export function LogoParticles({
     return false;
   });
 
+  // Mobile: animate the SVG image directly
+  useEffect(() => {
+    if (!isMobile || !mobileLogoRef.current) return;
+
+    const logo = mobileLogoRef.current;
+
+    gsap.set(logo, { opacity: 0, scale: 0.8, filter: 'blur(8px)' });
+
+    gsap.to(logo, {
+      opacity: 1,
+      scale: 1,
+      filter: 'blur(0px)',
+      duration: 1.5,
+      ease: 'power2.out',
+      delay: 0.2,
+      onComplete: () => {
+        if (!isReadyRef.current) {
+          isReadyRef.current = true;
+          onReady?.();
+        }
+      },
+    });
+  }, [isMobile, onReady]);
+
+  // Desktop: particle system
   const initParticles = useCallback(async () => {
+    if (isMobile) return;
+
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
@@ -58,16 +87,15 @@ export function LogoParticles({
     ctx.scale(dpr, dpr);
 
     // Load and process logo
-    const img = new Image();
+    const img = new window.Image();
     img.crossOrigin = 'anonymous';
 
     img.onload = () => {
-      const logoScale = isMobile ? 0.7 : 0.45;
-      const maxWidth = isMobile ? 320 : 500;
+      const logoScale = 0.45;
+      const maxWidth = 500;
       const logoWidth = Math.min(rect.width * logoScale, maxWidth);
       const logoHeight = (logoWidth / img.width) * img.height;
 
-      // Render SVG at 2x for crisp particle sampling on all screens
       const sampleScale = 2;
       const tempCanvas = document.createElement('canvas');
       const tempCtx = tempCanvas.getContext('2d');
@@ -83,8 +111,7 @@ export function LogoParticles({
       const offsetX = (rect.width - logoWidth) / 2;
       const offsetY = (rect.height - logoHeight) / 2;
 
-      // Particle sampling - step is in CSS-pixel space (independent of sampleScale)
-      const step = isMobile ? 2 : 2;
+      const step = 2;
       const sampleStep = step * sampleScale;
       const particles: Particle[] = [];
 
@@ -108,7 +135,7 @@ export function LogoParticles({
               vx: 0,
               vy: 0,
               color: `rgb(${r}, ${g}, ${b})`,
-              size: isMobile ? 2.5 : 2.5,
+              size: 2.5,
               alpha: a / 255,
             });
           }
@@ -116,7 +143,6 @@ export function LogoParticles({
       }
 
       particlesRef.current = particles;
-      console.log(`Logo particles created: ${particles.length}`);
 
       // Entrance animation with GSAP
       gsap.fromTo(
@@ -160,10 +186,10 @@ export function LogoParticles({
     const ctx = ctxRef.current;
     if (!ctx) return;
 
-    const distortionRadius = isMobile ? 60 : 100;
+    const distortionRadius = 100;
     const distortionRadiusSq = distortionRadius * distortionRadius;
     const forceStrength = 0.15;
-    const maxDisplacement = isMobile ? 30 : 50;
+    const maxDisplacement = 50;
     const friction = 0.9;
     const returnSpeed = 0.08;
 
@@ -228,9 +254,11 @@ export function LogoParticles({
     };
 
     animate();
-  }, [isMobile]);
+  }, []);
 
   useEffect(() => {
+    if (isMobile) return;
+
     initParticles();
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -248,27 +276,10 @@ export function LogoParticles({
       mouseRef.current.y = -9999;
     };
 
-    const handleTouchMove = (e: TouchEvent) => {
-      if (e.touches.length > 0) {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        const rect = canvas.getBoundingClientRect();
-        mouseRef.current.x = e.touches[0].clientX - rect.left;
-        mouseRef.current.y = e.touches[0].clientY - rect.top;
-        mouseRef.current.active = true;
-      }
-    };
-
-    const handleTouchEnd = () => {
-      mouseRef.current.active = false;
-    };
-
     const container = containerRef.current;
     if (container) {
       container.addEventListener('mousemove', handleMouseMove);
       container.addEventListener('mouseleave', handleMouseLeave);
-      container.addEventListener('touchmove', handleTouchMove, { passive: true });
-      container.addEventListener('touchend', handleTouchEnd);
     }
 
     return () => {
@@ -278,12 +289,28 @@ export function LogoParticles({
       if (container) {
         container.removeEventListener('mousemove', handleMouseMove);
         container.removeEventListener('mouseleave', handleMouseLeave);
-        container.removeEventListener('touchmove', handleTouchMove);
-        container.removeEventListener('touchend', handleTouchEnd);
       }
     };
-  }, [initParticles]);
+  }, [isMobile, initParticles]);
 
+  // Mobile: render crisp SVG directly
+  if (isMobile) {
+    return (
+      <div className="absolute inset-0 z-10 flex items-center justify-center">
+        <Image
+          ref={mobileLogoRef}
+          src={logoPath}
+          alt="HCS Logo"
+          width={300}
+          height={64}
+          priority
+          className="w-[70vw] max-w-[320px] h-auto opacity-0"
+        />
+      </div>
+    );
+  }
+
+  // Desktop: particle canvas
   return (
     <div
       ref={containerRef}
