@@ -121,8 +121,8 @@ export function LogoParticles({
       const step = 2;
       const particles: Particle[] = [];
 
-      for (let y = 0; y < tempCanvas.height; y += sampleStep) {
-        for (let x = 0; x < tempCanvas.width; x += sampleStep) {
+      for (let y = 0; y < tempCanvas.height; y += step) {
+        for (let x = 0; x < tempCanvas.width; x += step) {
           const i = (Math.floor(y) * tempCanvas.width + Math.floor(x)) * 4;
           const r = pixels[i];
           const g = pixels[i + 1];
