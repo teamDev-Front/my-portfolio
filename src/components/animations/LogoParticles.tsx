@@ -160,9 +160,9 @@ export function LogoParticles({
             const sy = Math.floor((particles[i].oy - offsetY) * sampleScale);
             return pixels[(sy * tempCanvas.width + sx) * 4 + 3] / 255;
           },
-          duration: isMobile ? 1.2 : 1.5,
+          duration: isMobile ? 0.6 : 1.5,
           stagger: {
-            each: isMobile ? 0.0003 : 0.0005,
+            each: isMobile ? 0.00008 : 0.0005,
             from: 'center',
           },
           ease: 'power2.out',

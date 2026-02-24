@@ -64,24 +64,27 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
   // Animate content when ready
   useEffect(() => {
     if (isReady && contentRef.current) {
+      const isMobile = window.innerWidth < 768;
       gsap.fromTo(
         contentRef.current,
-        { opacity: 0, y: 30 },
+        { opacity: 0, y: isMobile ? 15 : 30 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
+          duration: isMobile ? 0.4 : 0.8,
           ease: 'power2.out',
-          delay: 0.3,
+          delay: isMobile ? 0.05 : 0.3,
         }
       );
     }
   }, [isReady]);
 
   const handleLoadComplete = () => {
-    // Ensure minimum loading time of 1.5 seconds
+    // Ensure minimum loading time (shorter on mobile for snappier feel)
+    const isMobile = window.innerWidth < 768;
+    const minTime = isMobile ? 400 : 1500;
     const elapsed = Date.now() - loadingStartTime.current;
-    const remainingTime = Math.max(0, 1500 - elapsed);
+    const remainingTime = Math.max(0, minTime - elapsed);
 
     setTimeout(() => {
       setIsReady(true);
