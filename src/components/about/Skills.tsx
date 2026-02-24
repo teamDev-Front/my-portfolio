@@ -134,12 +134,12 @@ export function Skills() {
           <SectionTitle title={t('title')} />
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mt-12">
           {skillCategories.map((category, index) => (
             <div
               key={category.key}
               ref={(el) => { cardsRef.current[index] = el; }}
-              className="bg-card rounded-2xl border border-card-border p-6 hover:border-accent/50 transition-colors duration-300"
+              className="bg-card rounded-2xl border border-card-border p-4 md:p-6 hover:border-accent/50 transition-colors duration-300"
             >
               <h3 className="text-lg font-semibold text-accent mb-4 flex items-center gap-2">
                 <span className="w-2 h-2 bg-accent rounded-full" />

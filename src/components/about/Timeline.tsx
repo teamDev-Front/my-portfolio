@@ -149,10 +149,10 @@ export function Timeline() {
                   {/* Content */}
                   <div
                     ref={(el) => { itemsRef.current[index] = el; }}
-                    className={`flex-1 ml-8 md:ml-0 ${isEven ? 'md:pr-12 md:text-right' : 'md:pl-12 md:text-left'}`}
+                    className={`flex-1 ml-4 md:ml-0 ${isEven ? 'md:pr-12 md:text-right' : 'md:pl-12 md:text-left'}`}
                     style={{ perspective: '1000px' }}
                   >
-                    <div className="bg-card rounded-xl border border-card-border p-6 hover:border-accent/50 transition-colors duration-300">
+                    <div className="bg-card rounded-xl border border-card-border p-4 md:p-6 hover:border-accent/50 transition-colors duration-300">
                       <div className={`flex items-center gap-2 mb-2 ${isEven ? 'justify-start md:justify-end' : 'justify-start'}`}>
                         {item.isCurrent && (
                           <span className="px-2 py-0.5 bg-accent/20 text-accent text-xs rounded-full animate-pulse">

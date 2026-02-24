@@ -148,13 +148,13 @@ export function PortfolioGrid() {
 
       <div className="container-custom">
         {/* Filters */}
-        <div ref={filtersRef} className="flex flex-wrap justify-center gap-3 mb-16">
+        <div ref={filtersRef} className="flex flex-wrap justify-center gap-2 md:gap-3 mb-10 md:mb-16">
           {categories.map((category) => (
             <button
               key={category}
               onClick={() => handleCategoryChange(category)}
               className={cn(
-                'px-6 py-3 rounded-full text-sm font-medium transition-all duration-500 relative overflow-hidden group',
+                'px-4 py-2 md:px-6 md:py-3 rounded-full text-xs md:text-sm font-medium transition-all duration-500 relative overflow-hidden group',
                 activeCategory === category
                   ? 'bg-accent text-white'
                   : 'bg-transparent border border-card-border text-muted hover:text-foreground hover:border-accent'
@@ -169,7 +169,7 @@ export function PortfolioGrid() {
         </div>
 
         {/* Projects Grid */}
-        <div ref={gridRef} className="grid md:grid-cols-2 gap-8">
+        <div ref={gridRef} className="grid md:grid-cols-2 gap-6 md:gap-8">
           {filteredProjects.map((project, index) => (
             <div
               key={project.id}
@@ -190,7 +190,7 @@ export function PortfolioGrid() {
 
                 {/* Project initials */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-[8rem] font-bold text-white/10">
+                  <span className="text-[5rem] md:text-[8rem] font-bold text-white/10">
                     {project.translations[locale].title.substring(0, 2).toUpperCase()}
                   </span>
                 </div>

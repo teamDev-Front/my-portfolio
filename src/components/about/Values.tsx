@@ -119,12 +119,12 @@ export function Values() {
           <SectionTitle title={t('title')} />
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mt-12">
           {values.map((value, index) => (
             <div
               key={value.key}
               ref={(el) => { cardsRef.current[index] = el; }}
-              className="group bg-card rounded-2xl border border-card-border p-6 text-center hover:border-accent/50 transition-colors duration-300 cursor-default"
+              className="group bg-card rounded-2xl border border-card-border p-4 md:p-6 text-center hover:border-accent/50 transition-colors duration-300 cursor-default"
               style={{
                 transformStyle: 'preserve-3d',
                 perspective: '1000px',
@@ -134,8 +134,8 @@ export function Values() {
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
               <div className="relative z-10">
-                <div className="w-16 h-16 bg-accent/10 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-300">
-                  <value.icon className="w-8 h-8 text-accent" />
+                <div className="w-12 h-12 md:w-16 md:h-16 bg-accent/10 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-300">
+                  <value.icon className="w-6 h-6 md:w-8 md:h-8 text-accent" />
                 </div>
                 <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-accent transition-colors">
                   {t(value.key)}

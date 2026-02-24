@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "title": "Habaeb Creative Solutions | Web Development & Digital Solutions",
-    "description": "Website creation, e-commerce, SaaS, systems and AI automation. Digital solutions for law firms, real estate, clinics and businesses.",
-    "keywords": "web development, website creation, e-commerce, SaaS, systems, AI automation, corporate websites, law firms, real estate, clinics"
+    "title": "Habaeb Creative Solutions | Web Development, SaaS, E-commerce & AI Automation",
+    "description": "Custom websites, e-commerce stores, SaaS platforms, full systems and AI automation. Tailored digital solutions for startups, law firms, clinics, real estate and enterprises. React, Next.js, Python and more.",
+    "keywords": "web development, website creation, e-commerce, SaaS, web systems, AI automation, landing pages, React, Next.js, Python, Django, TypeScript, digital solutions"
   },
   "nav": {
     "home": "Home",
@@ -14,15 +14,15 @@
     "getQuote": "Get Quote"
   },
   "hero": {
-    "tagline": "Front-End & Creative Solutions That Convert",
-    "subtitle": "Building websites, e-commerce, SaaS and systems with cutting-edge technology and user-centered design",
-    "cta": "Let's Build Your Next Digital Experience",
+    "tagline": "Complete Digital Solutions That Convert",
+    "subtitle": "Websites, e-commerce stores, SaaS platforms, full systems and AI automations built with cutting-edge technology, user-centered design and a focus on results",
+    "cta": "Get a Quote",
     "secondaryCta": "View Portfolio"
   },
   "intro": {
     "title": "About Luiz Habaeb",
-    "subtitle": "Front-End Developer & HCS Founder",
-    "description": "I'm a front-end developer with strong experience in React, Next.js, Angular and TypeScript. I also work with Python, Django, SQL, Oracle and Supabase. I integrate AI/LLM services into front-end applications and lead cross-functional teams.",
+    "subtitle": "Full-Stack Developer & HCS Founder",
+    "description": "I'm a developer with 8+ years of experience in React, Next.js, Angular and TypeScript. I also work with Python, Django, SQL, Oracle and Supabase. I build end-to-end solutions — from websites and e-commerce stores to SaaS platforms and AI automations — leading cross-functional teams from concept to delivery.",
     "highlight1": "8+ years of experience",
     "highlight2": "Database degree from FATEC (2024)",
     "highlight3": "Advanced English",
@@ -63,7 +63,7 @@
   },
   "portfolio": {
     "title": "Portfolio",
-    "subtitle": "Projects that transform businesses and create value",
+    "subtitle": "Websites, e-commerce stores, SaaS platforms and systems delivering real results for our clients",
     "viewAll": "View All Projects",
     "viewProject": "View Project",
     "filters": {
@@ -90,7 +90,7 @@
   },
   "about": {
     "pageTitle": "About Me",
-    "pageSubtitle": "Learn about my journey and values",
+    "pageSubtitle": "8+ years building digital solutions — from websites and e-commerce to SaaS and AI automations",
     "bio": {
       "title": "My Story",
       "p1": "My journey in technology began in technical support and hospital administration, which gave me a solid foundation in empathy, user service and problem-solving.",
@@ -123,7 +123,7 @@
   },
   "servicesPage": {
     "pageTitle": "Services",
-    "pageSubtitle": "Complete digital solutions for your business",
+    "pageSubtitle": "From web development to SaaS and AI automation — end-to-end solutions to grow your business",
     "websites": {
       "title": "Websites & Landing Pages",
       "description": "Creation of corporate websites, landing pages and capture pages optimized for conversion.",
@@ -219,7 +219,7 @@
   },
   "contact": {
     "pageTitle": "Contact",
-    "pageSubtitle": "Let's talk about your project",
+    "pageSubtitle": "Tell us about your project and get a tailored quote for your digital solution",
     "form": {
       "name": "Name",
       "email": "Email",
@@ -255,7 +255,7 @@
     }
   },
   "footer": {
-    "description": "Creative digital solutions that transform businesses. Web development, e-commerce, SaaS and AI automation.",
+    "description": "Web development, e-commerce, SaaS, full systems and AI automation. Tailored digital solutions that deliver results.",
     "quickLinks": "Quick Links",
     "services": "Services",
     "contact": "Contact",

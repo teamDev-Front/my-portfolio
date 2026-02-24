@@ -37,10 +37,10 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
             <span className="text-sm text-accent font-medium uppercase tracking-wider">
               {t(`filters.${project.category}`)}
             </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mt-4 mb-6">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground mt-4 mb-6">
               {translation.title}
             </h1>
-            <p className="text-xl text-muted max-w-3xl">
+            <p className="text-base md:text-xl text-muted max-w-3xl">
               {translation.fullDescription}
             </p>
             {project.liveUrl && (
@@ -68,9 +68,9 @@ export function ProjectDetail({ project }: ProjectDetailProps) {
         </FadeIn>
 
         {/* Content grid */}
-        <div className="grid lg:grid-cols-3 gap-12">
+        <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
           {/* Main content */}
-          <div className="lg:col-span-2 space-y-12">
+          <div className="lg:col-span-2 space-y-8 lg:space-y-12">
             {/* Problem */}
             <FadeIn>
               <div>

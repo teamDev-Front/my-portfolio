@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "title": "Habaeb Creative Solutions | Criação de Sites e Soluções Digitais",
-    "description": "Criação de sites, e-commerce, SaaS, sistemas e automação com IA. Soluções digitais para advocacia, imobiliária, clínicas e empresas.",
-    "keywords": "criação de sites, desenvolvimento web, e-commerce, SaaS, sistemas, automação com IA, sites institucionais, advocacia, imobiliária, clínicas"
+    "title": "Habaeb Creative Solutions | Desenvolvimento Web, SaaS, E-commerce & Automação com IA",
+    "description": "Desenvolvimento de sites, e-commerces, SaaS, sistemas completos e automação com IA. Soluções digitais sob medida para empresas, startups, clínicas, escritórios de advocacia e imobiliárias. React, Next.js, Python e mais.",
+    "keywords": "desenvolvimento web, criação de sites, e-commerce, SaaS, sistemas web, automação com IA, landing pages, React, Next.js, Python, Django, TypeScript, soluções digitais, São Paulo"
   },
   "nav": {
     "home": "Início",
@@ -14,15 +14,15 @@
     "getQuote": "Orçamento"
   },
   "hero": {
-    "tagline": "Soluções Front-End & Criativas que Convertem",
-    "subtitle": "Criação de sites, e-commerce, SaaS e sistemas com tecnologia de ponta e design centrado no usuário",
-    "cta": "Vamos Construir Sua Próxima Experiência Digital",
+    "tagline": "Soluções Digitais Completas que Convertem",
+    "subtitle": "Sites, e-commerces, SaaS, sistemas e automações com tecnologia de ponta, design centrado no usuário e foco em resultados",
+    "cta": "Solicitar Orçamento",
     "secondaryCta": "Ver Portfólio"
   },
   "intro": {
     "title": "Sobre Luiz Habaeb",
-    "subtitle": "Desenvolvedor Front-End & Fundador da HCS",
-    "description": "Sou desenvolvedor front-end com experiência sólida em React, Next.js, Angular e TypeScript. Também trabalho com Python, Django, SQL, Oracle e Supabase. Integro serviços de IA/LLM em aplicações front-end e lidero equipes multifuncionais.",
+    "subtitle": "Desenvolvedor Full-Stack & Fundador da HCS",
+    "description": "Sou desenvolvedor com mais de 8 anos de experiência em React, Next.js, Angular e TypeScript. Também trabalho com Python, Django, SQL, Oracle e Supabase. Crio soluções completas — de sites e e-commerces a SaaS e automações com IA — liderando equipes multifuncionais do conceito à entrega.",
     "highlight1": "+8 anos de experiência",
     "highlight2": "Tecnólogo em Banco de Dados - FATEC (2024)",
     "highlight3": "Inglês avançado",
@@ -63,7 +63,7 @@
   },
   "portfolio": {
     "title": "Portfólio",
-    "subtitle": "Projetos que transformam negócios e criam valor",
+    "subtitle": "Sites, e-commerces, SaaS e sistemas que geram resultados reais para nossos clientes",
     "viewAll": "Ver Todos os Projetos",
     "viewProject": "Ver Projeto",
     "filters": {
@@ -90,7 +90,7 @@
   },
   "about": {
     "pageTitle": "Sobre Mim",
-    "pageSubtitle": "Conheça minha trajetória e valores",
+    "pageSubtitle": "Mais de 8 anos criando soluções digitais — de sites e e-commerces a SaaS e automações com IA",
     "bio": {
       "title": "Minha História",
       "p1": "Minha jornada na tecnologia começou em ambientes de suporte técnico e administração hospitalar, o que me proporcionou uma base sólida em empatia, atendimento ao usuário e resolução de problemas.",
@@ -123,7 +123,7 @@
   },
   "servicesPage": {
     "pageTitle": "Serviços",
-    "pageSubtitle": "Soluções digitais completas para seu negócio",
+    "pageSubtitle": "Do desenvolvimento web ao SaaS e automação com IA — soluções completas para transformar seu negócio",
     "websites": {
       "title": "Sites & Landing Pages",
       "description": "Criação de sites institucionais, landing pages e páginas de captura otimizadas para conversão.",
@@ -219,7 +219,7 @@
   },
   "contact": {
     "pageTitle": "Contato",
-    "pageSubtitle": "Vamos conversar sobre seu projeto",
+    "pageSubtitle": "Conte sobre seu projeto e receba um orçamento personalizado para sua solução digital",
     "form": {
       "name": "Nome",
       "email": "E-mail",
@@ -255,7 +255,7 @@
     }
   },
   "footer": {
-    "description": "Soluções digitais criativas que transformam negócios. Desenvolvimento web, e-commerce, SaaS e automação com IA.",
+    "description": "Desenvolvimento web, e-commerce, SaaS, sistemas completos e automação com IA. Soluções digitais sob medida que geram resultados.",
     "quickLinks": "Links Rápidos",
     "services": "Serviços",
     "contact": "Contato",

@@ -179,13 +179,6 @@ export function AboutHero() {
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-        <div className="w-6 h-10 border-2 border-accent/30 rounded-full flex justify-center pt-2">
-          <div className="w-1 h-3 bg-accent rounded-full animate-bounce" />
-        </div>
-        <span className="text-xs text-muted uppercase tracking-widest">Scroll</span>
-      </div>
     </section>
   );
 }
