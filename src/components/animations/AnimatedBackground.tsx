@@ -1,14 +1,19 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+
+const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 export function AnimatedBackground() {
   const containerRef = useRef<HTMLDivElement>(null);
   const orbRefs = useRef<(HTMLDivElement | null)[]>([]);
   const shapeRefs = useRef<(SVGPathElement | null)[]>([]);
 
-  useEffect(() => {
+  // useLayoutEffect ensures GSAP sets initial states before browser paints,
+  // preventing a frame where elements are visible without animations
+  useIsomorphicLayoutEffect(() => {
     const ctx = gsap.context(() => {
       // Animate floating orbs
       orbRefs.current.forEach((orb, i) => {

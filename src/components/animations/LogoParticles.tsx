@@ -1,7 +1,10 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, useCallback } from 'react';
 import { gsap } from 'gsap';
+
+const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 interface Particle {
   x: number;
@@ -223,7 +226,9 @@ export function LogoParticles({
     animate();
   }, [isMobile]);
 
-  useEffect(() => {
+  // useLayoutEffect ensures canvas is initialized before paint,
+  // preventing a blank canvas flash
+  useIsomorphicLayoutEffect(() => {
     initParticles();
 
     const handleMouseMove = (e: MouseEvent) => {

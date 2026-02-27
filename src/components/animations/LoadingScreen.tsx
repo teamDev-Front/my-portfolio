@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { ParticleBackground } from './ParticleBackground';
 import { LogoParticles } from './LogoParticles';
 import { AnimatedBackground } from './AnimatedBackground';
 
@@ -10,22 +9,27 @@ interface LoadingScreenProps {
   onComplete: () => void;
 }
 
+const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+
 export function LoadingScreen({ onComplete }: LoadingScreenProps) {
-  const [viewportHeight, setViewportHeight] = useState<string | number>('100dvh');
   const [isReady, setIsReady] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const loadingStartTime = useRef(Date.now());
 
-  // Handle mobile viewport height
-  useEffect(() => {
+  // Handle mobile viewport height via direct DOM manipulation (no re-renders)
+  useIsomorphicLayoutEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
     const updateHeight = () => {
       const isMobile = window.innerWidth < 1000;
       if (isMobile && window.visualViewport) {
-        setViewportHeight(window.visualViewport.height);
+        container.style.height = `${window.visualViewport.height}px`;
       } else {
-        setViewportHeight('100dvh');
+        container.style.height = '100dvh';
       }
     };
 
@@ -43,8 +47,8 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
     };
   }, []);
 
-  // Animate content when ready
-  useEffect(() => {
+  // Animate content when ready - useLayoutEffect prevents flash before GSAP runs
+  useIsomorphicLayoutEffect(() => {
     if (isReady && contentRef.current) {
       gsap.fromTo(
         contentRef.current,
@@ -103,7 +107,7 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
     <div
       ref={containerRef}
       className="fixed inset-0 z-[100] bg-hcs-black"
-      style={{ height: viewportHeight }}
+      style={{ height: '100dvh' }}
     >
       {/* Animated Background */}
       <AnimatedBackground />
