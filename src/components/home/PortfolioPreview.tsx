@@ -1,17 +1,17 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
 import { gsap } from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight, ArrowRight } from 'lucide-react';
-import { SectionTitle } from '@/components/ui/SectionTitle';
 import { Button } from '@/components/ui/Button';
 import { getFeaturedProjects } from '@/lib/data/projects';
 import type { Locale } from '@/i18n/routing';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 export function PortfolioPreview() {
   const t = useTranslations('portfolio');
@@ -25,129 +25,180 @@ export function PortfolioPreview() {
   const progressRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<(HTMLAnchorElement | null)[]>([]);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Title animation
-      if (titleRef.current) {
-        gsap.fromTo(
-          titleRef.current,
-          { opacity: 0, y: 80, skewY: 3 },
-          {
-            opacity: 1,
-            y: 0,
-            skewY: 0,
-            duration: 1,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: titleRef.current,
-              start: 'top 85%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
-      }
+  useGSAP(
+    (_ctx, contextSafe) => {
+      const mm = gsap.matchMedia();
 
-      // Horizontal scroll animation
-      if (horizontalRef.current && triggerRef.current) {
-        const cards = horizontalRef.current;
-        const scrollWidth = cards.scrollWidth - window.innerWidth + 100;
+      mm.add(
+        {
+          isDesktop: '(min-width: 1024px) and (prefers-reduced-motion: no-preference)',
+          canHorizontalScroll: '(min-width: 768px) and (prefers-reduced-motion: no-preference)',
+          reduceMotion: '(prefers-reduced-motion: reduce)',
+        },
+        (context) => {
+          const { isDesktop, canHorizontalScroll, reduceMotion } = context.conditions as {
+            isDesktop: boolean;
+            canHorizontalScroll: boolean;
+            reduceMotion: boolean;
+          };
 
-        // Pin and horizontal scroll
-        const horizontalScroll = gsap.to(cards, {
-          x: -scrollWidth,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: triggerRef.current,
-            start: 'top top',
-            end: () => `+=${scrollWidth}`,
-            pin: true,
-            scrub: 1,
-            anticipatePin: 1,
-            onUpdate: (self) => {
-              // Update progress bar
-              if (progressRef.current) {
-                gsap.to(progressRef.current, {
-                  scaleX: self.progress,
-                  duration: 0.1,
-                });
+          // Title skew-reveal
+          if (titleRef.current && !reduceMotion) {
+            gsap.fromTo(
+              titleRef.current,
+              { opacity: 0, y: 80, skewY: 4 },
+              {
+                opacity: 1,
+                y: 0,
+                skewY: 0,
+                duration: 1.1,
+                ease: 'expo.out',
+                scrollTrigger: {
+                  trigger: titleRef.current,
+                  start: 'top 85%',
+                  toggleActions: 'play none none reverse',
+                },
               }
-            },
-          },
-        });
+            );
+          }
 
-        // Individual card animations
-        cardsRef.current.forEach((card, index) => {
-          if (!card) return;
+          const cards = cardsRef.current.filter(Boolean) as HTMLAnchorElement[];
 
-          // Parallax effect on each card
-          gsap.fromTo(
-            card,
-            {
-              scale: 0.9,
-              opacity: 0.5,
-              rotateY: 15,
-            },
-            {
-              scale: 1,
-              opacity: 1,
-              rotateY: 0,
-              ease: 'power2.out',
-              scrollTrigger: {
-                trigger: card,
-                containerAnimation: horizontalScroll,
-                start: 'left 80%',
-                end: 'left 20%',
-                scrub: 1,
+          if (!canHorizontalScroll || !horizontalRef.current || !triggerRef.current) {
+            // Mobile: vertical stack with ScrollTrigger.batch
+            ScrollTrigger.batch(cards, {
+              start: 'top 88%',
+              onEnter: (batch) =>
+                gsap.fromTo(
+                  batch,
+                  { opacity: 0, y: 60, scale: 0.95 },
+                  {
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    duration: 0.8,
+                    stagger: 0.12,
+                    ease: 'expo.out',
+                    overwrite: true,
+                  }
+                ),
+            });
+            return;
+          }
+
+          // Desktop: horizontal scroll with pinning
+          const el = horizontalRef.current;
+          const scrollWidth = () => el.scrollWidth - window.innerWidth + 100;
+
+          const horizontalScroll = gsap.to(el, {
+            x: () => -scrollWidth(),
+            ease: 'none',
+            scrollTrigger: {
+              trigger: triggerRef.current,
+              start: 'top top',
+              end: () => `+=${scrollWidth()}`,
+              pin: true,
+              scrub: 1,
+              anticipatePin: 1,
+              invalidateOnRefresh: true,
+              onUpdate: (self) => {
+                if (progressRef.current) {
+                  gsap.set(progressRef.current, { scaleX: self.progress });
+                }
               },
-            }
-          );
+            },
+          });
 
-          // Hover 3D effect
-          const handleMouseMove = (e: MouseEvent) => {
-            const rect = card.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            const mouseX = e.clientX - centerX;
-            const mouseY = e.clientY - centerY;
+          // Per-card scrub animation tied to horizontal scroll
+          cards.forEach((card) => {
+            gsap.fromTo(
+              card,
+              { scale: 0.88, opacity: 0.4, rotateY: 12 },
+              {
+                scale: 1,
+                opacity: 1,
+                rotateY: 0,
+                ease: 'power2.out',
+                scrollTrigger: {
+                  trigger: card,
+                  containerAnimation: horizontalScroll,
+                  start: 'left 85%',
+                  end: 'left 30%',
+                  scrub: 1,
+                },
+              }
+            );
+          });
 
-            const rotateX = (mouseY / rect.height) * -10;
-            const rotateY = (mouseX / rect.width) * 10;
+          // 3D hover (desktop only)
+          if (!isDesktop || !contextSafe) return;
 
-            gsap.to(card, {
-              rotateX,
-              rotateY,
-              scale: 1.02,
-              duration: 0.3,
-              ease: 'power2.out',
-              transformPerspective: 1000,
-            });
-          };
+          const cleanups: Array<() => void> = [];
 
-          const handleMouseLeave = () => {
-            gsap.to(card, {
-              rotateX: 0,
-              rotateY: 0,
-              scale: 1,
+          cards.forEach((card) => {
+            const rotX = gsap.quickTo(card, 'rotateX', {
               duration: 0.5,
-              ease: 'elastic.out(1, 0.5)',
+              ease: 'power3.out',
             });
-          };
+            const rotY = gsap.quickTo(card, 'rotateY', {
+              duration: 0.5,
+              ease: 'power3.out',
+            });
 
-          card.addEventListener('mousemove', handleMouseMove);
-          card.addEventListener('mouseleave', handleMouseLeave);
-        });
-      }
-    }, sectionRef);
+            const onMove = contextSafe((e: MouseEvent) => {
+              const rect = card.getBoundingClientRect();
+              const x = (e.clientX - rect.left) / rect.width - 0.5;
+              const y = (e.clientY - rect.top) / rect.height - 0.5;
+              rotX(-y * 10);
+              rotY(x * 10);
+            });
 
-    return () => ctx.revert();
-  }, []);
+            const onEnter = contextSafe(() =>
+              gsap.to(card, {
+                scale: 1.02,
+                duration: 0.4,
+                ease: 'power3.out',
+              })
+            );
+
+            const onLeave = contextSafe(() => {
+              rotX(0);
+              rotY(0);
+              gsap.to(card, {
+                scale: 1,
+                duration: 0.6,
+                ease: 'elastic.out(1, 0.5)',
+              });
+            });
+
+            card.addEventListener('mousemove', onMove);
+            card.addEventListener('mouseenter', onEnter);
+            card.addEventListener('mouseleave', onLeave);
+
+            cleanups.push(() => {
+              card.removeEventListener('mousemove', onMove);
+              card.removeEventListener('mouseenter', onEnter);
+              card.removeEventListener('mouseleave', onLeave);
+            });
+          });
+
+          return () => cleanups.forEach((c) => c());
+        }
+      );
+
+      return () => mm.revert();
+    },
+    { scope: sectionRef }
+  );
 
   return (
     <section ref={sectionRef} className="relative">
-      {/* Title section */}
       <div className="section-padding pb-8">
         <div className="container-custom">
-          <div ref={titleRef} className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+          <div
+            ref={titleRef}
+            className="flex flex-col md:flex-row md:items-end md:justify-between gap-6"
+          >
             <div>
               <span className="text-accent font-mono text-sm mb-2 block">03 / PORTFOLIO</span>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground">
@@ -163,10 +214,12 @@ export function PortfolioPreview() {
         </div>
       </div>
 
-      {/* Horizontal scroll section */}
-      <div ref={triggerRef} className="relative h-screen overflow-hidden">
-        {/* Progress bar */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-card-border z-20">
+      <div
+        ref={triggerRef}
+        className="relative md:h-screen md:overflow-hidden"
+        style={{ perspective: '1400px' }}
+      >
+        <div className="hidden md:block absolute top-0 left-0 right-0 h-1 bg-card-border z-20">
           <div
             ref={progressRef}
             className="h-full bg-accent origin-left"
@@ -174,54 +227,43 @@ export function PortfolioPreview() {
           />
         </div>
 
-        {/* Cards container */}
         <div
           ref={horizontalRef}
-          className="flex items-center gap-4 md:gap-8 h-full pl-[5vw] md:pl-[10vw] pr-[15vw] md:pr-[30vw]"
+          className="flex flex-col md:flex-row items-stretch md:items-center gap-6 md:gap-8 md:h-full md:pl-[10vw] md:pr-[30vw] px-4 md:px-0 py-8 md:py-0"
           style={{ width: 'max-content' }}
         >
           {featuredProjects.map((project, index) => (
             <Link
               key={project.id}
-              ref={(el) => { cardsRef.current[index] = el; }}
-              href={`/${locale}/portfolio/${project.slug}`}
-              className="group block w-[75vw] md:w-[45vw] lg:w-[35vw] h-[55vh] md:h-[70vh] bg-card rounded-2xl md:rounded-3xl border border-card-border overflow-hidden flex-shrink-0 relative"
-              style={{
-                transformStyle: 'preserve-3d',
-                willChange: 'transform',
+              ref={(el) => {
+                cardsRef.current[index] = el;
               }}
+              href={`/${locale}/portfolio/${project.slug}`}
+              className="group block w-full md:w-[45vw] lg:w-[35vw] md:h-[70vh] bg-card rounded-2xl md:rounded-3xl border border-card-border overflow-hidden md:flex-shrink-0 relative will-change-transform"
+              style={{ transformStyle: 'preserve-3d' }}
             >
-              {/* Background gradient */}
               <div className="absolute inset-0 bg-gradient-to-br from-accent/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-              {/* Image placeholder */}
-              <div className="relative h-1/2 bg-hcs-gray overflow-hidden">
+              <div className="relative h-48 md:h-1/2 bg-hcs-gray overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-accent/20 to-transparent" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <img
-                    src={project.image}
-                    alt={project.translations[locale].title}
-                    className="absolute inset-0 h-full w-full object-cover"
-                  />
+                <img
+                  src={project.image}
+                  alt={project.translations[locale].title}
+                  className="absolute inset-0 h-full w-full object-cover group-hover:scale-105 transition-transform duration-700"
+                />
 
-                </div>
-
-                {/* Hover overlay */}
                 <div className="absolute inset-0 bg-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                {/* Arrow icon */}
                 <div className="absolute top-4 right-4 w-12 h-12 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300">
                   <ArrowUpRight className="w-5 h-5 text-accent" />
                 </div>
 
-                {/* Project number */}
                 <div className="absolute bottom-4 left-4 text-5xl md:text-7xl font-bold text-foreground/10 group-hover:text-accent/20 transition-colors">
                   0{index + 1}
                 </div>
               </div>
 
-              {/* Content */}
-              <div className="p-4 md:p-8 h-1/2 flex flex-col justify-between">
+              <div className="p-4 md:p-8 md:h-1/2 flex flex-col justify-between">
                 <div>
                   <span className="text-xs text-accent font-medium uppercase tracking-wider">
                     {t(`filters.${project.category}`)}
@@ -234,7 +276,6 @@ export function PortfolioPreview() {
                   </p>
                 </div>
 
-                {/* Tech tags */}
                 <div className="flex flex-wrap gap-2 mt-4">
                   {project.technologies.slice(0, 4).map((tech) => (
                     <span
@@ -249,10 +290,9 @@ export function PortfolioPreview() {
             </Link>
           ))}
 
-          {/* Final CTA card */}
           <Link
             href={`/${locale}/portfolio`}
-            className="group flex items-center justify-center w-[60vw] md:w-[30vw] h-[55vh] md:h-[70vh] bg-card rounded-2xl md:rounded-3xl border border-card-border border-dashed flex-shrink-0 hover:border-accent/50 transition-colors"
+            className="group hidden md:flex items-center justify-center w-[30vw] h-[70vh] bg-card rounded-3xl border border-card-border border-dashed flex-shrink-0 hover:border-accent/50 transition-colors"
           >
             <div className="text-center">
               <div className="w-20 h-20 mx-auto mb-6 rounded-full border-2 border-dashed border-muted/50 flex items-center justify-center group-hover:border-accent group-hover:scale-110 transition-all duration-300">
@@ -261,13 +301,10 @@ export function PortfolioPreview() {
               <p className="text-xl font-semibold text-foreground group-hover:text-accent transition-colors">
                 {t('viewAll')}
               </p>
-              <p className="text-muted text-sm mt-2">
-                +{featuredProjects.length} projects
-              </p>
+              <p className="text-muted text-sm mt-2">+{featuredProjects.length} projects</p>
             </div>
           </Link>
         </div>
-
       </div>
     </section>
   );

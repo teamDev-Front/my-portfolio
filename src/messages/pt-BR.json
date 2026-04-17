@@ -14,15 +14,15 @@
     "getQuote": "Orçamento"
   },
   "hero": {
-    "tagline": "Criamos Sites, SaaS, Lojas Virtuais & Automações com IA",
-    "subtitle": "Sites, e-commerces, SaaS, sistemas e automações com tecnologia de ponta, design centrado no usuário e foco em resultados",
+    "tagline": "Criamos Sites, SaaS, Lojas Virtuais & Soluções com IA",
+    "subtitle": "Sites, e-commerces, SaaS, sistemas e soluções com tecnologia de ponta, design centrado no usuário e foco em resultados",
     "cta": "Solicitar Orçamento",
     "secondaryCta": "Ver Portfólio"
   },
   "intro": {
     "title": "Sobre Luiz Habaeb",
     "subtitle": "Desenvolvedor Full-Stack & Fundador da HCS",
-    "description": "Sou desenvolvedor com mais de 8 anos de experiência em React, Next.js, Angular e TypeScript. Também trabalho com Python, Django, SQL, Oracle e Supabase. Crio soluções completas — de sites e e-commerces a SaaS e automações com IA — liderando equipes multifuncionais do conceito à entrega.",
+    "description": "Sou desenvolvedor com mais de 8 anos de experiência em React, Next.js, Angular e TypeScript. Também trabalho com Python, Django, SQL, Oracle e Supabase. Crio soluções completas — de sites e e-commerces a SaaS e soluções com IA — liderando equipes multifuncionais do conceito à entrega.",
     "highlight1": "+8 anos de experiência",
     "highlight2": "Tecnólogo em Banco de Dados - FATEC (2024)",
     "highlight3": "Inglês avançado",
@@ -90,7 +90,7 @@
   },
   "about": {
     "pageTitle": "Sobre Mim",
-    "pageSubtitle": "Mais de 8 anos criando soluções digitais — de sites e e-commerces a SaaS e automações com IA",
+    "pageSubtitle": "Mais de 8 anos criando soluções digitais — de sites e e-commerces a SaaS e soluções com IA",
     "bio": {
       "title": "Minha História",
       "p1": "Minha jornada na tecnologia começou em ambientes de suporte técnico e administração hospitalar, o que me proporcionou uma base sólida em empatia, atendimento ao usuário e resolução de problemas.",

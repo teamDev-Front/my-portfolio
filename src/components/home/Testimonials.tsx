@@ -1,15 +1,16 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { gsap } from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Quote, TrendingUp, Star } from 'lucide-react';
 import { SectionTitle } from '@/components/ui/SectionTitle';
 import { testimonials } from '@/lib/data/testimonials';
 import type { Locale } from '@/i18n/routing';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 export function Testimonials() {
   const t = useTranslations('testimonials');
@@ -20,112 +21,160 @@ export function Testimonials() {
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
   const numberRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Section number
-      if (numberRef.current) {
-        gsap.fromTo(
-          numberRef.current,
-          { opacity: 0, x: -100 },
-          {
-            opacity: 0.03,
-            x: 0,
-            duration: 1,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top 80%',
-              toggleActions: 'play none none reverse',
-            },
+  useGSAP(
+    (_ctx, contextSafe) => {
+      const mm = gsap.matchMedia();
+
+      mm.add(
+        {
+          isDesktop: '(min-width: 1024px) and (prefers-reduced-motion: no-preference)',
+          reduceMotion: '(prefers-reduced-motion: reduce)',
+        },
+        (context) => {
+          const { isDesktop, reduceMotion } = context.conditions as {
+            isDesktop: boolean;
+            reduceMotion: boolean;
+          };
+
+          const cards = cardsRef.current.filter(Boolean) as HTMLDivElement[];
+
+          if (reduceMotion) {
+            gsap.set([titleRef.current, ...cards], { opacity: 1 });
+            return;
           }
-        );
-      }
 
-      // Title animation
-      if (titleRef.current) {
-        gsap.fromTo(
-          titleRef.current,
-          { opacity: 0, y: 50 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: titleRef.current,
-              start: 'top 85%',
-              toggleActions: 'play none none reverse',
-            },
+          // Section number - entrance + parallax
+          if (numberRef.current) {
+            gsap.fromTo(
+              numberRef.current,
+              { opacity: 0, x: -120, scale: 0.85 },
+              {
+                opacity: 0.03,
+                x: 0,
+                scale: 1,
+                duration: 1.2,
+                ease: 'expo.out',
+                scrollTrigger: {
+                  trigger: sectionRef.current,
+                  start: 'top 80%',
+                  toggleActions: 'play none none reverse',
+                },
+              }
+            );
+
+            gsap.to(numberRef.current, {
+              y: -80,
+              scrollTrigger: {
+                trigger: sectionRef.current,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1,
+              },
+            });
           }
-        );
-      }
 
-      // Cards animation with stagger and 3D effect
-      cardsRef.current.forEach((card, index) => {
-        if (!card) return;
+          // Title
+          gsap.fromTo(
+            titleRef.current,
+            { opacity: 0, y: 50 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.9,
+              ease: 'expo.out',
+              scrollTrigger: {
+                trigger: titleRef.current,
+                start: 'top 85%',
+                toggleActions: 'play none none reverse',
+              },
+            }
+          );
 
-        // Entrance animation
-        gsap.fromTo(
-          card,
-          {
-            opacity: 0,
-            y: 80,
-            rotateX: 20,
-            scale: 0.9,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            rotateX: 0,
-            scale: 1,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top 90%',
-              toggleActions: 'play none none reverse',
-            },
-            delay: index * 0.1,
-          }
-        );
+          // Cards - batch entrance with wave stagger
+          gsap.set(cards, { opacity: 0, y: 80, rotateX: 18, scale: 0.9 });
 
-        // Parallax effect
-        gsap.to(card, {
-          y: (index % 3 - 1) * 20,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1,
-          },
-        });
-
-        // Hover effect
-        const handleMouseEnter = () => {
-          gsap.to(card, {
-            y: -10,
-            scale: 1.02,
-            duration: 0.3,
-            ease: 'power2.out',
+          ScrollTrigger.batch(cards, {
+            interval: 0.1,
+            batchMax: 3,
+            start: 'top 88%',
+            onEnter: (batch) =>
+              gsap.to(batch, {
+                opacity: 1,
+                y: 0,
+                rotateX: 0,
+                scale: 1,
+                duration: 0.9,
+                stagger: 0.12,
+                ease: 'back.out(1.3)',
+                overwrite: true,
+              }),
+            onLeaveBack: (batch) =>
+              gsap.to(batch, {
+                opacity: 0,
+                y: 80,
+                rotateX: 18,
+                scale: 0.9,
+                duration: 0.5,
+                stagger: 0.06,
+                ease: 'power2.in',
+                overwrite: true,
+              }),
           });
-        };
 
-        const handleMouseLeave = () => {
-          gsap.to(card, {
-            y: 0,
-            scale: 1,
-            duration: 0.3,
-            ease: 'power2.out',
+          // Subtle column parallax
+          cards.forEach((card, i) => {
+            gsap.to(card, {
+              y: ((i % 3) - 1) * 30,
+              scrollTrigger: {
+                trigger: sectionRef.current,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1.5,
+              },
+            });
           });
-        };
 
-        card.addEventListener('mouseenter', handleMouseEnter);
-        card.addEventListener('mouseleave', handleMouseLeave);
-      });
-    }, sectionRef);
+          if (!isDesktop || !contextSafe) return;
 
-    return () => ctx.revert();
-  }, []);
+          const cleanups: Array<() => void> = [];
+
+          cards.forEach((card) => {
+            const onEnter = contextSafe(() =>
+              gsap.to(card, {
+                y: '-=12',
+                scale: 1.03,
+                duration: 0.4,
+                ease: 'power3.out',
+                overwrite: 'auto',
+              })
+            );
+
+            const onLeave = contextSafe(() =>
+              gsap.to(card, {
+                y: '+=12',
+                scale: 1,
+                duration: 0.5,
+                ease: 'power3.out',
+                overwrite: 'auto',
+              })
+            );
+
+            card.addEventListener('mouseenter', onEnter);
+            card.addEventListener('mouseleave', onLeave);
+            cleanups.push(() => {
+              card.removeEventListener('mouseenter', onEnter);
+              card.removeEventListener('mouseleave', onLeave);
+            });
+          });
+
+          return () => cleanups.forEach((c) => c());
+        }
+      );
+
+      return () => mm.revert();
+    },
+    { scope: sectionRef }
+  );
 
   return (
     <section ref={sectionRef} className="section-padding bg-hcs-dark relative overflow-hidden">
