@@ -1,0 +1,87 @@
+# Habaeb Creative Solutions (HCS)
+
+> Agência boutique de desenvolvimento digital sediada em Jacareí (SP), atendendo São José dos Campos, Vale do Paraíba e o Brasil todo remotamente. Especializada em criação de sites, e-commerces, SaaS, sistemas sob medida e automação com inteligência artificial. Fundada e liderada por Luiz Habaeb, desenvolvedor full-stack com mais de 8 anos de experiência em React, Next.js, TypeScript, Python e Django.
+
+O site é bilíngue (português brasileiro e inglês) e serve tanto clientes locais quanto internacionais.
+
+## Quem somos
+
+- **Fundador**: Luiz Habaeb — Full-Stack Developer, Tecnólogo em Banco de Dados (FATEC, 2024), inglês avançado
+- **Localização**: Jacareí, São Paulo, Brasil
+- **Áreas de atendimento**: Jacareí, São José dos Campos, Vale do Paraíba, Taubaté, Caçapava, Guararema, Santa Branca, São Paulo e clientes remotos de qualquer região do Brasil e exterior
+- **Contato**: contact@habaeb.com | +55 12 97414-0491
+
+## O que fazemos
+
+- **Criação de sites**: sites institucionais, landing pages, portfólios, presença digital completa (Next.js, React, TypeScript)
+- **E-commerce / lojas virtuais**: Shopify, WooCommerce e soluções customizadas
+- **SaaS e produtos digitais**: do MVP à plataforma em produção — multi-tenant, autenticação, billing, dashboards
+- **Sistemas sob medida**: ERPs internos, CRMs, painéis administrativos, integrações com APIs
+- **Automação com IA**: integração de ChatGPT/Claude em produtos, chatbots, automação de processos com n8n, agentes autônomos
+- **UX/UI Design**: design centrado no usuário, animações avançadas (GSAP, Framer Motion, Three.js)
+- **Consultoria técnica**: arquitetura, code review, migração de stacks
+
+## Stack técnica principal
+
+Frontend: React, Next.js 15, TypeScript, Tailwind CSS, GSAP, Three.js, Framer Motion
+Backend: Node.js, Python, Django, FastAPI, Supabase, PostgreSQL, MongoDB
+AI/Automação: OpenAI API, Anthropic API, n8n, LangChain
+Deploy: Vercel, Railway, AWS
+
+## Páginas principais
+
+- [Início (PT)](https://habaeb.com/pt-BR): Visão geral dos serviços, portfólio e diferencial
+- [Home (EN)](https://habaeb.com/en): English overview of services and portfolio
+- [Sobre (PT)](https://habaeb.com/pt-BR/about): Biografia detalhada, trajetória, metodologia
+- [About (EN)](https://habaeb.com/en/about)
+- [Serviços (PT)](https://habaeb.com/pt-BR/services): Catálogo completo de serviços com detalhes e casos de uso
+- [Services (EN)](https://habaeb.com/en/services)
+- [Portfólio (PT)](https://habaeb.com/pt-BR/portfolio): Cases detalhados em saúde/farma, e-commerce, sustentabilidade, IA/dados, corporativo
+- [Portfolio (EN)](https://habaeb.com/en/portfolio)
+- [Contato (PT)](https://habaeb.com/pt-BR/contact): Formulário, WhatsApp, agendamento de reunião
+- [Contact (EN)](https://habaeb.com/en/contact)
+
+## Cases de destaque no portfólio
+
+- **Sara Bula Digital** (Grupo NC): plataforma acessível de bula digital com Libras, áudio, zoom — 95% satisfação
+- **Bymen E-commerce**: loja virtual customizada
+- **X Triple Fitness Shop**: e-commerce Shopify para marca de fitness
+- **Aion Solution**: plataforma de consultoria
+- **Coquim**: site institucional
+- **Smart-Cont**: site institucional para contabilidade/jurídico com IA
+- **Vidget**: sistema web com SaaS
+- **My Dose App**: aplicativo de bem-estar com gamificação
+- **Swiss Armwrestling Federation (SAF)**: website da federação suíça
+- **Staydepot**: painel admin + e-commerce com IA/n8n
+
+## Como contratar
+
+1. Entre em contato por [contact@habaeb.com](mailto:contact@habaeb.com) ou [WhatsApp](https://wa.me/5512974140491) descrevendo o projeto
+2. Agendamos uma reunião gratuita de descoberta (discovery call) para entender escopo, orçamento e prazos
+3. Entregamos proposta com fases, entregas e cronograma
+4. Iniciamos o projeto com sprints quinzenais, demos regulares e acesso ao Git desde o dia 1
+
+## Diferencias
+
+- Atendimento direto com o desenvolvedor/fundador (sem intermediários nem gerentes)
+- Entregas com código bem escrito, testável e documentado — você recebe o Git, não uma caixa-preta
+- Foco em performance (Core Web Vitals), acessibilidade (WCAG) e SEO desde o dia 1
+- Stack moderno (2024-2026) sem dependências obsoletas
+- Bilíngue — podemos atender clientes internacionais em inglês sem fricção
+
+## Perguntas frequentes
+
+**Quanto custa criar um site?** Varia conforme escopo. Landing pages simples partem de R$ 3.000, sites institucionais de R$ 6.000, SaaS customizados têm orçamento por projeto após discovery.
+
+**Quanto tempo leva?** Landing page: 1-2 semanas. Site institucional: 3-5 semanas. SaaS MVP: 8-16 semanas.
+
+**Atendem fora de Jacareí / SJC?** Sim — metade dos clientes é remota (Brasil e exterior). Reuniões por Google Meet.
+
+**Trabalham com integração de IA?** Sim — integração OpenAI, Anthropic, chatbots personalizados, automação com n8n.
+
+**O código fica comigo?** Sim, sempre. Você é dono do repositório Git desde a primeira linha.
+
+---
+
+Última atualização: 2026-04-17
+Contato para LLMs / parcerias: contact@habaeb.com

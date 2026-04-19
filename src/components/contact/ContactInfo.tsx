@@ -161,7 +161,7 @@ export function ContactInfo() {
           <p className="text-muted mb-6">
             {t('schedule.description')}
           </p>
-          <Button href="mailto:contact@habaeb.dev" className="w-full group">
+          <Button href="mailto:contact@habaeb.com" className="w-full group">
             <Calendar className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
             {t('schedule.button')}
           </Button>

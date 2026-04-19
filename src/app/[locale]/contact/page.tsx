@@ -3,6 +3,9 @@ import { Metadata } from 'next';
 import { ContactHero } from '@/components/contact/ContactHero';
 import { ContactForm } from '@/components/contact/ContactForm';
 import { ContactInfo } from '@/components/contact/ContactInfo';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { buildPageMetadata, type SupportedLocale } from '@/lib/seo';
+import { contactPageSchema, breadcrumbSchema } from '@/lib/schemas';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -10,20 +13,53 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
+  const l = locale as SupportedLocale;
   const t = await getTranslations({ locale, namespace: 'contact' });
-  
-  return {
+
+  return buildPageMetadata({
+    locale: l,
     title: t('pageTitle'),
     description: t('pageSubtitle'),
-  };
+    path: '/contact',
+    keywords:
+      l === 'pt-BR'
+        ? [
+            'contato desenvolvedor Jacareí',
+            'orçamento criar site',
+            'orçamento SaaS',
+            'contratar desenvolvedor São José dos Campos',
+            'falar com desenvolvedor',
+            'agendar reunião desenvolvimento',
+            'WhatsApp desenvolvedor',
+            'freelancer web Vale do Paraíba',
+          ]
+        : [
+            'contact web developer',
+            'website quote',
+            'SaaS quote',
+            'hire freelance developer Brazil',
+            'schedule development meeting',
+          ],
+  });
 }
 
 export default async function ContactPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const l = locale as SupportedLocale;
+  const t = await getTranslations({ locale, namespace: 'nav' });
 
   return (
     <>
+      <JsonLd data={contactPageSchema(l)} id="ld-contact" />
+      <JsonLd
+        data={breadcrumbSchema(l, [
+          { name: t('home'), path: '/' },
+          { name: t('contact'), path: '/contact' },
+        ])}
+        id="ld-breadcrumb"
+      />
+
       <ContactHero />
       <section className="section-padding">
         <div className="container-custom">
