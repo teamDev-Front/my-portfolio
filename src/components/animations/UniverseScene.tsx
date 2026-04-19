@@ -620,6 +620,11 @@ export const UniverseScene = forwardRef<UniverseSceneHandle, UniverseSceneProps>
     const flashPassRef = useRef<ShaderPass | null>(null);
     const bloomPassRef = useRef<UnrealBloomPass | null>(null);
 
+    // Shared light direction — shader uniforms hold a reference to this
+    // Vector3, so mutating it in the render loop updates every planet.
+    const lightDirRef = useRef<THREE.Vector3 | null>(null);
+    const lightDirBaseRef = useRef<THREE.Vector3>(new THREE.Vector3());
+
     // Animation state
     const stateRef = useRef({
       mouseX: 0,
@@ -636,6 +641,7 @@ export const UniverseScene = forwardRef<UniverseSceneHandle, UniverseSceneProps>
       flashAlpha: 0,
       bloomBoost: 0, // temporarily raised on click for a brief visual pulse
       cameraZ: 18, // overwritten in setup() based on mobile/desktop
+      ambientMul: 1, // multiplier for ambient orbit amplitude (mobile reduces)
     });
 
     const isWarpingRef = useRef(false);
@@ -700,10 +706,16 @@ export const UniverseScene = forwardRef<UniverseSceneHandle, UniverseSceneProps>
       const cameraZ = isMobile ? 23 : 18;
       camera.position.set(0, 0, cameraZ);
       stateRef.current.cameraZ = cameraZ;
+      stateRef.current.ambientMul = isMobile ? 0.45 : 1;
       cameraRef.current = camera;
 
-      // Light direction (same for everyone — acts like distant sun)
+      // Light direction (same for everyone — acts like distant sun).
+      // This Vector3 is SHARED across all planet/atmosphere uniforms by
+      // reference, so rotating it in the render loop updates every shader
+      // at once (giving a slow "sun drift" day/night cycle).
       const lightDir = new THREE.Vector3(0.6, 0.3, -0.7).normalize();
+      lightDirRef.current = lightDir;
+      lightDirBaseRef.current.copy(lightDir);
       // Note: light "direction" here is the direction light travels,
       // so pointing into the planets from slightly right-up-front.
 
@@ -1069,13 +1081,44 @@ export const UniverseScene = forwardRef<UniverseSceneHandle, UniverseSceneProps>
       const state = stateRef.current;
       state.time += 1 / 60;
 
-      // Smooth camera tilt toward mouse
+      // ---- Ambient camera choreography ----
+      // Long slow 3D sway built from three irrational-frequency sinusoids,
+      // so it never visibly repeats. Main component period ~74s. This
+      // produces a cinematic drift across many angles over a minute+.
       state.camX += (state.targetCamX - state.camX) * 0.04;
       state.camY += (state.targetCamY - state.camY) * 0.04;
-      camera.position.x = state.camX * 1.5;
-      camera.position.y = state.camY * 1.0;
-      camera.position.z = state.cameraZ - state.baseZ;
+
+      const phase = state.time;
+      const m = state.ambientMul;
+      const ambX =
+        Math.sin(phase * 0.085) * 7 * m +
+        Math.cos(phase * 0.19) * 2.2 * m;
+      const ambY =
+        Math.sin(phase * 0.062) * 2.8 * m +
+        Math.cos(phase * 0.14) * 1.1 * m;
+      const ambZ = Math.cos(phase * 0.073) * 4.5 * m;
+
+      camera.position.x = state.camX * 1.5 + ambX;
+      camera.position.y = state.camY * 1.0 + ambY;
+      camera.position.z = state.cameraZ + ambZ - state.baseZ;
       camera.lookAt(0, 0, 0);
+
+      // ---- Slow sun rotation ----
+      // Rotates the shared light direction around the Y axis over ~8 min,
+      // so the terminator on each planet walks slowly across their surface.
+      // Over a ~60 s dwell, the lit side shifts ~45° — enough to notice.
+      if (lightDirRef.current && lightDirBaseRef.current) {
+        const sunAngle = phase * 0.013; // radians per second
+        const base = lightDirBaseRef.current;
+        const rotated = lightDirRef.current;
+        const c = Math.cos(sunAngle);
+        const s = Math.sin(sunAngle);
+        // Rotate around Y: (x,z) plane spins, y stays
+        rotated.x = base.x * c - base.z * s;
+        rotated.y = base.y;
+        rotated.z = base.x * s + base.z * c;
+        rotated.normalize();
+      }
 
       // Entrance fade
       if (state.revealing) {
