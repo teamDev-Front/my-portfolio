@@ -13,17 +13,30 @@ import {
   Palette,
   Megaphone,
   Lightbulb,
+  ArrowUpRight,
 } from 'lucide-react';
+import Link from 'next/link';
 import { SectionTitle } from '@/components/ui/SectionTitle';
 import { Button } from '@/components/ui/Button';
+import { getPathname } from '@/i18n/navigation';
+import type { StaticPathname, Locale } from '@/i18n/routing';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-const services = [
-  { key: 'websites', icon: Globe },
+/**
+ * Services shown on the home preview. `landingRoute` opts a card into
+ * linking to its dedicated SEO landing page (key internal link for
+ * indexing `/criar-site`, `/criar-saas`, `/automacao-com-ia`).
+ */
+const services: Array<{
+  key: string;
+  icon: typeof Globe;
+  landingRoute?: StaticPathname;
+}> = [
+  { key: 'websites', icon: Globe, landingRoute: '/create-website' },
   { key: 'ecommerce', icon: ShoppingCart },
-  { key: 'saas', icon: Server },
-  { key: 'ai', icon: Bot },
+  { key: 'saas', icon: Server, landingRoute: '/create-saas' },
+  { key: 'ai', icon: Bot, landingRoute: '/ai-automation' },
   { key: 'design', icon: Palette },
   { key: 'marketing', icon: Megaphone },
   { key: 'consulting', icon: Lightbulb },
@@ -221,38 +234,60 @@ export function ServicesPreview() {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-12"
           style={{ perspective: '1200px' }}
         >
-          {services.map((service, index) => (
-            <div
-              key={service.key}
-              ref={(el) => {
-                cardsRef.current[index] = el;
-              }}
-              className="group relative p-6 bg-card rounded-2xl border border-card-border cursor-pointer hover:border-accent/50 transition-colors duration-300 will-change-transform"
-              style={{
-                transformStyle: 'preserve-3d',
-              }}
-            >
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          {services.map((service, index) => {
+            // Resolve localised href for services that have a landing page
+            const landingHref = service.landingRoute
+              ? `/${locale}${getPathname({
+                  href: service.landingRoute,
+                  locale: locale as Locale,
+                })}`
+              : null;
 
-              <div className="relative z-10">
-                <div className="w-14 h-14 bg-accent/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-300">
-                  <service.icon className="w-7 h-7 text-accent" />
+            return (
+              <div
+                key={service.key}
+                ref={(el) => {
+                  cardsRef.current[index] = el;
+                }}
+                className="group relative p-6 bg-card rounded-2xl border border-card-border cursor-pointer hover:border-accent/50 transition-colors duration-300 will-change-transform"
+                style={{
+                  transformStyle: 'preserve-3d',
+                }}
+              >
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                <div className="relative z-10">
+                  <div className="w-14 h-14 bg-accent/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-300">
+                    <service.icon className="w-7 h-7 text-accent" />
+                  </div>
+
+                  <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-accent transition-colors">
+                    {t(`${service.key}.title`)}
+                  </h3>
+
+                  <p className="text-sm text-muted leading-relaxed">
+                    {t(`${service.key}.description`)}
+                  </p>
+
+                  {landingHref && (
+                    <Link
+                      href={landingHref}
+                      className="inline-flex items-center gap-1.5 mt-4 text-xs font-medium text-accent/80 hover:text-accent transition-colors"
+                    >
+                      <span className="tracking-wide uppercase">
+                        {t('learnMore')}
+                      </span>
+                      <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    </Link>
+                  )}
                 </div>
 
-                <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-accent transition-colors">
-                  {t(`${service.key}.title`)}
-                </h3>
-
-                <p className="text-sm text-muted leading-relaxed">
-                  {t(`${service.key}.description`)}
-                </p>
+                <div className="absolute top-4 right-4 text-xs font-mono text-muted/30 group-hover:text-accent/50 transition-colors">
+                  0{index + 1}
+                </div>
               </div>
-
-              <div className="absolute top-4 right-4 text-xs font-mono text-muted/30 group-hover:text-accent/50 transition-colors">
-                0{index + 1}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div className="mt-16 text-center">

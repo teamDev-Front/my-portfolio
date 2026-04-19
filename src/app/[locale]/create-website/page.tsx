@@ -1,0 +1,155 @@
+import { setRequestLocale, getTranslations } from 'next-intl/server';
+import { Metadata } from 'next';
+import {
+  LandingHero,
+  LandingPillars,
+  LandingProcess,
+  LandingUseCases,
+  LandingPackages,
+  LandingFAQ,
+  LandingLocalScope,
+  type LandingData,
+  type LandingSharedCopy,
+} from '@/components/landing/LandingSections';
+import { CTA } from '@/components/home/CTA';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { buildPageMetadata, type SupportedLocale } from '@/lib/seo';
+import {
+  serviceListSchema,
+  breadcrumbSchema,
+  faqSchema,
+} from '@/lib/schemas';
+import { getPathname } from '@/i18n/navigation';
+
+type Props = {
+  params: Promise<{ locale: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const l = locale as SupportedLocale;
+  const t = await getTranslations({ locale, namespace: 'landing.createWebsite' });
+
+  // Localised pathname — pt-BR: /criar-site, en: /build-a-website
+  const localPath = getPathname({
+    href: '/create-website',
+    locale: l,
+  });
+
+  return buildPageMetadata({
+    locale: l,
+    title: t('metaTitle'),
+    description: t('metaDescription'),
+    path: localPath,
+    keywords:
+      l === 'pt-BR'
+        ? [
+            'criar site',
+            'criar site profissional',
+            'criar site em Jacareí',
+            'criar site São José dos Campos',
+            'criar site Vale do Paraíba',
+            'desenvolvedor de sites Jacareí',
+            'agência de criação de sites',
+            'site profissional Next.js',
+            'landing page de conversão',
+            'fazer site empresa',
+            'site institucional',
+            'site com SEO',
+            'site responsivo',
+          ]
+        : [
+            'build a website',
+            'professional website design',
+            'website development Brazil',
+            'Next.js website',
+            'landing page design',
+            'business website',
+            'hire web developer',
+            'responsive website',
+          ],
+  });
+}
+
+export default async function CreateWebsitePage({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const l = locale as SupportedLocale;
+
+  const tNav = await getTranslations({ locale, namespace: 'nav' });
+  const tLand = await getTranslations({ locale, namespace: 'landing.createWebsite' });
+  const tShared = await getTranslations({ locale, namespace: 'landing.shared' });
+  const tScope = await getTranslations({ locale, namespace: 'landing.localScope' });
+
+  // Raw translation objects — next-intl exposes them via `raw()` for arrays/objects.
+  const data = {
+    metaTitle: tLand('metaTitle'),
+    metaDescription: tLand('metaDescription'),
+    hero: tLand.raw('hero') as LandingData['hero'],
+    pillars: tLand.raw('pillars') as LandingData['pillars'],
+    process: tLand.raw('process') as LandingData['process'],
+    useCases: tLand.raw('useCases') as LandingData['useCases'],
+    packages: tLand.raw('packages') as LandingData['packages'],
+    faq: tLand.raw('faq') as LandingData['faq'],
+  } satisfies LandingData;
+
+  const shared: LandingSharedCopy = {
+    orbitLabel: tShared('orbitLabel'),
+    primaryCta: tShared('primaryCta'),
+    secondaryCta: tShared('secondaryCta'),
+    localScopeTitle: tShared('localScopeTitle'),
+    localScopeSubtitle: tShared('localScopeSubtitle'),
+    pillarsTitle: tShared('pillarsTitle'),
+    pillarsSubtitle: tShared('pillarsSubtitle'),
+    processTitle: tShared('processTitle'),
+    processSubtitle: tShared('processSubtitle'),
+    useCasesTitle: tShared('useCasesTitle'),
+    useCasesSubtitle: tShared('useCasesSubtitle'),
+    packagesTitle: tShared('packagesTitle'),
+    packagesSubtitle: tShared('packagesSubtitle'),
+    faqTitle: tShared('faqTitle'),
+    faqSubtitle: tShared('faqSubtitle'),
+    packageFeatured: tShared('packageFeatured'),
+    packageStartingAt: tShared('packageStartingAt'),
+    packageCta: tShared('packageCta'),
+  };
+
+  // --- Structured data ----------------------------------------------------
+  const localPath = getPathname({ href: '/create-website', locale: l });
+  const servicesSchema = serviceListSchema(
+    l,
+    data.pillars.map((p) => ({
+      name: p.title,
+      description: p.description,
+    }))
+  );
+  const breadcrumbs = breadcrumbSchema(l, [
+    { name: tNav('home'), path: '/' },
+    { name: tNav('services'), path: '/services' },
+    { name: data.hero.title, path: localPath },
+  ]);
+  const faqLD = faqSchema(
+    data.faq.map((q) => ({ question: q.question, answer: q.answer }))
+  );
+
+  return (
+    <>
+      <JsonLd data={servicesSchema} id="ld-services-list" />
+      <JsonLd data={breadcrumbs} id="ld-breadcrumb" />
+      <JsonLd data={faqLD} id="ld-faq" />
+
+      <LandingHero data={data} shared={shared} />
+      <LandingPillars data={data} shared={shared} />
+      <LandingProcess data={data} shared={shared} />
+      <LandingUseCases data={data} shared={shared} />
+      <LandingPackages data={data} shared={shared} />
+      <LandingFAQ data={data} shared={shared} />
+      <LandingLocalScope
+        title={tScope('title')}
+        subtitle={tScope('subtitle')}
+        cities={tScope.raw('cities') as string[]}
+      />
+      <CTA />
+    </>
+  );
+}
