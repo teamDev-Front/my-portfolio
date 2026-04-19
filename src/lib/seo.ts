@@ -30,7 +30,7 @@ export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
 /** Contact channels — keep in sync with `ContactInfo.tsx`. */
 export const CONTACT = {
-  email: 'contact@habaeb.com',
+  email: 'contato@habaeb.com',
   phone: '+55 12 97414-0491',
   whatsapp: 'https://wa.me/5512974140491',
   // Canonical geographic focus — drives LocalBusiness + copy localisation.

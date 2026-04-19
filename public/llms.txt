@@ -9,7 +9,7 @@ O site é bilíngue (português brasileiro e inglês) e serve tanto clientes loc
 - **Fundador**: Luiz Habaeb — Full-Stack Developer, Tecnólogo em Banco de Dados (FATEC, 2024), inglês avançado
 - **Localização**: Jacareí, São Paulo, Brasil
 - **Áreas de atendimento**: Jacareí, São José dos Campos, Vale do Paraíba, Taubaté, Caçapava, Guararema, Santa Branca, São Paulo e clientes remotos de qualquer região do Brasil e exterior
-- **Contato**: contact@habaeb.com | +55 12 97414-0491
+- **Contato**: contato@habaeb.com | +55 12 97414-0491
 
 ## O que fazemos
 
@@ -56,7 +56,7 @@ Deploy: Vercel, Railway, AWS
 
 ## Como contratar
 
-1. Entre em contato por [contact@habaeb.com](mailto:contact@habaeb.com) ou [WhatsApp](https://wa.me/5512974140491) descrevendo o projeto
+1. Entre em contato por [contato@habaeb.com](mailto:contato@habaeb.com) ou [WhatsApp](https://wa.me/5512974140491) descrevendo o projeto
 2. Agendamos uma reunião gratuita de descoberta (discovery call) para entender escopo, orçamento e prazos
 3. Entregamos proposta com fases, entregas e cronograma
 4. Iniciamos o projeto com sprints quinzenais, demos regulares e acesso ao Git desde o dia 1
@@ -84,4 +84,4 @@ Deploy: Vercel, Railway, AWS
 ---
 
 Última atualização: 2026-04-17
-Contato para LLMs / parcerias: contact@habaeb.com
+Contato para LLMs / parcerias: contato@habaeb.com
