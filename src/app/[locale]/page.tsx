@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 /**
- * FAQ content per locale. These land in Google SERPs as expandable cards
+ * FAQ content per locale . These land in Google SERPs as expandable cards
  * and are a major source of long-tail traffic. Questions are written to
  * match actual search queries ("quanto custa", "quanto tempo leva", etc.).
  */
