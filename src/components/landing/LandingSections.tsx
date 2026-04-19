@@ -326,12 +326,20 @@ export function LandingPillars({ data, shared }: SectionProps) {
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
+
       mm.add('(prefers-reduced-motion: no-preference)', () => {
-        gsap.from(headerRef.current, {
-          opacity: 0,
-          y: 30,
-          duration: 0.8,
-          ease: 'power3.out',
+        const gridItems = Array.from(gridRef.current?.children || []);
+
+        // Initial hidden state — applied synchronously so there is no
+        // flash of content before the ScrollTrigger fires.
+        gsap.set(headerRef.current, { opacity: 0, y: 30 });
+        gsap.set(gridItems, { opacity: 0, y: 40 });
+
+        // Single timeline tied to the section trigger. Using one trigger
+        // per section (instead of per-element) guarantees the grid plays
+        // even when the user scrolls quickly past the inner container.
+        const tl = gsap.timeline({
+          defaults: { ease: 'power3.out' },
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top 80%',
@@ -339,19 +347,21 @@ export function LandingPillars({ data, shared }: SectionProps) {
           },
         });
 
-        gsap.from(gridRef.current?.children || [], {
-          opacity: 0,
-          y: 40,
-          stagger: 0.08,
-          duration: 0.6,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: gridRef.current,
-            start: 'top 85%',
-            toggleActions: 'play none none reverse',
-          },
+        tl.to(headerRef.current, { opacity: 1, y: 0, duration: 0.8 })
+          .to(
+            gridItems,
+            { opacity: 1, y: 0, duration: 0.6, stagger: 0.08 },
+            '-=0.4'
+          );
+      });
+
+      mm.add('(prefers-reduced-motion: reduce)', () => {
+        gsap.set([headerRef.current, ...Array.from(gridRef.current?.children || [])], {
+          opacity: 1,
+          y: 0,
         });
       });
+
       return () => mm.revert();
     },
     { scope: sectionRef }
@@ -409,12 +419,16 @@ export function LandingProcess({ data, shared }: SectionProps) {
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
+
       mm.add('(prefers-reduced-motion: no-preference)', () => {
-        gsap.from(headerRef.current, {
-          opacity: 0,
-          y: 30,
-          duration: 0.8,
-          ease: 'power3.out',
+        const steps = Array.from(timelineRef.current?.children || []);
+
+        gsap.set(headerRef.current, { opacity: 0, y: 30 });
+        gsap.set(lineRef.current, { scaleX: 0, transformOrigin: 'left center' });
+        gsap.set(steps, { opacity: 0, y: 40 });
+
+        const tl = gsap.timeline({
+          defaults: { ease: 'power3.out' },
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top 80%',
@@ -422,34 +436,30 @@ export function LandingProcess({ data, shared }: SectionProps) {
           },
         });
 
-        gsap.fromTo(
-          lineRef.current,
-          { scaleX: 0, transformOrigin: 'left center' },
-          {
-            scaleX: 1,
-            duration: 1.4,
-            ease: 'power2.inOut',
-            scrollTrigger: {
-              trigger: timelineRef.current,
-              start: 'top 80%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
-
-        gsap.from(timelineRef.current?.children || [], {
-          opacity: 0,
-          y: 40,
-          stagger: 0.15,
-          duration: 0.7,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: timelineRef.current,
-            start: 'top 75%',
-            toggleActions: 'play none none reverse',
-          },
-        });
+        tl.to(headerRef.current, { opacity: 1, y: 0, duration: 0.8 })
+          .to(
+            lineRef.current,
+            { scaleX: 1, duration: 1.4, ease: 'power2.inOut' },
+            '-=0.4'
+          )
+          .to(
+            steps,
+            { opacity: 1, y: 0, duration: 0.7, stagger: 0.15 },
+            '-=1.0'
+          );
       });
+
+      mm.add('(prefers-reduced-motion: reduce)', () => {
+        gsap.set(
+          [
+            headerRef.current,
+            ...Array.from(timelineRef.current?.children || []),
+          ],
+          { opacity: 1, y: 0 }
+        );
+        gsap.set(lineRef.current, { scaleX: 1 });
+      });
+
       return () => mm.revert();
     },
     { scope: sectionRef }
@@ -515,12 +525,15 @@ export function LandingUseCases({ data, shared }: SectionProps) {
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
+
       mm.add('(prefers-reduced-motion: no-preference)', () => {
-        gsap.from(headerRef.current, {
-          opacity: 0,
-          y: 30,
-          duration: 0.8,
-          ease: 'power3.out',
+        const gridItems = Array.from(gridRef.current?.children || []);
+
+        gsap.set(headerRef.current, { opacity: 0, y: 30 });
+        gsap.set(gridItems, { opacity: 0, y: 30 });
+
+        const tl = gsap.timeline({
+          defaults: { ease: 'power3.out' },
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top 80%',
@@ -528,19 +541,20 @@ export function LandingUseCases({ data, shared }: SectionProps) {
           },
         });
 
-        gsap.from(gridRef.current?.children || [], {
-          opacity: 0,
-          y: 30,
-          stagger: 0.08,
-          duration: 0.6,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: gridRef.current,
-            start: 'top 85%',
-            toggleActions: 'play none none reverse',
-          },
+        tl.to(headerRef.current, { opacity: 1, y: 0, duration: 0.8 }).to(
+          gridItems,
+          { opacity: 1, y: 0, duration: 0.6, stagger: 0.08 },
+          '-=0.4'
+        );
+      });
+
+      mm.add('(prefers-reduced-motion: reduce)', () => {
+        gsap.set([headerRef.current, ...Array.from(gridRef.current?.children || [])], {
+          opacity: 1,
+          y: 0,
         });
       });
+
       return () => mm.revert();
     },
     { scope: sectionRef }
@@ -599,12 +613,15 @@ export function LandingPackages({ data, shared }: SectionProps) {
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
+
       mm.add('(prefers-reduced-motion: no-preference)', () => {
-        gsap.from(headerRef.current, {
-          opacity: 0,
-          y: 30,
-          duration: 0.8,
-          ease: 'power3.out',
+        const gridItems = Array.from(gridRef.current?.children || []);
+
+        gsap.set(headerRef.current, { opacity: 0, y: 30 });
+        gsap.set(gridItems, { opacity: 0, y: 50 });
+
+        const tl = gsap.timeline({
+          defaults: { ease: 'power3.out' },
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top 80%',
@@ -612,19 +629,20 @@ export function LandingPackages({ data, shared }: SectionProps) {
           },
         });
 
-        gsap.from(gridRef.current?.children || [], {
-          opacity: 0,
-          y: 50,
-          stagger: 0.12,
-          duration: 0.7,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: gridRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none reverse',
-          },
+        tl.to(headerRef.current, { opacity: 1, y: 0, duration: 0.8 }).to(
+          gridItems,
+          { opacity: 1, y: 0, duration: 0.7, stagger: 0.12 },
+          '-=0.4'
+        );
+      });
+
+      mm.add('(prefers-reduced-motion: reduce)', () => {
+        gsap.set([headerRef.current, ...Array.from(gridRef.current?.children || [])], {
+          opacity: 1,
+          y: 0,
         });
       });
+
       return () => mm.revert();
     },
     { scope: sectionRef }
@@ -723,12 +741,15 @@ export function LandingFAQ({ data, shared }: SectionProps) {
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
+
       mm.add('(prefers-reduced-motion: no-preference)', () => {
-        gsap.from(headerRef.current, {
-          opacity: 0,
-          y: 30,
-          duration: 0.8,
-          ease: 'power3.out',
+        const items = Array.from(listRef.current?.children || []);
+
+        gsap.set(headerRef.current, { opacity: 0, y: 30 });
+        gsap.set(items, { opacity: 0, y: 20 });
+
+        const tl = gsap.timeline({
+          defaults: { ease: 'power2.out' },
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top 80%',
@@ -736,19 +757,20 @@ export function LandingFAQ({ data, shared }: SectionProps) {
           },
         });
 
-        gsap.from(listRef.current?.children || [], {
-          opacity: 0,
-          y: 20,
-          stagger: 0.06,
-          duration: 0.5,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: listRef.current,
-            start: 'top 85%',
-            toggleActions: 'play none none reverse',
-          },
+        tl.to(headerRef.current, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }).to(
+          items,
+          { opacity: 1, y: 0, duration: 0.5, stagger: 0.06 },
+          '-=0.4'
+        );
+      });
+
+      mm.add('(prefers-reduced-motion: reduce)', () => {
+        gsap.set([headerRef.current, ...Array.from(listRef.current?.children || [])], {
+          opacity: 1,
+          y: 0,
         });
       });
+
       return () => mm.revert();
     },
     { scope: sectionRef }
@@ -834,12 +856,14 @@ export function LandingLocalScope({ title, subtitle, cities }: LocalScopeProps) 
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
+
       mm.add('(prefers-reduced-motion: no-preference)', () => {
-        gsap.from(headerRef.current, {
-          opacity: 0,
-          y: 30,
-          duration: 0.8,
-          ease: 'power3.out',
+        const cities = Array.from(citiesRef.current?.children || []);
+
+        gsap.set(headerRef.current, { opacity: 0, y: 30 });
+        gsap.set(cities, { opacity: 0, y: 10, scale: 0.9 });
+
+        const tl = gsap.timeline({
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top 80%',
@@ -847,20 +871,32 @@ export function LandingLocalScope({ title, subtitle, cities }: LocalScopeProps) 
           },
         });
 
-        gsap.from(citiesRef.current?.children || [], {
-          opacity: 0,
-          y: 10,
-          scale: 0.9,
-          stagger: 0.04,
-          duration: 0.45,
-          ease: 'back.out(1.5)',
-          scrollTrigger: {
-            trigger: citiesRef.current,
-            start: 'top 85%',
-            toggleActions: 'play none none reverse',
+        tl.to(headerRef.current, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+        }).to(
+          cities,
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.45,
+            stagger: 0.04,
+            ease: 'back.out(1.5)',
           },
-        });
+          '-=0.4'
+        );
       });
+
+      mm.add('(prefers-reduced-motion: reduce)', () => {
+        gsap.set(
+          [headerRef.current, ...Array.from(citiesRef.current?.children || [])],
+          { opacity: 1, y: 0, scale: 1 }
+        );
+      });
+
       return () => mm.revert();
     },
     { scope: sectionRef }
