@@ -13,6 +13,7 @@ export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const formRef = useRef<HTMLFormElement>(null);
   const successRef = useRef<HTMLDivElement>(null);
@@ -162,6 +163,7 @@ export function ContactForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setErrorMessage(null);
 
     // Button animation
     if (buttonRef.current) {
@@ -171,11 +173,32 @@ export function ContactForm() {
       });
     }
 
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    const formData = new FormData(e.currentTarget);
+    const payload = {
+      name: String(formData.get('name') ?? ''),
+      email: String(formData.get('email') ?? ''),
+      company: String(formData.get('company') ?? ''),
+      projectType: String(formData.get('projectType') ?? ''),
+      message: String(formData.get('message') ?? ''),
+    };
 
-    setIsSubmitting(false);
-    setIsSubmitted(true);
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        throw new Error('Request failed');
+      }
+
+      setIsSubmitted(true);
+    } catch {
+      setErrorMessage(t('error'));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleFocus = (fieldName: string) => {
@@ -352,6 +375,14 @@ export function ContactForm() {
       </div>
 
       <div ref={(el) => { fieldsRef.current[3] = el; }} className="pt-4">
+        {errorMessage && (
+          <p
+            role="alert"
+            className="mb-4 text-sm text-red-500"
+          >
+            {errorMessage}
+          </p>
+        )}
         <button
           ref={buttonRef}
           type="submit"
