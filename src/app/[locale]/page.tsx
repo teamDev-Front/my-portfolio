@@ -2,7 +2,7 @@ import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
 import { HeroSection } from '@/sections/home/HeroSection';
 import { AboutSection } from '@/sections/home/AboutSection';
-import { ServicesPreview } from '@/components/home/ServicesPreview';
+import { ServicesSection } from '@/sections/home/ServicesSection';
 import { PortfolioPreview } from '@/components/home/PortfolioPreview';
 import { Testimonials } from '@/components/home/Testimonials';
 import { CTA } from '@/components/home/CTA';
@@ -121,7 +121,7 @@ export default async function HomePage({ params }: Props) {
 
       <HeroSection />
       <AboutSection />
-      <ServicesPreview />
+      <ServicesSection />
       <PortfolioPreview />
       <Testimonials />
       <CTA />
