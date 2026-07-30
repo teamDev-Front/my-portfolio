@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-import { HeroChoreography } from '@/sections/home/HeroChoreography';
+import { Choreography } from '@/components/shell/Choreography';
 import { HeroStarfield } from '@/sections/home/HeroStarfield';
 
 /**
@@ -17,7 +17,7 @@ export function HeroSection() {
   const words = t('tagline').split(' ');
 
   return (
-    <HeroChoreography>
+    <Choreography name="hero">
       <section
         data-hero-stage
         data-stage="hero"
@@ -35,7 +35,7 @@ export function HeroSection() {
               <span
                 key={`${word}-${i}`}
                 data-hero-word
-                className={`inline-block will-change-transform ${
+                className={`inline-block whitespace-pre will-change-transform ${
                   HIGHLIGHTS.has(word.toLowerCase()) ? 'text-red-bright' : ''
                 }`}
               >
@@ -56,7 +56,7 @@ export function HeroSection() {
             <Link
               href="/contact"
               data-hero-cta
-              className="group inline-flex items-center gap-3 rounded-[2px] bg-red px-8 py-4 font-mono text-xs uppercase tracking-[0.18em] text-white transition-colors duration-200 hover:bg-red-bright"
+              className="group inline-flex items-center gap-3 rounded-xs bg-red px-8 py-4 font-mono text-xs uppercase tracking-[0.18em] text-white transition-colors duration-200 hover:bg-red-bright"
             >
               {t('cta')}
               <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1">
@@ -66,7 +66,7 @@ export function HeroSection() {
             <Link
               href="/portfolio"
               data-hero-cta
-              className="border-hairline inline-flex items-center gap-3 rounded-[2px] px-8 py-4 font-mono text-xs uppercase tracking-[0.18em] text-fg/80 transition-colors duration-200 hover:border-red-bright/40 hover:text-fg"
+              className="border-hairline inline-flex items-center gap-3 rounded-xs px-8 py-4 font-mono text-xs uppercase tracking-[0.18em] text-fg/80 transition-colors duration-200 hover:border-red-bright/40 hover:text-fg"
             >
               {t('secondaryCta')}
             </Link>
@@ -77,7 +77,7 @@ export function HeroSection() {
               <li
                 key={tech}
                 data-hero-chip
-                className="hud-readout border-hairline rounded-[2px] px-3 py-1.5 text-[9px] !opacity-60 md:text-[10px]"
+                className="hud-readout border-hairline rounded-xs px-3 py-1.5 text-[9px] opacity-60! md:text-[10px]"
               >
                 {tech}
               </li>
@@ -96,6 +96,6 @@ export function HeroSection() {
           </span>
         </div>
       </section>
-    </HeroChoreography>
+    </Choreography>
   );
 }

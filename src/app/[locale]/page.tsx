@@ -1,7 +1,7 @@
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
 import { HeroSection } from '@/sections/home/HeroSection';
-import { Intro } from '@/components/home/Intro';
+import { AboutSection } from '@/sections/home/AboutSection';
 import { ServicesPreview } from '@/components/home/ServicesPreview';
 import { PortfolioPreview } from '@/components/home/PortfolioPreview';
 import { Testimonials } from '@/components/home/Testimonials';
@@ -120,7 +120,7 @@ export default async function HomePage({ params }: Props) {
       <JsonLd data={faqSchema(faqs)} id="ld-faq" />
 
       <HeroSection />
-      <Intro />
+      <AboutSection />
       <ServicesPreview />
       <PortfolioPreview />
       <Testimonials />
