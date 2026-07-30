@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Analytics } from '@vercel/analytics/next';
+import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { organizationSchema } from '@/lib/schemas';
@@ -112,14 +113,43 @@ export const viewport: Viewport = {
   colorScheme: 'dark light',
 };
 
+const fontBody = Inter({
+  subsets: ['latin'],
+  variable: '--font-body',
+  display: 'swap',
+});
+
+const fontDisplay = Space_Grotesk({
+  subsets: ['latin'],
+  variable: '--font-display-var',
+  display: 'swap',
+});
+
+const fontMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono-var',
+  display: 'swap',
+  weight: ['400', '500'],
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html suppressHydrationWarning>
+    <html
+      suppressHydrationWarning
+      className={`${fontBody.variable} ${fontDisplay.variable} ${fontMono.variable}`}
+    >
       <body className="antialiased">
+        {/* Apply the saved theme before first paint — kills the light-mode FOUC. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(localStorage.getItem('theme')==='light')document.documentElement.classList.add('light')}catch(e){}",
+          }}
+        />
         {/* Organisation schema shared across the entire site */}
         <JsonLd data={organizationSchema()} id="ld-organization" />
         {children}

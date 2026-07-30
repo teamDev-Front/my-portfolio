@@ -1,7 +1,33 @@
 @import "tailwindcss";
 
+/*
+ * Design tokens. Core colours are space-separated RGB triplets (--c-*) so canvas/JS
+ * consumers can read them via getComputedStyle and CSS can apply alpha with
+ * rgb(var(--c-x) / a). Semantic aliases (--background, --card-bg…) are kept for the
+ * pre-redesign pages and resolve FROM the triplets — one source of truth.
+ * Theme flips via the .light class on <html> (ThemeProvider).
+ */
 :root {
-  /* HCS Color Palette */
+  /* Brand core */
+  --c-bg: 4 4 8;            /* #040408 — near-black, the void */
+  --c-surface: 13 13 20;    /* #0d0d14 — panels, cards */
+  --c-surface-2: 21 21 30;  /* #15151e — raised panels */
+  --c-fg: 244 244 246;      /* #f4f4f6 — text */
+  --c-muted: 156 160 172;   /* #9ca0ac — secondary text */
+  --c-red: 220 38 38;       /* #dc2626 — the brand red */
+  --c-red-bright: 248 113 113; /* #f87171 — red for TEXT on dark (AA-safe) */
+  --c-red-deep: 91 18 18;   /* #5b1212 — background washes only */
+  --c-line: 255 255 255;    /* hairlines are white at --line-alpha, not a grey */
+
+  /* Atmosphere parameters (JS twins in src/config/visual.ts) */
+  --line-alpha: 0.1;
+  --hud-opacity: 0.4;
+  --grain-opacity: 0.32;
+  --page-margin: 24px;
+  --container-max: 1440px;
+  --ease-hcs: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Legacy aliases (pre-redesign pages) */
   --hcs-black: #0a0a0a;
   --hcs-dark: #111111;
   --hcs-gray-dark: #1a1a1a;
@@ -14,27 +40,43 @@
   --hcs-white-muted: #e5e5e5;
   --hcs-text-muted: #a3a3a3;
 
-  /* Dark mode (default) */
-  --background: var(--hcs-black);
-  --foreground: var(--hcs-white);
-  --card-bg: var(--hcs-dark);
-  --card-border: var(--hcs-gray);
+  --background: rgb(var(--c-bg));
+  --foreground: rgb(var(--c-fg));
+  --card-bg: rgb(var(--c-surface));
+  --card-border: rgb(var(--c-line) / var(--line-alpha));
   --accent: var(--hcs-red);
   --accent-hover: var(--hcs-red-light);
-  --muted: var(--hcs-text-muted);
+  --muted: rgb(var(--c-muted));
 }
 
 .light {
-  --background: #fafafa;
-  --foreground: #171717;
-  --card-bg: #ffffff;
-  --card-border: #e5e5e5;
+  --c-bg: 248 248 246;
+  --c-surface: 255 255 255;
+  --c-surface-2: 240 240 238;
+  --c-fg: 20 20 24;
+  --c-muted: 82 82 90;
+  --c-red: 185 28 28;        /* darker red for AA on light */
+  --c-red-bright: 185 28 28;
+  --c-red-deep: 254 226 226; /* light washes */
+  --c-line: 0 0 0;
+  --line-alpha: 0.12;
+
   --accent: var(--hcs-red);
   --accent-hover: var(--hcs-red-dark);
-  --muted: #525252;
 }
 
 @theme inline {
+  /* New token-driven utilities */
+  --color-bg: rgb(var(--c-bg));
+  --color-surface: rgb(var(--c-surface));
+  --color-surface-2: rgb(var(--c-surface-2));
+  --color-fg: rgb(var(--c-fg));
+  --color-red: rgb(var(--c-red));
+  --color-red-bright: rgb(var(--c-red-bright));
+  --color-red-deep: rgb(var(--c-red-deep));
+  --color-line: rgb(var(--c-line));
+
+  /* Legacy utilities (pre-redesign pages) */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card-bg);
@@ -46,8 +88,13 @@
   --color-hcs-red-light: var(--hcs-red-light);
   --color-hcs-dark: var(--hcs-dark);
   --color-hcs-gray: var(--hcs-gray);
-  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+
+  /* Fonts — injected by next/font in src/app/layout.tsx */
+  --font-sans: var(--font-body), system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: var(--font-display-var), var(--font-body), system-ui, sans-serif;
+  --font-mono: var(--font-mono-var), ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+
+  --ease-hcs: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 * {
@@ -55,53 +102,93 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* Lenis owns smooth scrolling; native smooth would fight it. */
+  scroll-behavior: auto;
+  /* Scrubbed transforms (words scaling past the camera) extend the document's overflow
+     sideways — clip it. `clip` (not `hidden`) so no scroll container is created, which
+     would break ScrollTrigger pinning. */
+  overflow-x: clip;
+  /* The journey is a tunnel, not a page: the scrollbar is the loudest "you are
+     scrolling down" signal, so it goes. Wheel/keyboard/touch input untouched. */
+  scrollbar-width: none;
+}
+html::-webkit-scrollbar {
+  display: none;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: rgb(var(--c-bg));
+  color: rgb(var(--c-fg));
+  font-family: var(--font-body), system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--hcs-dark);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--hcs-gray);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--hcs-red);
+  overflow-x: clip;
 }
 
 /* Selection */
 ::selection {
-  background: var(--hcs-red);
-  color: var(--hcs-white);
+  background: rgb(var(--c-red) / 0.85);
+  color: rgb(var(--c-fg));
 }
 
 /* Focus styles for accessibility */
 :focus-visible {
-  outline: 2px solid var(--hcs-red);
+  outline: 2px solid rgb(var(--c-red-bright));
   outline-offset: 2px;
 }
 
-/* Smooth transitions */
-a, button {
-  transition: all 0.2s ease-in-out;
+/* Reduced motion — global safety net (timelines also branch in JS). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
-/* Gradient text utility */
+/* Lenis (smooth scroll) integration. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ————— HCS.OS chrome ————— */
+
+/* Hairline border — the terminal chrome. */
+.border-hairline {
+  border: 1px solid rgb(var(--c-line) / var(--line-alpha));
+}
+
+/* Terminal readout — mono, uppercase, wide tracking, dimmed. */
+.hud-readout {
+  font-family: var(--font-mono-var), ui-monospace, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+  opacity: var(--hud-opacity);
+}
+
+/* Display type — tight, loud, uppercase. */
+.type-display {
+  font-family: var(--font-display-var), system-ui, sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  line-height: 0.98;
+}
+
+/* ————— Legacy utilities (pre-redesign pages — pruned as pages migrate) ————— */
+
 .gradient-text {
   background: linear-gradient(135deg, var(--hcs-red) 0%, var(--hcs-red-light) 100%);
   -webkit-background-clip: text;
@@ -109,91 +196,66 @@ a, button {
   background-clip: text;
 }
 
-/* Glass effect */
 .glass {
-  background: rgba(10, 10, 10, 0.8);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgb(var(--c-bg) / 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-.light .glass {
-  background: rgba(255, 255, 255, 0.8);
-}
-
-/* Red glow effect */
 .red-glow {
   box-shadow: 0 0 40px rgba(220, 38, 38, 0.3);
 }
 
-/* Card hover effect */
 .card-hover {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
 .card-hover:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 40px rgba(220, 38, 38, 0.2);
 }
 
-/* Animated underline */
 .animated-underline {
   position: relative;
 }
-
 .animated-underline::after {
   content: '';
   position: absolute;
   bottom: -2px;
   left: 0;
   width: 0;
-  height: 2px;
-  background: var(--hcs-red);
-  transition: width 0.3s ease;
+  height: 1px;
+  background: rgb(var(--c-red-bright));
+  transition: width 0.3s var(--ease-hcs);
 }
-
 .animated-underline:hover::after {
   width: 100%;
 }
 
-/* Hero background pattern */
-.hero-pattern {
-  background-image:
-    radial-gradient(circle at 20% 80%, rgba(220, 38, 38, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(220, 38, 38, 0.1) 0%, transparent 40%),
-    radial-gradient(circle at 40% 40%, rgba(220, 38, 38, 0.05) 0%, transparent 60%);
-}
-
-/* Section padding */
 .section-padding {
   padding: 5rem 1rem;
 }
-
 @media (min-width: 768px) {
   .section-padding {
     padding: 6rem 2rem;
   }
 }
-
 @media (min-width: 1024px) {
   .section-padding {
     padding: 8rem 2rem;
   }
 }
 
-/* Container */
 .container-custom {
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 1rem;
 }
-
 @media (min-width: 768px) {
   .container-custom {
     padding: 0 2rem;
   }
 }
 
-/* Custom animations */
 @keyframes spin-slow {
   from {
     transform: rotate(0deg);
@@ -202,40 +264,36 @@ a, button {
     transform: rotate(360deg);
   }
 }
-
 .animate-spin-slow {
   animation: spin-slow 20s linear infinite;
 }
 
-/* Floating animation */
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
     transform: translateY(-20px);
   }
 }
-
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
 
-/* Pulse glow animation */
 @keyframes pulse-glow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 20px rgba(220, 38, 38, 0.3);
   }
   50% {
     box-shadow: 0 0 40px rgba(220, 38, 38, 0.6);
   }
 }
-
 .animate-pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
-/* Text shimmer effect */
 @keyframes shimmer {
   0% {
     background-position: -200% center;
@@ -244,7 +302,6 @@ a, button {
     background-position: 200% center;
   }
 }
-
 .animate-shimmer {
   background: linear-gradient(
     90deg,
