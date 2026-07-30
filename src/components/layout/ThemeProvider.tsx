@@ -1,50 +1,57 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useSyncExternalStore } from 'react';
 
 type Theme = 'dark' | 'light';
 
 interface ThemeContextType {
   theme: Theme;
   toggleTheme: () => void;
-  mounted: boolean;
+}
+
+/**
+ * Theme state lives on <html> (the class the blocking inline script in app/layout.tsx
+ * already applied before first paint), not in React state. React subscribes to that one
+ * source of truth through useSyncExternalStore, so there is no mount flag, no effect
+ * writing state on mount, and no window where the two disagree.
+ */
+const listeners = new Set<() => void>();
+
+function currentTheme(): Theme {
+  return document.documentElement.classList.contains('light') ? 'light' : 'dark';
+}
+
+function subscribe(callback: () => void): () => void {
+  listeners.add(callback);
+  const observer = new MutationObserver(() => callback());
+  observer.observe(document.documentElement, { attributeFilter: ['class'] });
+  return () => {
+    listeners.delete(callback);
+    observer.disconnect();
+  };
+}
+
+function applyTheme(theme: Theme): void {
+  document.documentElement.classList.toggle('light', theme === 'light');
+  try {
+    localStorage.setItem('theme', theme);
+  } catch {
+    // Private mode / storage disabled: the theme still applies for this session.
+  }
+  listeners.forEach((l) => l());
 }
 
 const ThemeContext = createContext<ThemeContextType>({
   theme: 'dark',
   toggleTheme: () => {},
-  mounted: false,
 });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('dark');
-  const [mounted, setMounted] = useState(false);
+  const theme = useSyncExternalStore(subscribe, currentTheme, () => 'dark' as Theme);
 
-  useEffect(() => {
-    setMounted(true);
-    const savedTheme = localStorage.getItem('theme') as Theme;
-    if (savedTheme) {
-      setTheme(savedTheme);
-    }
-  }, []);
+  const toggleTheme = () => applyTheme(theme === 'dark' ? 'light' : 'dark');
 
-  useEffect(() => {
-    if (mounted) {
-      document.documentElement.classList.remove('light', 'dark');
-      document.documentElement.classList.add(theme);
-      localStorage.setItem('theme', theme);
-    }
-  }, [theme, mounted]);
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
-  };
-
-  return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, mounted }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>;
 }
 
 export function useTheme() {

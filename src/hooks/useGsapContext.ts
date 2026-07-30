@@ -18,14 +18,18 @@ export function useGsapContext<T extends HTMLElement>(
   setup: (ctx: { self: gsap.Context }) => void,
   deps: React.DependencyList = [],
 ): void {
+  // The latest setup closure is stashed in a layout effect (never during render, which
+  // would be a ref write mid-render) so re-running is driven purely by `deps` — a section
+  // re-rendering must not rebuild its timelines.
   const setupRef = useRef(setup);
-  setupRef.current = setup;
+  useIsomorphicLayoutEffect(() => {
+    setupRef.current = setup;
+  });
 
   useIsomorphicLayoutEffect(() => {
     registerGsap();
     if (!scope.current) return;
     const ctx = gsap.context((self) => setupRef.current({ self }), scope);
     return () => ctx.revert();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 }

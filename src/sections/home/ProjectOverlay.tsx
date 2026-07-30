@@ -19,10 +19,10 @@ export function ProjectOverlay() {
   const slug = useExperience((s) => s.activeProjectSlug);
   const [mounted, setMounted] = useState<string | null>(null);
 
-  // Keep the node mounted through the closing animation.
-  useEffect(() => {
-    if (slug) setMounted(slug);
-  }, [slug]);
+  // Derived state, adjusted during render (React's sanctioned pattern) rather than in an
+  // effect: the node stays mounted after `slug` clears so the closing timeline can run,
+  // and it unmounts from onReverseComplete.
+  if (slug && slug !== mounted) setMounted(slug);
 
   if (!mounted) return null;
   return <OverlayBody slug={mounted} open={slug === mounted} onGone={() => setMounted(null)} />;
