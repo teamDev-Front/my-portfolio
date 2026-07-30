@@ -77,7 +77,7 @@ export function HeroSection() {
               <li
                 key={tech}
                 data-hero-chip
-                className="hud-readout border-hairline rounded-xs px-3 py-1.5 text-[9px] opacity-60! md:text-[10px]"
+                className="hud-readout border-hairline rounded-xs px-3 py-1.5 text-[9px] opacity-100! md:text-[10px]"
               >
                 {tech}
               </li>

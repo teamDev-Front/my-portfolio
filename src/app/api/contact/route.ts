@@ -3,7 +3,15 @@ import { Resend } from 'resend';
 
 export const runtime = 'nodejs';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+/**
+ * Constructed per request, not at module scope: the Resend client throws on a missing key,
+ * and at module scope that throw happens during `next build` page-data collection — so a
+ * clean build fails on any machine without RESEND_API_KEY set. The handler already guards
+ * for the missing key below.
+ */
+function getResend(): Resend {
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
 const TO_EMAIL = process.env.CONTACT_TO_EMAIL ?? 'contato@habaeb.com';
 const FROM_EMAIL =
@@ -114,7 +122,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { error: resendError } = await resend.emails.send({
+    const { error: resendError } = await getResend().emails.send({
       from: FROM_EMAIL,
       to: TO_EMAIL,
       replyTo: data.email,

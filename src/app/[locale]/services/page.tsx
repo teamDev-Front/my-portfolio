@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { ServicesHero } from '@/components/services/ServicesHero';
 import { ServicesGrid } from '@/components/services/ServicesGrid';
 import { Industries } from '@/components/services/Industries';
+import { PageReveal } from '@/components/shell/PageReveal';
 import { ContactSection } from '@/sections/home/ContactSection';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { buildPageMetadata, type SupportedLocale } from '@/lib/seo';
@@ -155,9 +156,12 @@ export default async function ServicesPage({ params }: Props) {
         id="ld-breadcrumb"
       />
 
-      <ServicesHero />
-      <ServicesGrid />
-      <Industries />
+      <PageReveal>
+        <ServicesHero />
+        <ServicesGrid />
+        <Industries />
+      </PageReveal>
+
       <ContactSection numbered={false} />
     </>
   );

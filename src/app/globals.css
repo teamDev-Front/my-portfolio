@@ -21,8 +21,11 @@
 
   /* Atmosphere parameters (JS twins in src/config/visual.ts) */
   --line-alpha: 0.1;
-  --hud-opacity: 0.4;
-  --grain-opacity: 0.13;
+  /* 0.62, not the 0.4 the look wants: mono readouts run at 9–11px, and below this the
+     ratio drops under the 4.5:1 AA floor for small text. The purely decorative corner
+     telemetry dims itself further via --hud-telemetry-opacity (it is aria-hidden). */
+  --hud-opacity: 0.62;
+  --hud-telemetry-opacity: 0.4;
   --page-margin: 24px;
   --container-max: 1440px;
   --ease-hcs: cubic-bezier(0.16, 1, 0.3, 1);
@@ -60,8 +63,6 @@
   --c-red-deep: 254 226 226; /* light washes */
   --c-line: 0 0 0;
   --line-alpha: 0.12;
-  /* Multiply blend darkens, so the same amount of grain reads far heavier here. */
-  --grain-opacity: 0.05;
 
   --accent: var(--hcs-red);
   --accent-hover: var(--hcs-red-dark);
@@ -180,6 +181,12 @@ html.lenis body {
   opacity: var(--hud-opacity);
 }
 
+/* The corner telemetry is decoration (aria-hidden), so it may sit below the text
+   contrast floor the readable readouts must clear. */
+[data-hud] .hud-readout {
+  opacity: var(--hud-telemetry-opacity);
+}
+
 /* Display type — tight, loud, uppercase. */
 .type-display {
   font-family: var(--font-display-var), system-ui, sans-serif;
@@ -187,12 +194,6 @@ html.lenis body {
   text-transform: uppercase;
   letter-spacing: -0.03em;
   line-height: 0.98;
-}
-
-/* The grain is additive interference on the dark skin; on the light one it has to
-   subtract, or it just washes the page out. */
-.light [data-noise] {
-  mix-blend-mode: multiply;
 }
 
 /* Portfolio queue — static fallback (reduced motion): the receding corridor collapses

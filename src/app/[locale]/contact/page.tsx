@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { ContactHero } from '@/components/contact/ContactHero';
 import { ContactForm } from '@/components/contact/ContactForm';
 import { ContactInfo } from '@/components/contact/ContactInfo';
+import { PageReveal } from '@/components/shell/PageReveal';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { buildPageMetadata, type SupportedLocale } from '@/lib/seo';
 import { contactPageSchema, breadcrumbSchema } from '@/lib/schemas';
@@ -60,15 +61,20 @@ export default async function ContactPage({ params }: Props) {
         id="ld-breadcrumb"
       />
 
-      <ContactHero />
-      <section className="section-padding">
-        <div className="container-custom">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
-            <ContactForm />
-            <ContactInfo />
+      <PageReveal>
+        <ContactHero />
+
+        <section className="px-6 py-16 md:px-12 md:py-24">
+          <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-12 lg:gap-16">
+            <div data-reveal className="lg:col-span-7">
+              <ContactForm />
+            </div>
+            <div className="lg:col-span-5">
+              <ContactInfo />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </PageReveal>
     </>
   );
 }

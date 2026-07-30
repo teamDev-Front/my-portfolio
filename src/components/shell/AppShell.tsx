@@ -5,16 +5,15 @@ import { usePathname } from 'next/navigation';
 import { SmoothScroll } from '@/components/shell/SmoothScroll';
 import { BackgroundWash } from '@/components/shell/BackgroundWash';
 import { GlobalHud } from '@/components/shell/GlobalHud';
-import { NoiseOverlay } from '@/components/shell/NoiseOverlay';
 import { StageDriver } from '@/components/shell/StageDriver';
 import { experienceActions } from '@/stores/experienceStore';
 
 /**
  * The persistent engine — mounted once in the locale layout, wraps every route:
- * one grain layer, one HUD, one wash, one smooth-scroll pipeline. Pages are content
- * travelling through this machine; the shell never remounts on navigation.
+ * one HUD, one wash, one smooth-scroll pipeline. Pages are content travelling through
+ * this machine; the shell never remounts on navigation.
  *
- * Z-layers: wash 0 · content 10 · hud 40 · header 50 · project overlay 60 · grain 70.
+ * Z-layers: wash 0 · content 10 · hud 40 · header 50 · project overlay 60.
  *
  * CRITICAL: children render unconditionally — server HTML is never gated behind
  * client state (the old splash-screen `mounted` gate killed SEO for the whole site).
@@ -47,7 +46,6 @@ export function AppShell({ children }: { children: ReactNode }) {
       <BackgroundWash />
       <div className="relative z-10">{children}</div>
       <GlobalHud />
-      <NoiseOverlay />
       <StageDriver />
     </SmoothScroll>
   );

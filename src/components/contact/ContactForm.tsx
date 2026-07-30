@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 const FIELD =
-  'border-hairline w-full rounded-xs bg-surface px-4 py-3.5 text-base text-fg transition-colors duration-200 placeholder:text-fg/35 hover:border-line/20 focus:border-red-bright/60';
+  'border-hairline w-full rounded-xs bg-surface px-4 py-3.5 text-base text-fg transition-colors duration-200 hover:border-line/20 focus:border-red-bright/60';
 
 const LABEL =
   'block font-mono text-[10px] uppercase tracking-[0.16em] text-fg/70 transition-colors duration-200 group-focus-within:text-red-bright';
@@ -79,7 +79,7 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate={false} className="space-y-8 md:space-y-10">
+    <form onSubmit={handleSubmit} className="space-y-8 md:space-y-10">
       <div className="grid gap-8 sm:grid-cols-2 md:gap-10">
         <div className="group">
           <label htmlFor="name" className={LABEL}>
@@ -149,7 +149,7 @@ export function ContactForm() {
             </select>
             <span
               aria-hidden
-              className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 font-mono text-[10px] text-fg/50"
+              className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 font-mono text-[10px] text-fg/60"
             >
               ▼
             </span>

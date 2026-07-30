@@ -1,42 +1,14 @@
 import type { JourneyStage } from '@/stores/experienceStore';
 
 /**
- * Cosmetic parameters — grain amount, HUD opacity, wash recipes. They are PARAMETERS,
+ * Cosmetic parameters — HUD opacity, starfield, wash recipes. They are PARAMETERS,
  * NOT BLOCKERS: tune here, never rebuild the experience. CSS-facing twins of some values
- * live in globals.css (--grain-opacity, --hud-opacity, --line-alpha) — keep in sync.
+ * live in globals.css (--hud-opacity, --line-alpha) — keep in sync.
  */
 export const visual = {
-  /** Noise/grain layer intensity 0–1 (CSS twin: --grain-opacity). */
-  grainOpacity: 0.13,
-
-  /**
-   * The living TV static: pre-rendered noise tiles shuffled at ~12fps through a canvas
-   * pattern — no per-pixel work per frame, no WebGL. The occasional GLITCH is the old
-   * monitor hiccup: horizontal bands tear sideways for a few frames, then recover.
-   * Reduced-motion / static tiers fall back to a still texture.
-   */
-  staticNoise: {
-    fps: 12,
-    tileSize: 224,
-    frames: 5,
-    /** Peak grain luminance 0–255 — LOW keeps it subtle. */
-    amplitude: 54,
-    /** Render scale (canvas px per CSS px) — 0.5 = chunkier grain, quarter the pixels. */
-    resolutionScale: 0.5,
-    glitch: {
-      minDelaySec: 7,
-      maxDelaySec: 16,
-      minDurationMs: 90,
-      maxDurationMs: 260,
-      /** Horizontal slice displacement, as a fraction of the viewport width. */
-      maxSliceShift: 0.05,
-      slices: 3,
-    },
-  },
-
   /** HUD / terminal chrome. */
   hud: {
-    opacity: 0.4,
+    opacity: 0.62,
     lineAlpha: 0.1,
     pageMarginPx: 24,
   },

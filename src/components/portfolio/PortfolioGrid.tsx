@@ -73,7 +73,7 @@ export function PortfolioGrid() {
             })}
           </ul>
 
-          <p aria-live="polite" className="hud-readout shrink-0 text-[10px]">
+          <p aria-live="polite" className="hud-readout shrink-0 text-[10px] opacity-100! text-fg/60">
             {String(filtered.length).padStart(2, '0')} /{' '}
             {String(projects.length).padStart(2, '0')}
           </p>
@@ -149,7 +149,7 @@ export function PortfolioGrid() {
                         href={project.liveUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="relative z-10 inline-flex min-h-11 items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-fg/50 transition-colors duration-200 hover:text-fg"
+                        className="relative z-10 inline-flex min-h-11 items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-fg/60 transition-colors duration-200 hover:text-fg"
                       >
                         {t('liveDemo')}
                         <span aria-hidden>↗</span>
