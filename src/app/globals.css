@@ -187,6 +187,40 @@ html.lenis body {
   line-height: 0.98;
 }
 
+/* Portfolio queue — static fallback (reduced motion): the receding corridor collapses
+   into a plain readable stack, every card in flow and tabbable. */
+[data-queue-static='on'] {
+  min-height: 0;
+  padding: 7rem 1.5rem;
+}
+[data-queue-static='on'] [data-queue-surface] {
+  position: static;
+  display: grid;
+  gap: 2rem;
+  cursor: default;
+}
+@media (min-width: 768px) {
+  [data-queue-static='on'] [data-queue-surface] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+[data-queue-static='on'] [data-queue-card] {
+  position: static;
+  width: 100%;
+  max-width: none;
+  transform: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+[data-queue-static='on'] [data-portfolio-headwrap],
+[data-queue-static='on'] [data-portfolio-footwrap] {
+  position: static;
+  padding: 0;
+}
+[data-queue-static='on'] [data-portfolio-footwrap] {
+  margin-top: 3rem;
+}
+
 /* Scroll indicator — a dot travelling down a hairline. */
 @keyframes scroll-hint {
   0% {

@@ -212,6 +212,28 @@ export function portfolioTimeline(
       },
       { capture: true, signal },
     );
+
+    // Keyboard parity: a focused card is pulled to the front slot. Offset is solved
+    // modulo n and eased through the same live layer, so the queue arrives naturally
+    // instead of snapping.
+    surface.addEventListener(
+      'queue:focus',
+      (e) => {
+        const index = (e as CustomEvent<{ index: number }>).detail?.index;
+        if (typeof index !== 'number') return;
+        // Front means total ≡ index (mod n) — pick the nearest equivalent offset.
+        let target = index - state.scrubPhase;
+        target = ((target % n) + n) % n;
+        const delta = ((target - live.offset + n * 1.5) % n) - n * 0.5;
+        gsap.to(live, {
+          offset: live.offset + delta,
+          duration: 0.6,
+          ease: 'power2.out',
+          overwrite: true,
+        });
+      },
+      { signal },
+    );
   }
 
   gsap.to(
@@ -231,8 +253,9 @@ export function portfolioTimeline(
         const targetBoost = Math.min(Math.abs(v) * cfg.velocityGain, cfg.maxBoost);
         live.boost += (targetBoost - live.boost) * Math.min(1, dt * 6);
         live.dragVel *= Math.exp(-cfg.inertiaDecay * dt);
+        // Not wrapped here: applyPhase already works modulo n, and a focus tween needs a
+        // continuous target to ease toward (wrapping mid-tween would snap the queue).
         live.offset += (cfg.autoSpeed + live.boost) * dt + (dragging ? 0 : live.dragVel * dt);
-        live.offset = ((live.offset % n) + n) % n;
         if (tl.scrollTrigger?.isActive) applyPhase(state.scrubPhase + live.offset);
       },
     },

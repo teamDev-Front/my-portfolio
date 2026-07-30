@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import { HeroSection } from '@/sections/home/HeroSection';
 import { AboutSection } from '@/sections/home/AboutSection';
 import { ServicesSection } from '@/sections/home/ServicesSection';
-import { PortfolioPreview } from '@/components/home/PortfolioPreview';
+import { PortfolioSection } from '@/sections/home/PortfolioSection';
 import { Testimonials } from '@/components/home/Testimonials';
 import { CTA } from '@/components/home/CTA';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -122,7 +122,7 @@ export default async function HomePage({ params }: Props) {
       <HeroSection />
       <AboutSection />
       <ServicesSection />
-      <PortfolioPreview />
+      <PortfolioSection />
       <Testimonials />
       <CTA />
     </>

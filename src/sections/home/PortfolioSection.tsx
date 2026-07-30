@@ -26,7 +26,7 @@ export async function PortfolioSection() {
         data-stage-lead="0.7"
         className="relative min-h-screen overflow-hidden"
       >
-        <div className="absolute inset-x-0 top-24 z-20 px-6 md:px-12">
+        <div data-portfolio-headwrap className="absolute inset-x-0 top-24 z-20 px-6 md:px-12">
           <div data-portfolio-header className="mx-auto max-w-6xl">
             <p className="hud-readout text-[10px] opacity-100! text-red-bright">03 / PORTFOLIO</p>
             <h2 className="type-display mt-4 max-w-2xl text-[clamp(1.8rem,4.5vw,3.6rem)] text-fg">
@@ -38,7 +38,7 @@ export async function PortfolioSection() {
         {/* The drag surface. touch-action pan-y keeps vertical scroll native on touch. */}
         <div
           data-queue-surface
-          className="absolute inset-0 z-10 cursor-grab touch-pan-y select-none data-[queue-static=on]:static"
+          className="absolute inset-0 z-10 cursor-grab touch-pan-y select-none"
         >
           {featured.map((project, i) => {
             const copy = project.translations[locale];
@@ -80,7 +80,7 @@ export async function PortfolioSection() {
           })}
         </div>
 
-        <div className="absolute inset-x-0 bottom-24 z-20 px-6 md:px-12">
+        <div data-portfolio-footwrap className="absolute inset-x-0 bottom-24 z-20 px-6 md:px-12">
           <div className="mx-auto flex max-w-6xl items-end justify-between gap-6">
             <p data-queue-hint className="hud-readout text-[10px]">
               {locale === 'pt-BR' ? 'ARRASTE · CLIQUE PARA ABRIR' : 'DRAG · CLICK TO OPEN'}
