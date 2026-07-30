@@ -11,7 +11,7 @@ import {
   type LandingData,
   type LandingSharedCopy,
 } from '@/components/landing/LandingSections';
-import { CTA } from '@/components/home/CTA';
+import { ContactSection } from '@/sections/home/ContactSection';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { buildPageMetadata, type SupportedLocale } from '@/lib/seo';
 import {
@@ -141,7 +141,7 @@ export default async function AiAutomationPage({ params }: Props) {
         subtitle={tScope('subtitle')}
         cities={tScope.raw('cities') as string[]}
       />
-      <CTA />
+      <ContactSection numbered={false} />
     </>
   );
 }

@@ -2,7 +2,7 @@ import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { ProjectDetail } from '@/components/portfolio/ProjectDetail';
-import { CTA } from '@/components/home/CTA';
+import { ContactSection } from '@/sections/home/ContactSection';
 import { projects, getProjectBySlug } from '@/lib/data/projects';
 import { JsonLd } from '@/components/seo/JsonLd';
 import {
@@ -97,7 +97,7 @@ export default async function ProjectPage({ params }: Props) {
       />
 
       <ProjectDetail project={project} />
-      <CTA />
+      <ContactSection numbered={false} />
     </>
   );
 }

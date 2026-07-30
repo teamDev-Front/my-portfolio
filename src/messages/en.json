@@ -81,7 +81,15 @@
   },
   "testimonials": {
     "title": "Results & Testimonials",
-    "subtitle": "Measurable impacts for our clients"
+    "subtitle": "Measurable impacts for our clients",
+    "metrics": {
+      "revenue": "Revenue increase",
+      "bookings": "Booking increase",
+      "sales": "Online sales",
+      "consultations": "Consultation increase",
+      "satisfaction": "User satisfaction",
+      "label": "Results in numbers"
+    }
   },
   "cta": {
     "title": "Ready to Transform Your Digital Presence?",
@@ -315,28 +323,94 @@
         "stat3Label": "avg MVP lead time"
       },
       "pillars": [
-        { "icon": "sparkles", "title": "Custom design", "description": "No stock templates. Every project starts with Figma wireframes and unique creative direction for your brand." },
-        { "icon": "zap", "title": "Extreme performance", "description": "Next.js 15, lazy loading, global CDN. 90+ PageSpeed on mobile and desktop — Google loves it." },
-        { "icon": "search", "title": "Real technical SEO", "description": "Meta tags, sitemap, robots, structured data, hreflang, OG images. Ready to index on first crawl." },
-        { "icon": "layout", "title": "Admin panel", "description": "Update text, images and posts without a developer. CMS integrated via Sanity, Contentful or custom." },
-        { "icon": "smartphone", "title": "100% responsive", "description": "Mobile-first. Tested on iPhone, Android, tablet, desktop and ultra-wide. Zero layout breakage." },
-        { "icon": "accessibility", "title": "WCAG accessibility", "description": "Contrast, keyboard navigation, screen reader, ARIA. Inclusive and compliant with WCAG 2.1 AA." },
-        { "icon": "shield", "title": "Hosting + SSL", "description": "Vercel deployment with HTTPS, HTTP/3, global CDN across 119 cities. 99.99% uptime guaranteed." },
-        { "icon": "git", "title": "Code is 100% yours", "description": "You own the Git repo from commit #1. No lock-in, no black boxes, no hostage situations." }
+        {
+          "icon": "sparkles",
+          "title": "Custom design",
+          "description": "No stock templates. Every project starts with Figma wireframes and unique creative direction for your brand."
+        },
+        {
+          "icon": "zap",
+          "title": "Extreme performance",
+          "description": "Next.js 15, lazy loading, global CDN. 90+ PageSpeed on mobile and desktop — Google loves it."
+        },
+        {
+          "icon": "search",
+          "title": "Real technical SEO",
+          "description": "Meta tags, sitemap, robots, structured data, hreflang, OG images. Ready to index on first crawl."
+        },
+        {
+          "icon": "layout",
+          "title": "Admin panel",
+          "description": "Update text, images and posts without a developer. CMS integrated via Sanity, Contentful or custom."
+        },
+        {
+          "icon": "smartphone",
+          "title": "100% responsive",
+          "description": "Mobile-first. Tested on iPhone, Android, tablet, desktop and ultra-wide. Zero layout breakage."
+        },
+        {
+          "icon": "accessibility",
+          "title": "WCAG accessibility",
+          "description": "Contrast, keyboard navigation, screen reader, ARIA. Inclusive and compliant with WCAG 2.1 AA."
+        },
+        {
+          "icon": "shield",
+          "title": "Hosting + SSL",
+          "description": "Vercel deployment with HTTPS, HTTP/3, global CDN across 119 cities. 99.99% uptime guaranteed."
+        },
+        {
+          "icon": "git",
+          "title": "Code is 100% yours",
+          "description": "You own the Git repo from commit #1. No lock-in, no black boxes, no hostage situations."
+        }
       ],
       "process": [
-        { "step": "01", "title": "Discovery", "description": "Free 45-min meeting to understand goals, audience and scope. You walk out with a quote and timeline." },
-        { "step": "02", "title": "Figma design", "description": "Wireframes and interactive prototype. You approve visuals before we write a single line of code." },
-        { "step": "03", "title": "Development", "description": "1-week sprints with live demos. You follow the Git repo and see progress in real time." },
-        { "step": "04", "title": "Launch + support", "description": "Deploy, DNS config, Google Analytics, Search Console. 30 days of support included." }
+        {
+          "step": "01",
+          "title": "Discovery",
+          "description": "Free 45-min meeting to understand goals, audience and scope. You walk out with a quote and timeline."
+        },
+        {
+          "step": "02",
+          "title": "Figma design",
+          "description": "Wireframes and interactive prototype. You approve visuals before we write a single line of code."
+        },
+        {
+          "step": "03",
+          "title": "Development",
+          "description": "1-week sprints with live demos. You follow the Git repo and see progress in real time."
+        },
+        {
+          "step": "04",
+          "title": "Launch + support",
+          "description": "Deploy, DNS config, Google Analytics, Search Console. 30 days of support included."
+        }
       ],
       "useCases": [
-        { "title": "Clinics and practices", "description": "Online booking, WhatsApp integration, medical content blog." },
-        { "title": "Law firms", "description": "Practice areas, qualified lead capture, compliance-aware content." },
-        { "title": "Real estate", "description": "Property listings, advanced filters, CRM integration." },
-        { "title": "Restaurants and bars", "description": "Digital menu, reservations, delivery platform integration." },
-        { "title": "Startups and SaaS", "description": "Conversion landing pages, A/B testing, analytics." },
-        { "title": "B2B and industry", "description": "Technical catalog, client portal, ERP integration." }
+        {
+          "title": "Clinics and practices",
+          "description": "Online booking, WhatsApp integration, medical content blog."
+        },
+        {
+          "title": "Law firms",
+          "description": "Practice areas, qualified lead capture, compliance-aware content."
+        },
+        {
+          "title": "Real estate",
+          "description": "Property listings, advanced filters, CRM integration."
+        },
+        {
+          "title": "Restaurants and bars",
+          "description": "Digital menu, reservations, delivery platform integration."
+        },
+        {
+          "title": "Startups and SaaS",
+          "description": "Conversion landing pages, A/B testing, analytics."
+        },
+        {
+          "title": "B2B and industry",
+          "description": "Technical catalog, client portal, ERP integration."
+        }
       ],
       "packages": [
         {
@@ -388,14 +462,38 @@
         }
       ],
       "faq": [
-        { "question": "How much does a professional website cost?", "answer": "Landing pages start at $990, business sites at $1,990, and enterprise projects are quoted after a free discovery call. Final price depends on pages, integrations and custom design." },
-        { "question": "How long until it's ready?", "answer": "Landing page: 1-2 weeks. Business site: 3-5 weeks. Portal with integrations: 6-10 weeks. Always delivered in weekly sprints with live demos." },
-        { "question": "Do you work with international clients?", "answer": "Yes. Headquartered in Brazil, we serve clients across the US, Canada, UK, and EU remotely. Meetings on Google Meet, delivery via Git." },
-        { "question": "Will the site be responsive and fast?", "answer": "Yes. Mobile-first, tested across devices, 90+ Google PageSpeed score. Next.js, global CDN, automatic image optimization." },
-        { "question": "Can I update the site myself later?", "answer": "Yes. Every project above Essential ships with an integrated CMS admin panel. You update text, images and posts without a developer." },
-        { "question": "Do I own the code?", "answer": "100% yours from commit #1. You get the Git repo. We only charge hosting if you want us to manage it — otherwise, host wherever you prefer." },
-        { "question": "Do you do SEO?", "answer": "We handle technical SEO (sitemap, robots, schema, performance, hreflang, OG image). Content SEO and link building is a separate service we also offer." },
-        { "question": "I already have a site — can you rebuild it?", "answer": "Yes. We redesign with content migration, SEO preservation (301 redirects), and no ranking loss. Usually the ranking improves significantly." }
+        {
+          "question": "How much does a professional website cost?",
+          "answer": "Landing pages start at $990, business sites at $1,990, and enterprise projects are quoted after a free discovery call. Final price depends on pages, integrations and custom design."
+        },
+        {
+          "question": "How long until it's ready?",
+          "answer": "Landing page: 1-2 weeks. Business site: 3-5 weeks. Portal with integrations: 6-10 weeks. Always delivered in weekly sprints with live demos."
+        },
+        {
+          "question": "Do you work with international clients?",
+          "answer": "Yes. Headquartered in Brazil, we serve clients across the US, Canada, UK, and EU remotely. Meetings on Google Meet, delivery via Git."
+        },
+        {
+          "question": "Will the site be responsive and fast?",
+          "answer": "Yes. Mobile-first, tested across devices, 90+ Google PageSpeed score. Next.js, global CDN, automatic image optimization."
+        },
+        {
+          "question": "Can I update the site myself later?",
+          "answer": "Yes. Every project above Essential ships with an integrated CMS admin panel. You update text, images and posts without a developer."
+        },
+        {
+          "question": "Do I own the code?",
+          "answer": "100% yours from commit #1. You get the Git repo. We only charge hosting if you want us to manage it — otherwise, host wherever you prefer."
+        },
+        {
+          "question": "Do you do SEO?",
+          "answer": "We handle technical SEO (sitemap, robots, schema, performance, hreflang, OG image). Content SEO and link building is a separate service we also offer."
+        },
+        {
+          "question": "I already have a site — can you rebuild it?",
+          "answer": "Yes. We redesign with content migration, SEO preservation (301 redirects), and no ranking loss. Usually the ranking improves significantly."
+        }
       ]
     },
     "createSaas": {
@@ -414,28 +512,94 @@
         "stat3Label": "uptime SLA"
       },
       "pillars": [
-        { "icon": "users", "title": "Multi-tenant architecture", "description": "Organisation isolation, roles and permissions. Ready for B2B and B2C from day one." },
-        { "icon": "shield", "title": "Robust authentication", "description": "Email/password, Google, GitHub, Microsoft. SSO/SAML on demand. MFA, password reset, secure sessions." },
-        { "icon": "credit", "title": "Recurring billing", "description": "Stripe integration with plans, trials, upgrades/downgrades, invoices, webhook events." },
-        { "icon": "layout", "title": "Admin panel", "description": "User management, MRR/churn metrics, feature flags, impersonation for support." },
-        { "icon": "zap", "title": "REST or GraphQL API", "description": "OpenAPI/Swagger docs, rate limiting, versioning, auto-generated SDKs." },
-        { "icon": "bot", "title": "Native AI integration", "description": "ChatGPT, Claude, or open-source models integrated into the product — chat, generation, analysis, RAG." },
-        { "icon": "chart", "title": "Product analytics", "description": "PostHog or Mixpanel integrated. Funnels, retention, feature usage. Data-driven decisions." },
-        { "icon": "git", "title": "CI/CD + monitoring", "description": "GitHub Actions, auto-deploy, Sentry for errors, structured logs, 24/7 alerts." }
+        {
+          "icon": "users",
+          "title": "Multi-tenant architecture",
+          "description": "Organisation isolation, roles and permissions. Ready for B2B and B2C from day one."
+        },
+        {
+          "icon": "shield",
+          "title": "Robust authentication",
+          "description": "Email/password, Google, GitHub, Microsoft. SSO/SAML on demand. MFA, password reset, secure sessions."
+        },
+        {
+          "icon": "credit",
+          "title": "Recurring billing",
+          "description": "Stripe integration with plans, trials, upgrades/downgrades, invoices, webhook events."
+        },
+        {
+          "icon": "layout",
+          "title": "Admin panel",
+          "description": "User management, MRR/churn metrics, feature flags, impersonation for support."
+        },
+        {
+          "icon": "zap",
+          "title": "REST or GraphQL API",
+          "description": "OpenAPI/Swagger docs, rate limiting, versioning, auto-generated SDKs."
+        },
+        {
+          "icon": "bot",
+          "title": "Native AI integration",
+          "description": "ChatGPT, Claude, or open-source models integrated into the product — chat, generation, analysis, RAG."
+        },
+        {
+          "icon": "chart",
+          "title": "Product analytics",
+          "description": "PostHog or Mixpanel integrated. Funnels, retention, feature usage. Data-driven decisions."
+        },
+        {
+          "icon": "git",
+          "title": "CI/CD + monitoring",
+          "description": "GitHub Actions, auto-deploy, Sentry for errors, structured logs, 24/7 alerts."
+        }
       ],
       "process": [
-        { "step": "01", "title": "Discovery + Architecture", "description": "2-3 sessions defining user, jobs-to-be-done, database schema, stack and phased roadmap." },
-        { "step": "02", "title": "Functional MVP", "description": "8-12 weeks to ship the core flow: signup, onboarding, core use, billing, admin." },
-        { "step": "03", "title": "Beta with users", "description": "Controlled launch, feedback collection, weekly iteration, UX tweaks and bug fixes." },
-        { "step": "04", "title": "Growth + scale", "description": "Optimisation, premium features, integrations, programmatic SEO, partnerships, automated onboarding." }
+        {
+          "step": "01",
+          "title": "Discovery + Architecture",
+          "description": "2-3 sessions defining user, jobs-to-be-done, database schema, stack and phased roadmap."
+        },
+        {
+          "step": "02",
+          "title": "Functional MVP",
+          "description": "8-12 weeks to ship the core flow: signup, onboarding, core use, billing, admin."
+        },
+        {
+          "step": "03",
+          "title": "Beta with users",
+          "description": "Controlled launch, feedback collection, weekly iteration, UX tweaks and bug fixes."
+        },
+        {
+          "step": "04",
+          "title": "Growth + scale",
+          "description": "Optimisation, premium features, integrations, programmatic SEO, partnerships, automated onboarding."
+        }
       ],
       "useCases": [
-        { "title": "Vertical B2B SaaS", "description": "Tools for niches: clinics, workshops, accountants, real estate agencies." },
-        { "title": "Marketplaces", "description": "Supply-demand matching, commissions, reputation, split payments." },
-        { "title": "PaaS / API", "description": "Usage-based monetised APIs with consumption dashboards and metered billing." },
-        { "title": "Productivity tools", "description": "Dashboards, collaborative editors, internal tools sold as products." },
-        { "title": "AI-first SaaS", "description": "Products where the core is an AI model — generation, analysis, chat, RAG." },
-        { "title": "Vertical ERP/CRM", "description": "Management systems for specific sectors, replacing spreadsheets." }
+        {
+          "title": "Vertical B2B SaaS",
+          "description": "Tools for niches: clinics, workshops, accountants, real estate agencies."
+        },
+        {
+          "title": "Marketplaces",
+          "description": "Supply-demand matching, commissions, reputation, split payments."
+        },
+        {
+          "title": "PaaS / API",
+          "description": "Usage-based monetised APIs with consumption dashboards and metered billing."
+        },
+        {
+          "title": "Productivity tools",
+          "description": "Dashboards, collaborative editors, internal tools sold as products."
+        },
+        {
+          "title": "AI-first SaaS",
+          "description": "Products where the core is an AI model — generation, analysis, chat, RAG."
+        },
+        {
+          "title": "Vertical ERP/CRM",
+          "description": "Management systems for specific sectors, replacing spreadsheets."
+        }
       ],
       "packages": [
         {
@@ -489,14 +653,38 @@
         }
       ],
       "faq": [
-        { "question": "How much does it cost to build a SaaS?", "answer": "MVP starts at $9,900 in 8 weeks. Full Product from $22,900 in 12-16 weeks. Enterprise is quoted after discovery. Final price depends on complexity, integrations and planned scale." },
-        { "question": "How long until MVP is ready?", "answer": "8-12 weeks for a functional MVP. Already ready for first paying users, with auth, billing and core flow working end-to-end." },
-        { "question": "Is the code mine or yours?", "answer": "100% yours from commit #1. You get the Git repo, Stripe, Vercel, Supabase access. Zero lock-in." },
-        { "question": "Do you support after delivery?", "answer": "Yes. 45 to 90 days included depending on package. After that, optional monthly retainer (4h, 8h or 16h/month) for maintenance, new features and evolution." },
-        { "question": "What stack do you use?", "answer": "Next.js 15 + TypeScript + Tailwind on frontend. Supabase or PostgreSQL + Node.js/Python on backend. Stripe for billing. Vercel for deploy. Adapted per case." },
-        { "question": "Do you integrate AI into SaaS?", "answer": "Yes, natively. OpenAI, Anthropic, open-source models via Ollama. Chat, content generation, document analysis, RAG with your data, autonomous agents." },
-        { "question": "What if I need to scale to 100k users?", "answer": "Architecture is built ready: edge functions, global CDN, read-replica database, caching. At enterprise scale, we migrate to dedicated infra (AWS/GCP) without major refactoring." },
-        { "question": "Do you do AI integration outside of SaaS too?", "answer": "Yes — see our AI Automation page. We integrate ChatGPT, Claude and agents into existing systems as well." }
+        {
+          "question": "How much does it cost to build a SaaS?",
+          "answer": "MVP starts at $9,900 in 8 weeks. Full Product from $22,900 in 12-16 weeks. Enterprise is quoted after discovery. Final price depends on complexity, integrations and planned scale."
+        },
+        {
+          "question": "How long until MVP is ready?",
+          "answer": "8-12 weeks for a functional MVP. Already ready for first paying users, with auth, billing and core flow working end-to-end."
+        },
+        {
+          "question": "Is the code mine or yours?",
+          "answer": "100% yours from commit #1. You get the Git repo, Stripe, Vercel, Supabase access. Zero lock-in."
+        },
+        {
+          "question": "Do you support after delivery?",
+          "answer": "Yes. 45 to 90 days included depending on package. After that, optional monthly retainer (4h, 8h or 16h/month) for maintenance, new features and evolution."
+        },
+        {
+          "question": "What stack do you use?",
+          "answer": "Next.js 15 + TypeScript + Tailwind on frontend. Supabase or PostgreSQL + Node.js/Python on backend. Stripe for billing. Vercel for deploy. Adapted per case."
+        },
+        {
+          "question": "Do you integrate AI into SaaS?",
+          "answer": "Yes, natively. OpenAI, Anthropic, open-source models via Ollama. Chat, content generation, document analysis, RAG with your data, autonomous agents."
+        },
+        {
+          "question": "What if I need to scale to 100k users?",
+          "answer": "Architecture is built ready: edge functions, global CDN, read-replica database, caching. At enterprise scale, we migrate to dedicated infra (AWS/GCP) without major refactoring."
+        },
+        {
+          "question": "Do you do AI integration outside of SaaS too?",
+          "answer": "Yes — see our AI Automation page. We integrate ChatGPT, Claude and agents into existing systems as well."
+        }
       ]
     },
     "aiAutomation": {
@@ -515,28 +703,94 @@
         "stat3Label": "response speed"
       },
       "pillars": [
-        { "icon": "bot", "title": "Custom chatbot", "description": "Trained on your docs and FAQs. WhatsApp, web, Instagram. Speaks like you, solves what it can and escalates the rest to humans." },
-        { "icon": "sparkles", "title": "ChatGPT / Claude integration", "description": "OpenAI and Anthropic APIs integrated into your product. Content generation, summarisation, analysis, translation, classification." },
-        { "icon": "zap", "title": "n8n workflows", "description": "Visual automation across 400+ apps: Gmail, Sheets, Notion, WhatsApp, Stripe, CRMs. Runs 24/7 on your infra." },
-        { "icon": "users", "title": "Autonomous agents", "description": "Agents that navigate, decide and execute — support, prospecting, monitoring, data analysis." },
-        { "icon": "search", "title": "RAG (search your docs)", "description": "Vector DB + embeddings. AI answers from your documents, contracts, policies, knowledge base." },
-        { "icon": "shield", "title": "Privacy preserved", "description": "Sensitive data can run on open-source models (Llama, Mistral) on-premise. Zero third-party leakage." },
-        { "icon": "chart", "title": "Predictive analysis", "description": "ML models for churn, LTV, fraud, demand prediction. Applied to your historical data." },
-        { "icon": "layout", "title": "Dashboard + monitoring", "description": "See every execution, cost per interaction, tokens consumed, errors. Full transparency on what AI is doing." }
+        {
+          "icon": "bot",
+          "title": "Custom chatbot",
+          "description": "Trained on your docs and FAQs. WhatsApp, web, Instagram. Speaks like you, solves what it can and escalates the rest to humans."
+        },
+        {
+          "icon": "sparkles",
+          "title": "ChatGPT / Claude integration",
+          "description": "OpenAI and Anthropic APIs integrated into your product. Content generation, summarisation, analysis, translation, classification."
+        },
+        {
+          "icon": "zap",
+          "title": "n8n workflows",
+          "description": "Visual automation across 400+ apps: Gmail, Sheets, Notion, WhatsApp, Stripe, CRMs. Runs 24/7 on your infra."
+        },
+        {
+          "icon": "users",
+          "title": "Autonomous agents",
+          "description": "Agents that navigate, decide and execute — support, prospecting, monitoring, data analysis."
+        },
+        {
+          "icon": "search",
+          "title": "RAG (search your docs)",
+          "description": "Vector DB + embeddings. AI answers from your documents, contracts, policies, knowledge base."
+        },
+        {
+          "icon": "shield",
+          "title": "Privacy preserved",
+          "description": "Sensitive data can run on open-source models (Llama, Mistral) on-premise. Zero third-party leakage."
+        },
+        {
+          "icon": "chart",
+          "title": "Predictive analysis",
+          "description": "ML models for churn, LTV, fraud, demand prediction. Applied to your historical data."
+        },
+        {
+          "icon": "layout",
+          "title": "Dashboard + monitoring",
+          "description": "See every execution, cost per interaction, tokens consumed, errors. Full transparency on what AI is doing."
+        }
       ],
       "process": [
-        { "step": "01", "title": "Process mapping", "description": "We identify repetitive tasks with highest automation ROI. Prioritised by time savings and risk." },
-        { "step": "02", "title": "Proof of concept", "description": "Functional pilot in 2-3 weeks showing the automated flow running on a real case." },
-        { "step": "03", "title": "Implementation", "description": "Integration with your systems (ERP, CRM, WhatsApp, Gmail). Testing, prompt refinement, guardrails." },
-        { "step": "04", "title": "Continuous monitoring", "description": "Dashboard shows performance, cost and failures. Weekly adjustments to improve precision over time." }
+        {
+          "step": "01",
+          "title": "Process mapping",
+          "description": "We identify repetitive tasks with highest automation ROI. Prioritised by time savings and risk."
+        },
+        {
+          "step": "02",
+          "title": "Proof of concept",
+          "description": "Functional pilot in 2-3 weeks showing the automated flow running on a real case."
+        },
+        {
+          "step": "03",
+          "title": "Implementation",
+          "description": "Integration with your systems (ERP, CRM, WhatsApp, Gmail). Testing, prompt refinement, guardrails."
+        },
+        {
+          "step": "04",
+          "title": "Continuous monitoring",
+          "description": "Dashboard shows performance, cost and failures. Weekly adjustments to improve precision over time."
+        }
       ],
       "useCases": [
-        { "title": "24/7 support", "description": "WhatsApp chatbot answering FAQs and scheduling meetings." },
-        { "title": "Lead qualification", "description": "AI qualifies leads, understands need and routes to the right salesperson." },
-        { "title": "Document analysis", "description": "Contracts, invoices, resumes processed in seconds with structured extraction." },
-        { "title": "Content generation", "description": "Texts, emails, posts, product descriptions at scale while keeping tone of voice." },
-        { "title": "Internal copilot", "description": "AI trained on your processes — answers employee questions on policies, systems, HR." },
-        { "title": "Marketing automation", "description": "Dynamic segmentation, campaign personalisation, AI-driven A/B testing." }
+        {
+          "title": "24/7 support",
+          "description": "WhatsApp chatbot answering FAQs and scheduling meetings."
+        },
+        {
+          "title": "Lead qualification",
+          "description": "AI qualifies leads, understands need and routes to the right salesperson."
+        },
+        {
+          "title": "Document analysis",
+          "description": "Contracts, invoices, resumes processed in seconds with structured extraction."
+        },
+        {
+          "title": "Content generation",
+          "description": "Texts, emails, posts, product descriptions at scale while keeping tone of voice."
+        },
+        {
+          "title": "Internal copilot",
+          "description": "AI trained on your processes — answers employee questions on policies, systems, HR."
+        },
+        {
+          "title": "Marketing automation",
+          "description": "Dynamic segmentation, campaign personalisation, AI-driven A/B testing."
+        }
       ],
       "packages": [
         {
@@ -585,14 +839,38 @@
         }
       ],
       "faq": [
-        { "question": "Does AI replace my team?", "answer": "No — well-done AI augments the team. It takes away repetitive, boring tasks so people can focus on creativity, empathy and judgment. It's a tool, not a replacement." },
-        { "question": "How much does AI cost to run monthly?", "answer": "Depends on volume. A WhatsApp chatbot with 1,000 interactions/month costs ~$20-60 in OpenAI tokens. More sophisticated agents can go to $100-400/month. We always show cost projection upfront." },
-        { "question": "Is my data safe?", "answer": "Yes. We use APIs with no-training clauses (OpenAI Enterprise, Anthropic, Azure OpenAI). For ultra-sensitive data, we run open-source models (Llama, Mistral) on-premise — zero external leakage." },
-        { "question": "Does AI answer incorrectly sometimes?", "answer": "Any LLM can hallucinate. We implement guardrails: answers limited to your docs (RAG), output validation, human handoff when uncertain. Typical precision 92-97% in well-defined cases." },
-        { "question": "ChatGPT or Claude — which to use?", "answer": "Depends. Claude 3.5/4 is better at reasoning, long-form writing and code. GPT-4o/5 is faster and cheaper for simple tasks. We recommend after understanding the case. Also test open-source when it makes sense." },
-        { "question": "Can you integrate with WhatsApp?", "answer": "Yes. Via WhatsApp Business API (Twilio, Gupshup, Z-API) or Evolution API. CRM integration, auto-responses, interactive buttons, lists, media." },
-        { "question": "What if I don't know where to start?", "answer": "That's exactly why we do free Process Mapping in the initial meeting. In 45min we identify the 2-3 processes with highest automation ROI and show a viable path." },
-        { "question": "Do you work with n8n or build custom code?", "answer": "Both. n8n is great for quick prototypes and simple integrations. When performance, scale or complex logic is needed, we move to custom code (Node.js, Python). We pick the right tool for each problem." }
+        {
+          "question": "Does AI replace my team?",
+          "answer": "No — well-done AI augments the team. It takes away repetitive, boring tasks so people can focus on creativity, empathy and judgment. It's a tool, not a replacement."
+        },
+        {
+          "question": "How much does AI cost to run monthly?",
+          "answer": "Depends on volume. A WhatsApp chatbot with 1,000 interactions/month costs ~$20-60 in OpenAI tokens. More sophisticated agents can go to $100-400/month. We always show cost projection upfront."
+        },
+        {
+          "question": "Is my data safe?",
+          "answer": "Yes. We use APIs with no-training clauses (OpenAI Enterprise, Anthropic, Azure OpenAI). For ultra-sensitive data, we run open-source models (Llama, Mistral) on-premise — zero external leakage."
+        },
+        {
+          "question": "Does AI answer incorrectly sometimes?",
+          "answer": "Any LLM can hallucinate. We implement guardrails: answers limited to your docs (RAG), output validation, human handoff when uncertain. Typical precision 92-97% in well-defined cases."
+        },
+        {
+          "question": "ChatGPT or Claude — which to use?",
+          "answer": "Depends. Claude 3.5/4 is better at reasoning, long-form writing and code. GPT-4o/5 is faster and cheaper for simple tasks. We recommend after understanding the case. Also test open-source when it makes sense."
+        },
+        {
+          "question": "Can you integrate with WhatsApp?",
+          "answer": "Yes. Via WhatsApp Business API (Twilio, Gupshup, Z-API) or Evolution API. CRM integration, auto-responses, interactive buttons, lists, media."
+        },
+        {
+          "question": "What if I don't know where to start?",
+          "answer": "That's exactly why we do free Process Mapping in the initial meeting. In 45min we identify the 2-3 processes with highest automation ROI and show a viable path."
+        },
+        {
+          "question": "Do you work with n8n or build custom code?",
+          "answer": "Both. n8n is great for quick prototypes and simple integrations. When performance, scale or complex logic is needed, we move to custom code (Node.js, Python). We pick the right tool for each problem."
+        }
       ]
     },
     "localScope": {

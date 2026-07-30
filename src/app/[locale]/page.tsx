@@ -4,8 +4,8 @@ import { HeroSection } from '@/sections/home/HeroSection';
 import { AboutSection } from '@/sections/home/AboutSection';
 import { ServicesSection } from '@/sections/home/ServicesSection';
 import { PortfolioSection } from '@/sections/home/PortfolioSection';
-import { Testimonials } from '@/components/home/Testimonials';
-import { CTA } from '@/components/home/CTA';
+import { ResultsSection } from '@/sections/home/ResultsSection';
+import { ContactSection } from '@/sections/home/ContactSection';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { buildPageMetadata, SITE_KEYWORDS, type SupportedLocale } from '@/lib/seo';
 import { websiteSchema, faqSchema } from '@/lib/schemas';
@@ -123,8 +123,8 @@ export default async function HomePage({ params }: Props) {
       <AboutSection />
       <ServicesSection />
       <PortfolioSection />
-      <Testimonials />
-      <CTA />
+      <ResultsSection />
+      <ContactSection />
     </>
   );
 }

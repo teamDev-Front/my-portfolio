@@ -2,7 +2,7 @@ import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
 import { PortfolioHero } from '@/components/portfolio/PortfolioHero';
 import { PortfolioGrid } from '@/components/portfolio/PortfolioGrid';
-import { CTA } from '@/components/home/CTA';
+import { ContactSection } from '@/sections/home/ContactSection';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { buildPageMetadata, type SupportedLocale } from '@/lib/seo';
 import { portfolioCollectionSchema, breadcrumbSchema } from '@/lib/schemas';
@@ -78,7 +78,7 @@ export default async function PortfolioPage({ params }: Props) {
 
       <PortfolioHero />
       <PortfolioGrid />
-      <CTA />
+      <ContactSection numbered={false} />
     </>
   );
 }

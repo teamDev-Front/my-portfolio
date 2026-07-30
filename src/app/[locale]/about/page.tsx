@@ -5,7 +5,7 @@ import { Biography } from '@/components/about/Biography';
 import { Timeline } from '@/components/about/Timeline';
 import { Skills } from '@/components/about/Skills';
 import { Values } from '@/components/about/Values';
-import { CTA } from '@/components/home/CTA';
+import { ContactSection } from '@/sections/home/ContactSection';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { buildPageMetadata, type SupportedLocale } from '@/lib/seo';
 import { personSchema, breadcrumbSchema } from '@/lib/schemas';
@@ -68,7 +68,7 @@ export default async function AboutPage({ params }: Props) {
       <Timeline />
       <Skills />
       <Values />
-      <CTA />
+      <ContactSection numbered={false} />
     </>
   );
 }

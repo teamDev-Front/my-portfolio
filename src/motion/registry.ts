@@ -2,6 +2,8 @@ import { heroTimeline } from '@/motion/hero.timeline';
 import { aboutTimeline } from '@/motion/about.timeline';
 import { servicesTimeline } from '@/motion/services.timeline';
 import { portfolioTimeline } from '@/motion/portfolio.timeline';
+import { resultsTimeline } from '@/motion/results.timeline';
+import { contactTimeline } from '@/motion/contact.timeline';
 import type { TimelineFactory } from '@/motion/types';
 
 /**
@@ -13,6 +15,8 @@ export const timelines = {
   about: aboutTimeline,
   services: servicesTimeline,
   portfolio: portfolioTimeline,
+  results: resultsTimeline,
+  contact: contactTimeline,
 } satisfies Record<string, TimelineFactory>;
 
 export type TimelineName = keyof typeof timelines;

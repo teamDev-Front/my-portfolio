@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import { ServicesHero } from '@/components/services/ServicesHero';
 import { ServicesGrid } from '@/components/services/ServicesGrid';
 import { Industries } from '@/components/services/Industries';
-import { CTA } from '@/components/home/CTA';
+import { ContactSection } from '@/sections/home/ContactSection';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { buildPageMetadata, type SupportedLocale } from '@/lib/seo';
 import { serviceListSchema, breadcrumbSchema } from '@/lib/schemas';
@@ -158,7 +158,7 @@ export default async function ServicesPage({ params }: Props) {
       <ServicesHero />
       <ServicesGrid />
       <Industries />
-      <CTA />
+      <ContactSection numbered={false} />
     </>
   );
 }

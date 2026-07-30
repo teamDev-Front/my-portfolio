@@ -81,7 +81,15 @@
   },
   "testimonials": {
     "title": "Resultados & Depoimentos",
-    "subtitle": "Impactos mensuráveis para nossos clientes"
+    "subtitle": "Impactos mensuráveis para nossos clientes",
+    "metrics": {
+      "revenue": "Aumento de receita",
+      "bookings": "Aumento de reservas",
+      "sales": "Vendas online",
+      "consultations": "Aumento de consultas",
+      "satisfaction": "Satisfação dos usuários",
+      "label": "Resultados em números"
+    }
   },
   "cta": {
     "title": "Pronto para Transformar Sua Presença Digital?",
@@ -315,28 +323,94 @@
         "stat3Label": "prazo médio MVP"
       },
       "pillars": [
-        { "icon": "sparkles", "title": "Design exclusivo", "description": "Sem templates prontos. Cada projeto parte de wireframe no Figma com direção criativa única para sua marca." },
-        { "icon": "zap", "title": "Performance extrema", "description": "Next.js 15, lazy loading, CDN global. Pontuação 90+ no PageSpeed em mobile e desktop — Google ama." },
-        { "icon": "search", "title": "SEO técnico de verdade", "description": "Meta tags, sitemap, robots, structured data, hreflang, OG image. Pronto pra indexar no primeiro crawl." },
-        { "icon": "layout", "title": "Painel de administração", "description": "Atualize textos, imagens e posts sem depender de desenvolvedor. CMS integrado via Sanity, Contentful ou custom." },
-        { "icon": "smartphone", "title": "100% responsivo", "description": "Mobile-first. Testado em iPhone, Android, tablet, desktop e ultra-wide. Zero quebra de layout." },
-        { "icon": "accessibility", "title": "Acessibilidade WCAG", "description": "Contraste, navegação por teclado, leitor de tela, ARIA. Inclusivo e em conformidade com LBI e WCAG 2.1 AA." },
-        { "icon": "shield", "title": "Hospedagem + SSL", "description": "Deploy na Vercel com HTTPS, HTTP/3, CDN global em 119 cidades. 99.99% uptime garantido." },
-        { "icon": "git", "title": "Código 100% seu", "description": "Você recebe o repositório Git desde o primeiro commit. Sem lock-in, sem caixa-preta, sem reféns." }
+        {
+          "icon": "sparkles",
+          "title": "Design exclusivo",
+          "description": "Sem templates prontos. Cada projeto parte de wireframe no Figma com direção criativa única para sua marca."
+        },
+        {
+          "icon": "zap",
+          "title": "Performance extrema",
+          "description": "Next.js 15, lazy loading, CDN global. Pontuação 90+ no PageSpeed em mobile e desktop — Google ama."
+        },
+        {
+          "icon": "search",
+          "title": "SEO técnico de verdade",
+          "description": "Meta tags, sitemap, robots, structured data, hreflang, OG image. Pronto pra indexar no primeiro crawl."
+        },
+        {
+          "icon": "layout",
+          "title": "Painel de administração",
+          "description": "Atualize textos, imagens e posts sem depender de desenvolvedor. CMS integrado via Sanity, Contentful ou custom."
+        },
+        {
+          "icon": "smartphone",
+          "title": "100% responsivo",
+          "description": "Mobile-first. Testado em iPhone, Android, tablet, desktop e ultra-wide. Zero quebra de layout."
+        },
+        {
+          "icon": "accessibility",
+          "title": "Acessibilidade WCAG",
+          "description": "Contraste, navegação por teclado, leitor de tela, ARIA. Inclusivo e em conformidade com LBI e WCAG 2.1 AA."
+        },
+        {
+          "icon": "shield",
+          "title": "Hospedagem + SSL",
+          "description": "Deploy na Vercel com HTTPS, HTTP/3, CDN global em 119 cidades. 99.99% uptime garantido."
+        },
+        {
+          "icon": "git",
+          "title": "Código 100% seu",
+          "description": "Você recebe o repositório Git desde o primeiro commit. Sem lock-in, sem caixa-preta, sem reféns."
+        }
       ],
       "process": [
-        { "step": "01", "title": "Discovery", "description": "Reunião gratuita de 45min pra entender objetivos, público e escopo. Saímos com orçamento e cronograma." },
-        { "step": "02", "title": "Design no Figma", "description": "Wireframes e protótipo interativo. Você aprova visual antes de escrevermos 1 linha de código." },
-        { "step": "03", "title": "Desenvolvimento", "description": "Sprints de 1 semana com demos ao vivo. Você acompanha o Git e vê o progresso em tempo real." },
-        { "step": "04", "title": "Launch + Suporte", "description": "Deploy, configuração de DNS, Google Analytics, Search Console. 30 dias de suporte incluso." }
+        {
+          "step": "01",
+          "title": "Discovery",
+          "description": "Reunião gratuita de 45min pra entender objetivos, público e escopo. Saímos com orçamento e cronograma."
+        },
+        {
+          "step": "02",
+          "title": "Design no Figma",
+          "description": "Wireframes e protótipo interativo. Você aprova visual antes de escrevermos 1 linha de código."
+        },
+        {
+          "step": "03",
+          "title": "Desenvolvimento",
+          "description": "Sprints de 1 semana com demos ao vivo. Você acompanha o Git e vê o progresso em tempo real."
+        },
+        {
+          "step": "04",
+          "title": "Launch + Suporte",
+          "description": "Deploy, configuração de DNS, Google Analytics, Search Console. 30 dias de suporte incluso."
+        }
       ],
       "useCases": [
-        { "title": "Clínicas e consultórios", "description": "Agendamento online, integração com WhatsApp, blog de conteúdo médico." },
-        { "title": "Escritórios de advocacia", "description": "Áreas de atuação, captação qualificada, conformidade OAB." },
-        { "title": "Imobiliárias", "description": "Listagem de imóveis, filtros avançados, integração com CRM." },
-        { "title": "Restaurantes e bares", "description": "Cardápio digital, reservas, integração com iFood/Rappi." },
-        { "title": "Startups e SaaS", "description": "Landing pages de conversão, A/B testing, analytics." },
-        { "title": "Indústria e B2B", "description": "Catálogo técnico, área do cliente, integração com ERP." }
+        {
+          "title": "Clínicas e consultórios",
+          "description": "Agendamento online, integração com WhatsApp, blog de conteúdo médico."
+        },
+        {
+          "title": "Escritórios de advocacia",
+          "description": "Áreas de atuação, captação qualificada, conformidade OAB."
+        },
+        {
+          "title": "Imobiliárias",
+          "description": "Listagem de imóveis, filtros avançados, integração com CRM."
+        },
+        {
+          "title": "Restaurantes e bares",
+          "description": "Cardápio digital, reservas, integração com iFood/Rappi."
+        },
+        {
+          "title": "Startups e SaaS",
+          "description": "Landing pages de conversão, A/B testing, analytics."
+        },
+        {
+          "title": "Indústria e B2B",
+          "description": "Catálogo técnico, área do cliente, integração com ERP."
+        }
       ],
       "packages": [
         {
@@ -388,14 +462,38 @@
         }
       ],
       "faq": [
-        { "question": "Quanto custa criar um site profissional?", "answer": "Landing pages partem de R$ 3.900, sites institucionais de R$ 7.900 e projetos enterprise têm orçamento definido após reunião de descoberta gratuita. O valor final depende de páginas, integrações e design custom." },
-        { "question": "Quanto tempo leva para ficar pronto?", "answer": "Landing page: 1-2 semanas. Site institucional: 3-5 semanas. Portal com integrações: 6-10 semanas. Sempre entregamos em sprints semanais com demos ao vivo." },
-        { "question": "Vocês atendem fora de Jacareí?", "answer": "Sim. Somos sediados em Jacareí (SP) mas atendemos Vale do Paraíba, São Paulo capital, Brasil inteiro e exterior. Reuniões por Google Meet, entregas via Git." },
-        { "question": "O site vai ser responsivo e rápido?", "answer": "Sim. Mobile-first, testado em todos os dispositivos, com pontuação 90+ no Google PageSpeed. Next.js, CDN global, imagens otimizadas automaticamente." },
-        { "question": "Eu consigo atualizar o site sozinho depois?", "answer": "Sim. Todo projeto acima do plano Essencial vem com painel de administração (CMS) integrado. Você atualiza textos, imagens e posts sem precisar de desenvolvedor." },
-        { "question": "O código fica comigo ou vocês cobram mensalidade?", "answer": "O código é 100% seu desde o primeiro commit. Entregamos o repositório Git. Só cobramos hospedagem se você quiser que a gente continue gerenciando — caso contrário, você hospeda onde preferir." },
-        { "question": "Vocês fazem SEO?", "answer": "Fazemos SEO técnico (sitemap, robots, schema, performance, hreflang, OG image). SEO de conteúdo e backlinks é uma frente separada que também oferecemos." },
-        { "question": "E se eu já tenho um site e só quero refazer?", "answer": "Fazemos redesign com migração de conteúdo, SEO preservado (301 redirects) e sem perda de ranking. Inclusive, costuma melhorar bastante a posição no Google." }
+        {
+          "question": "Quanto custa criar um site profissional?",
+          "answer": "Landing pages partem de R$ 3.900, sites institucionais de R$ 7.900 e projetos enterprise têm orçamento definido após reunião de descoberta gratuita. O valor final depende de páginas, integrações e design custom."
+        },
+        {
+          "question": "Quanto tempo leva para ficar pronto?",
+          "answer": "Landing page: 1-2 semanas. Site institucional: 3-5 semanas. Portal com integrações: 6-10 semanas. Sempre entregamos em sprints semanais com demos ao vivo."
+        },
+        {
+          "question": "Vocês atendem fora de Jacareí?",
+          "answer": "Sim. Somos sediados em Jacareí (SP) mas atendemos Vale do Paraíba, São Paulo capital, Brasil inteiro e exterior. Reuniões por Google Meet, entregas via Git."
+        },
+        {
+          "question": "O site vai ser responsivo e rápido?",
+          "answer": "Sim. Mobile-first, testado em todos os dispositivos, com pontuação 90+ no Google PageSpeed. Next.js, CDN global, imagens otimizadas automaticamente."
+        },
+        {
+          "question": "Eu consigo atualizar o site sozinho depois?",
+          "answer": "Sim. Todo projeto acima do plano Essencial vem com painel de administração (CMS) integrado. Você atualiza textos, imagens e posts sem precisar de desenvolvedor."
+        },
+        {
+          "question": "O código fica comigo ou vocês cobram mensalidade?",
+          "answer": "O código é 100% seu desde o primeiro commit. Entregamos o repositório Git. Só cobramos hospedagem se você quiser que a gente continue gerenciando — caso contrário, você hospeda onde preferir."
+        },
+        {
+          "question": "Vocês fazem SEO?",
+          "answer": "Fazemos SEO técnico (sitemap, robots, schema, performance, hreflang, OG image). SEO de conteúdo e backlinks é uma frente separada que também oferecemos."
+        },
+        {
+          "question": "E se eu já tenho um site e só quero refazer?",
+          "answer": "Fazemos redesign com migração de conteúdo, SEO preservado (301 redirects) e sem perda de ranking. Inclusive, costuma melhorar bastante a posição no Google."
+        }
       ]
     },
     "createSaas": {
@@ -414,28 +512,94 @@
         "stat3Label": "uptime SLA"
       },
       "pillars": [
-        { "icon": "users", "title": "Arquitetura multi-tenant", "description": "Isolamento por organização, roles e permissões. Pronto pra B2B e B2C do primeiro dia." },
-        { "icon": "shield", "title": "Autenticação robusta", "description": "Email/senha, Google, GitHub, Microsoft. SSO/SAML sob demanda. MFA, recuperação de senha, sessões seguras." },
-        { "icon": "credit", "title": "Billing recorrente", "description": "Integração Stripe com planos, períodos de trial, upgrades/downgrades, faturas, webhook para eventos." },
-        { "icon": "layout", "title": "Painel administrativo", "description": "Gestão de usuários, métricas de MRR/churn, feature flags, impersonation para suporte." },
-        { "icon": "zap", "title": "API REST ou GraphQL", "description": "Documentação OpenAPI/Swagger, rate limiting, versionamento, SDKs gerados automaticamente." },
-        { "icon": "bot", "title": "IA integrada nativamente", "description": "ChatGPT, Claude ou modelos open-source integrados no produto — chat, geração, análise, RAG." },
-        { "icon": "chart", "title": "Analytics do produto", "description": "PostHog ou Mixpanel integrado. Funis, retention, feature usage. Decisões baseadas em dados." },
-        { "icon": "git", "title": "CI/CD + monitoramento", "description": "GitHub Actions, deploy automático, Sentry para erros, logs estruturados, alertas 24/7." }
+        {
+          "icon": "users",
+          "title": "Arquitetura multi-tenant",
+          "description": "Isolamento por organização, roles e permissões. Pronto pra B2B e B2C do primeiro dia."
+        },
+        {
+          "icon": "shield",
+          "title": "Autenticação robusta",
+          "description": "Email/senha, Google, GitHub, Microsoft. SSO/SAML sob demanda. MFA, recuperação de senha, sessões seguras."
+        },
+        {
+          "icon": "credit",
+          "title": "Billing recorrente",
+          "description": "Integração Stripe com planos, períodos de trial, upgrades/downgrades, faturas, webhook para eventos."
+        },
+        {
+          "icon": "layout",
+          "title": "Painel administrativo",
+          "description": "Gestão de usuários, métricas de MRR/churn, feature flags, impersonation para suporte."
+        },
+        {
+          "icon": "zap",
+          "title": "API REST ou GraphQL",
+          "description": "Documentação OpenAPI/Swagger, rate limiting, versionamento, SDKs gerados automaticamente."
+        },
+        {
+          "icon": "bot",
+          "title": "IA integrada nativamente",
+          "description": "ChatGPT, Claude ou modelos open-source integrados no produto — chat, geração, análise, RAG."
+        },
+        {
+          "icon": "chart",
+          "title": "Analytics do produto",
+          "description": "PostHog ou Mixpanel integrado. Funis, retention, feature usage. Decisões baseadas em dados."
+        },
+        {
+          "icon": "git",
+          "title": "CI/CD + monitoramento",
+          "description": "GitHub Actions, deploy automático, Sentry para erros, logs estruturados, alertas 24/7."
+        }
       ],
       "process": [
-        { "step": "01", "title": "Discovery + Arquitetura", "description": "2-3 sessões definindo usuário, jobs-to-be-done, schema de banco, stack e roadmap fase-a-fase." },
-        { "step": "02", "title": "MVP funcional", "description": "8-12 semanas pra tirar do ar o fluxo principal: cadastro, onboarding, uso core, billing, admin." },
-        { "step": "03", "title": "Beta com usuários", "description": "Lançamento controlado, coleta de feedback, iteração semanal, ajustes de UX e correções." },
-        { "step": "04", "title": "Growth + Escala", "description": "Otimização, features premium, integrações, SEO programático, parcerias, onboarding automatizado." }
+        {
+          "step": "01",
+          "title": "Discovery + Arquitetura",
+          "description": "2-3 sessões definindo usuário, jobs-to-be-done, schema de banco, stack e roadmap fase-a-fase."
+        },
+        {
+          "step": "02",
+          "title": "MVP funcional",
+          "description": "8-12 semanas pra tirar do ar o fluxo principal: cadastro, onboarding, uso core, billing, admin."
+        },
+        {
+          "step": "03",
+          "title": "Beta com usuários",
+          "description": "Lançamento controlado, coleta de feedback, iteração semanal, ajustes de UX e correções."
+        },
+        {
+          "step": "04",
+          "title": "Growth + Escala",
+          "description": "Otimização, features premium, integrações, SEO programático, parcerias, onboarding automatizado."
+        }
       ],
       "useCases": [
-        { "title": "SaaS B2B vertical", "description": "Ferramentas para nichos: clínicas, oficinas, contadores, imobiliárias." },
-        { "title": "Marketplaces", "description": "Matching entre oferta e demanda, comissionamento, reputação, pagamentos split." },
-        { "title": "PaaS / API", "description": "APIs monetizadas por uso, com dashboard de consumo e billing metered." },
-        { "title": "Ferramentas produtividade", "description": "Dashboards, editores colaborativos, ferramentas internas vendidas como produto." },
-        { "title": "IA-first SaaS", "description": "Produtos cujo core é um modelo de IA — geração, análise, chat, RAG." },
-        { "title": "ERP/CRM vertical", "description": "Sistemas de gestão para setores específicos, substituindo planilhas." }
+        {
+          "title": "SaaS B2B vertical",
+          "description": "Ferramentas para nichos: clínicas, oficinas, contadores, imobiliárias."
+        },
+        {
+          "title": "Marketplaces",
+          "description": "Matching entre oferta e demanda, comissionamento, reputação, pagamentos split."
+        },
+        {
+          "title": "PaaS / API",
+          "description": "APIs monetizadas por uso, com dashboard de consumo e billing metered."
+        },
+        {
+          "title": "Ferramentas produtividade",
+          "description": "Dashboards, editores colaborativos, ferramentas internas vendidas como produto."
+        },
+        {
+          "title": "IA-first SaaS",
+          "description": "Produtos cujo core é um modelo de IA — geração, análise, chat, RAG."
+        },
+        {
+          "title": "ERP/CRM vertical",
+          "description": "Sistemas de gestão para setores específicos, substituindo planilhas."
+        }
       ],
       "packages": [
         {
@@ -489,14 +653,38 @@
         }
       ],
       "faq": [
-        { "question": "Quanto custa criar um SaaS?", "answer": "MVP parte de R$ 39.000 em 8 semanas. Produto completo de R$ 89.000 em 12-16 semanas. Enterprise é orçado após discovery. Valor final depende de complexidade, integrações e escala planejada." },
-        { "question": "Em quanto tempo o MVP fica pronto?", "answer": "8-12 semanas para o MVP funcional. Já pronto pra ter os primeiros usuários pagantes, com auth, billing e o fluxo principal funcionando end-to-end." },
-        { "question": "O código é meu ou fica com vocês?", "answer": "100% seu desde o primeiro commit. Você recebe o repositório Git, acesso ao Stripe, Vercel, Supabase. Zero lock-in." },
-        { "question": "Vocês dão suporte depois de entregar?", "answer": "Sim. 45 a 90 dias inclusos dependendo do pacote. Depois disso, retainer mensal opcional (4h, 8h ou 16h/mês) pra manutenção, features novas e evoluções." },
-        { "question": "Qual stack vocês usam?", "answer": "Next.js 15 + TypeScript + Tailwind no frontend. Supabase ou PostgreSQL + Node.js/Python no backend. Stripe pra billing. Vercel pra deploy. Adaptamos conforme seu caso." },
-        { "question": "Vocês integram IA no SaaS?", "answer": "Sim, nativamente. OpenAI, Anthropic, modelos open-source via Ollama. Chat, geração de conteúdo, análise de documentos, RAG com seus dados, agentes autônomos." },
-        { "question": "E se eu precisar escalar pra 100k usuários?", "answer": "A arquitetura nasce preparada: edge functions, CDN global, banco com read replicas, caching. Em escala enterprise, migramos pra infra dedicada (AWS/GCP) sem refatoração grande." },
-        { "question": "Vocês fazem integração com IA fora de SaaS também?", "answer": "Sim — veja nossa página de Automação com IA. Integramos ChatGPT, Claude e agentes em sistemas existentes também." }
+        {
+          "question": "Quanto custa criar um SaaS?",
+          "answer": "MVP parte de R$ 39.000 em 8 semanas. Produto completo de R$ 89.000 em 12-16 semanas. Enterprise é orçado após discovery. Valor final depende de complexidade, integrações e escala planejada."
+        },
+        {
+          "question": "Em quanto tempo o MVP fica pronto?",
+          "answer": "8-12 semanas para o MVP funcional. Já pronto pra ter os primeiros usuários pagantes, com auth, billing e o fluxo principal funcionando end-to-end."
+        },
+        {
+          "question": "O código é meu ou fica com vocês?",
+          "answer": "100% seu desde o primeiro commit. Você recebe o repositório Git, acesso ao Stripe, Vercel, Supabase. Zero lock-in."
+        },
+        {
+          "question": "Vocês dão suporte depois de entregar?",
+          "answer": "Sim. 45 a 90 dias inclusos dependendo do pacote. Depois disso, retainer mensal opcional (4h, 8h ou 16h/mês) pra manutenção, features novas e evoluções."
+        },
+        {
+          "question": "Qual stack vocês usam?",
+          "answer": "Next.js 15 + TypeScript + Tailwind no frontend. Supabase ou PostgreSQL + Node.js/Python no backend. Stripe pra billing. Vercel pra deploy. Adaptamos conforme seu caso."
+        },
+        {
+          "question": "Vocês integram IA no SaaS?",
+          "answer": "Sim, nativamente. OpenAI, Anthropic, modelos open-source via Ollama. Chat, geração de conteúdo, análise de documentos, RAG com seus dados, agentes autônomos."
+        },
+        {
+          "question": "E se eu precisar escalar pra 100k usuários?",
+          "answer": "A arquitetura nasce preparada: edge functions, CDN global, banco com read replicas, caching. Em escala enterprise, migramos pra infra dedicada (AWS/GCP) sem refatoração grande."
+        },
+        {
+          "question": "Vocês fazem integração com IA fora de SaaS também?",
+          "answer": "Sim — veja nossa página de Automação com IA. Integramos ChatGPT, Claude e agentes em sistemas existentes também."
+        }
       ]
     },
     "aiAutomation": {
@@ -515,28 +703,94 @@
         "stat3Label": "velocidade de resposta"
       },
       "pillars": [
-        { "icon": "bot", "title": "Chatbot personalizado", "description": "Treinado nos seus documentos e FAQs. WhatsApp, site, Instagram. Fala como você, resolve o que pode e escala o resto pro humano." },
-        { "icon": "sparkles", "title": "Integração ChatGPT / Claude", "description": "API da OpenAI e Anthropic integrada no seu produto. Geração de conteúdo, resumo, análise, tradução, classificação." },
-        { "icon": "zap", "title": "Workflows n8n", "description": "Automação visual entre 400+ apps: Gmail, Sheets, Notion, WhatsApp, Stripe, CRMs. Roda 24/7 na sua infra." },
-        { "icon": "users", "title": "Agentes autônomos", "description": "Agentes que navegam, decidem e executam — atendimento, prospecção, monitoramento, análise de dados." },
-        { "icon": "search", "title": "RAG (busca nos seus docs)", "description": "Vector DB + embeddings. IA responde sobre seus documentos, contratos, políticas, base de conhecimento." },
-        { "icon": "shield", "title": "Privacidade preservada", "description": "Dados sensíveis podem rodar em modelos open-source (Llama, Mistral) on-premise. Zero vazamento pra terceiros." },
-        { "icon": "chart", "title": "Análise preditiva", "description": "Modelos de ML para previsão de churn, LTV, fraude, demanda. Aplicados ao seu histórico de dados." },
-        { "icon": "layout", "title": "Dashboard + monitoramento", "description": "Veja cada execução, custo por interação, tokens consumidos, erros. Transparência total do que a IA está fazendo." }
+        {
+          "icon": "bot",
+          "title": "Chatbot personalizado",
+          "description": "Treinado nos seus documentos e FAQs. WhatsApp, site, Instagram. Fala como você, resolve o que pode e escala o resto pro humano."
+        },
+        {
+          "icon": "sparkles",
+          "title": "Integração ChatGPT / Claude",
+          "description": "API da OpenAI e Anthropic integrada no seu produto. Geração de conteúdo, resumo, análise, tradução, classificação."
+        },
+        {
+          "icon": "zap",
+          "title": "Workflows n8n",
+          "description": "Automação visual entre 400+ apps: Gmail, Sheets, Notion, WhatsApp, Stripe, CRMs. Roda 24/7 na sua infra."
+        },
+        {
+          "icon": "users",
+          "title": "Agentes autônomos",
+          "description": "Agentes que navegam, decidem e executam — atendimento, prospecção, monitoramento, análise de dados."
+        },
+        {
+          "icon": "search",
+          "title": "RAG (busca nos seus docs)",
+          "description": "Vector DB + embeddings. IA responde sobre seus documentos, contratos, políticas, base de conhecimento."
+        },
+        {
+          "icon": "shield",
+          "title": "Privacidade preservada",
+          "description": "Dados sensíveis podem rodar em modelos open-source (Llama, Mistral) on-premise. Zero vazamento pra terceiros."
+        },
+        {
+          "icon": "chart",
+          "title": "Análise preditiva",
+          "description": "Modelos de ML para previsão de churn, LTV, fraude, demanda. Aplicados ao seu histórico de dados."
+        },
+        {
+          "icon": "layout",
+          "title": "Dashboard + monitoramento",
+          "description": "Veja cada execução, custo por interação, tokens consumidos, erros. Transparência total do que a IA está fazendo."
+        }
       ],
       "process": [
-        { "step": "01", "title": "Mapeamento de processos", "description": "Identificamos tarefas repetitivas com maior ROI de automação. Priorização por economia de tempo e risco." },
-        { "step": "02", "title": "Prova de conceito", "description": "Piloto funcional em 2-3 semanas mostrando o fluxo automatizado rodando em um caso real." },
-        { "step": "03", "title": "Implementação", "description": "Integração com seus sistemas (ERP, CRM, WhatsApp, Gmail). Testes, refinamento de prompts, guardrails." },
-        { "step": "04", "title": "Monitoramento contínuo", "description": "Dashboard mostra performance, custo e falhas. Ajustes semanais pra melhorar precisão ao longo do tempo." }
+        {
+          "step": "01",
+          "title": "Mapeamento de processos",
+          "description": "Identificamos tarefas repetitivas com maior ROI de automação. Priorização por economia de tempo e risco."
+        },
+        {
+          "step": "02",
+          "title": "Prova de conceito",
+          "description": "Piloto funcional em 2-3 semanas mostrando o fluxo automatizado rodando em um caso real."
+        },
+        {
+          "step": "03",
+          "title": "Implementação",
+          "description": "Integração com seus sistemas (ERP, CRM, WhatsApp, Gmail). Testes, refinamento de prompts, guardrails."
+        },
+        {
+          "step": "04",
+          "title": "Monitoramento contínuo",
+          "description": "Dashboard mostra performance, custo e falhas. Ajustes semanais pra melhorar precisão ao longo do tempo."
+        }
       ],
       "useCases": [
-        { "title": "Atendimento 24/7", "description": "Chatbot no WhatsApp respondendo perguntas frequentes e agendando reuniões." },
-        { "title": "Triagem de leads", "description": "IA qualifica leads, entende necessidade e rota pro vendedor certo." },
-        { "title": "Análise de documentos", "description": "Contratos, notas fiscais, currículos processados em segundos com extração estruturada." },
-        { "title": "Geração de conteúdo", "description": "Textos, emails, posts, descrições de produto em escala mantendo tom de voz." },
-        { "title": "Suporte interno", "description": "Copilot treinado nos seus processos — atende funcionários sobre políticas, sistemas, RH." },
-        { "title": "Automação de marketing", "description": "Segmentação dinâmica, personalização de campanhas, A/B testing com IA." }
+        {
+          "title": "Atendimento 24/7",
+          "description": "Chatbot no WhatsApp respondendo perguntas frequentes e agendando reuniões."
+        },
+        {
+          "title": "Triagem de leads",
+          "description": "IA qualifica leads, entende necessidade e rota pro vendedor certo."
+        },
+        {
+          "title": "Análise de documentos",
+          "description": "Contratos, notas fiscais, currículos processados em segundos com extração estruturada."
+        },
+        {
+          "title": "Geração de conteúdo",
+          "description": "Textos, emails, posts, descrições de produto em escala mantendo tom de voz."
+        },
+        {
+          "title": "Suporte interno",
+          "description": "Copilot treinado nos seus processos — atende funcionários sobre políticas, sistemas, RH."
+        },
+        {
+          "title": "Automação de marketing",
+          "description": "Segmentação dinâmica, personalização de campanhas, A/B testing com IA."
+        }
       ],
       "packages": [
         {
@@ -585,14 +839,38 @@
         }
       ],
       "faq": [
-        { "question": "IA substitui minha equipe?", "answer": "Não — IA bem-feita aumenta a equipe. Tira as tarefas repetitivas e chatas para as pessoas focarem no que exige criatividade, empatia e julgamento. É ferramenta, não substituto." },
-        { "question": "Quanto custa rodar IA por mês?", "answer": "Depende do volume. Um chatbot WhatsApp com 1000 interações/mês custa ~R$ 100-300 em tokens da OpenAI. Agentes mais sofisticados podem ir a R$ 500-2000/mês. Sempre mostramos a projeção de custo antes." },
-        { "question": "Meus dados ficam seguros?", "answer": "Sim. Usamos APIs com cláusulas de não-treinamento (OpenAI Enterprise, Anthropic, Azure OpenAI). Para dados ultra-sensíveis, rodamos modelos open-source (Llama, Mistral) on-premise — zero vazamento externo." },
-        { "question": "A IA responde errado às vezes?", "answer": "Qualquer LLM pode alucinar. Implementamos guardrails: respostas limitadas aos seus documentos (RAG), validação de saída, handoff pra humano quando incerto. Precisão típica 92-97% em casos bem definidos." },
-        { "question": "ChatGPT ou Claude, qual usar?", "answer": "Depende. Claude 3.5/4 é melhor em raciocínio, escrita longa e código. GPT-4o/5 é mais rápido e barato em tarefas simples. Recomendamos após entender o caso. Também testamos modelos open-source quando faz sentido." },
-        { "question": "Conseguem integrar com meu WhatsApp?", "answer": "Sim. Via WhatsApp Business API (Twilio, Gupshup, Z-API) ou Evolution API. Integração com CRM, respostas automáticas, botões interativos, listas, mídias." },
-        { "question": "E se eu não sei nem por onde começar?", "answer": "Justamente pra isso fazemos o Mapeamento de processos gratuito na reunião inicial. Em 45min identificamos os 2-3 processos com maior ROI de automação e mostramos caminho viável." },
-        { "question": "Vocês trabalham com n8n ou fazem código do zero?", "answer": "Ambos. n8n é ótimo pra protótipos rápidos e integrações simples. Quando precisa de performance, escala ou lógica complexa, partimos pra código custom (Node.js, Python). Escolhemos a ferramenta certa pra cada problema." }
+        {
+          "question": "IA substitui minha equipe?",
+          "answer": "Não — IA bem-feita aumenta a equipe. Tira as tarefas repetitivas e chatas para as pessoas focarem no que exige criatividade, empatia e julgamento. É ferramenta, não substituto."
+        },
+        {
+          "question": "Quanto custa rodar IA por mês?",
+          "answer": "Depende do volume. Um chatbot WhatsApp com 1000 interações/mês custa ~R$ 100-300 em tokens da OpenAI. Agentes mais sofisticados podem ir a R$ 500-2000/mês. Sempre mostramos a projeção de custo antes."
+        },
+        {
+          "question": "Meus dados ficam seguros?",
+          "answer": "Sim. Usamos APIs com cláusulas de não-treinamento (OpenAI Enterprise, Anthropic, Azure OpenAI). Para dados ultra-sensíveis, rodamos modelos open-source (Llama, Mistral) on-premise — zero vazamento externo."
+        },
+        {
+          "question": "A IA responde errado às vezes?",
+          "answer": "Qualquer LLM pode alucinar. Implementamos guardrails: respostas limitadas aos seus documentos (RAG), validação de saída, handoff pra humano quando incerto. Precisão típica 92-97% em casos bem definidos."
+        },
+        {
+          "question": "ChatGPT ou Claude, qual usar?",
+          "answer": "Depende. Claude 3.5/4 é melhor em raciocínio, escrita longa e código. GPT-4o/5 é mais rápido e barato em tarefas simples. Recomendamos após entender o caso. Também testamos modelos open-source quando faz sentido."
+        },
+        {
+          "question": "Conseguem integrar com meu WhatsApp?",
+          "answer": "Sim. Via WhatsApp Business API (Twilio, Gupshup, Z-API) ou Evolution API. Integração com CRM, respostas automáticas, botões interativos, listas, mídias."
+        },
+        {
+          "question": "E se eu não sei nem por onde começar?",
+          "answer": "Justamente pra isso fazemos o Mapeamento de processos gratuito na reunião inicial. Em 45min identificamos os 2-3 processos com maior ROI de automação e mostramos caminho viável."
+        },
+        {
+          "question": "Vocês trabalham com n8n ou fazem código do zero?",
+          "answer": "Ambos. n8n é ótimo pra protótipos rápidos e integrações simples. Quando precisa de performance, escala ou lógica complexa, partimos pra código custom (Node.js, Python). Escolhemos a ferramenta certa pra cada problema."
+        }
       ]
     },
     "localScope": {

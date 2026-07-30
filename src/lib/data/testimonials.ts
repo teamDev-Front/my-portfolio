@@ -13,7 +13,8 @@ export interface Testimonial {
     };
   };
   metrics?: {
-    label: string;
+    /** i18n key under `testimonials.metrics` — the label is translated, not stored here. */
+    key: 'revenue' | 'bookings' | 'sales' | 'consultations' | 'satisfaction';
     value: string;
   };
 }
@@ -33,7 +34,7 @@ export const testimonials: Testimonial[] = [
       }
     },
     metrics: {
-      label: 'Revenue Increase',
+      key: 'revenue',
       value: '+30%'
     }
   },
@@ -51,7 +52,7 @@ export const testimonials: Testimonial[] = [
       }
     },
     metrics: {
-      label: 'Booking Increase',
+      key: 'bookings',
       value: '+20%'
     }
   },
@@ -69,7 +70,7 @@ export const testimonials: Testimonial[] = [
       }
     },
     metrics: {
-      label: 'Online Sales',
+      key: 'sales',
       value: '+45%'
     }
   },
@@ -87,7 +88,7 @@ export const testimonials: Testimonial[] = [
       }
     },
     metrics: {
-      label: 'Consultation Increase',
+      key: 'consultations',
       value: '+60%'
     }
   },
@@ -105,7 +106,7 @@ export const testimonials: Testimonial[] = [
       }
     },
     metrics: {
-      label: 'User Satisfaction',
+      key: 'satisfaction',
       value: '95%'
     }
   }
