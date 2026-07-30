@@ -1,6 +1,6 @@
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
-import { Hero } from '@/components/home/Hero';
+import { HeroSection } from '@/sections/home/HeroSection';
 import { Intro } from '@/components/home/Intro';
 import { ServicesPreview } from '@/components/home/ServicesPreview';
 import { PortfolioPreview } from '@/components/home/PortfolioPreview';
@@ -119,7 +119,7 @@ export default async function HomePage({ params }: Props) {
       <JsonLd data={websiteSchema(l)} id="ld-website" />
       <JsonLd data={faqSchema(faqs)} id="ld-faq" />
 
-      <Hero />
+      <HeroSection />
       <Intro />
       <ServicesPreview />
       <PortfolioPreview />

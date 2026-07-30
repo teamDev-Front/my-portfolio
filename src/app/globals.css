@@ -187,6 +187,22 @@ html.lenis body {
   line-height: 0.98;
 }
 
+/* Scroll indicator — a dot travelling down a hairline. */
+@keyframes scroll-hint {
+  0% {
+    transform: translateY(-100%);
+  }
+  65% {
+    transform: translateY(400%);
+  }
+  100% {
+    transform: translateY(400%);
+  }
+}
+.animate-scroll-hint {
+  animation: scroll-hint 2.2s var(--ease-hcs) infinite;
+}
+
 /* ————— Legacy utilities (pre-redesign pages — pruned as pages migrate) ————— */
 
 .gradient-text {
