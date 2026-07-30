@@ -190,6 +190,12 @@ export function websiteSchema(locale: SupportedLocale) {
       },
       'query-input': 'required name=search_term_string',
     },
+    // Voice / answer-engine hint: the passages worth reading aloud are the page heading
+    // and the FAQ answers, not the navigation chrome.
+    speakable: {
+      '@type': 'SpeakableSpecification',
+      cssSelector: ['h1', '[data-speakable]'],
+    },
   };
 }
 
@@ -341,6 +347,9 @@ export function faqSchema(faqs: FAQ[]) {
   return {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
+    // These same questions and answers are rendered as visible <details> content by
+    // FaqSection — answer engines will not quote structured data they cannot corroborate
+    // in the page text, so the two must stay in sync (both read the one array in page.tsx).
     mainEntity: faqs.map((faq) => ({
       '@type': 'Question',
       name: faq.question,

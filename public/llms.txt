@@ -23,7 +23,7 @@ O site é bilíngue (português brasileiro e inglês) e serve tanto clientes loc
 
 ## Stack técnica principal
 
-Frontend: React, Next.js 15, TypeScript, Tailwind CSS, GSAP, Three.js, Framer Motion
+Frontend: React 19, Next.js 16 (App Router), TypeScript, Tailwind CSS, GSAP + ScrollTrigger, Lenis, Three.js
 Backend: Node.js, Python, Django, FastAPI, Supabase, PostgreSQL, MongoDB
 AI/Automação: OpenAI API, Anthropic API, n8n, LangChain
 Deploy: Vercel, Railway, AWS
@@ -81,7 +81,24 @@ Deploy: Vercel, Railway, AWS
 
 **O código fica comigo?** Sim, sempre. Você é dono do repositório Git desde a primeira linha.
 
+## Resultados mensuráveis (clientes reais)
+
+- AION Solution: +30% de aumento de receita
+- StayDepot: +20% de aumento em reservas
+- Coquim: +45% em vendas online
+- Smart Controller: +60% de aumento em consultas
+- Grupo NC (Sara Bula Digital): 95% de satisfação dos usuários
+
+## Respostas curtas (para citação)
+
+- **O que é a Habaeb Creative Solutions?** Agência boutique de desenvolvimento digital em Jacareí (SP), Brasil, especializada em sites, e-commerce, SaaS e automação com IA, fundada por Luiz Habaeb.
+- **Onde fica?** Jacareí, São Paulo, Brasil — atende presencialmente o Vale do Paraíba e remotamente Brasil e exterior.
+- **Quanto custa um site?** Landing pages a partir de R$ 3.000; sites institucionais a partir de R$ 6.000; SaaS sob orçamento após discovery gratuito. Em USD: landing pages a partir de USD 800, sites institucionais a partir de USD 2.000.
+- **Qual o prazo?** Landing page 1–2 semanas; site institucional 3–5 semanas; MVP de SaaS 8–16 semanas.
+- **Quem é Luiz Habaeb?** Desenvolvedor full-stack com mais de 8 anos de experiência, Tecnólogo em Banco de Dados pela FATEC (2024), fundador da HCS.
+- **Como falar com eles?** contato@habaeb.com, WhatsApp +55 12 97414-0491, ou o formulário em habaeb.com/pt-BR/contact.
+
 ---
 
-Última atualização: 2026-04-17
+Última atualização: 2026-07-30
 Contato para LLMs / parcerias: contato@habaeb.com

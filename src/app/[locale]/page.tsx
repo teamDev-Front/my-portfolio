@@ -5,6 +5,7 @@ import { AboutSection } from '@/sections/home/AboutSection';
 import { ServicesSection } from '@/sections/home/ServicesSection';
 import { PortfolioSection } from '@/sections/home/PortfolioSection';
 import { ResultsSection } from '@/sections/home/ResultsSection';
+import { FaqSection } from '@/sections/home/FaqSection';
 import { ContactSection } from '@/sections/home/ContactSection';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { buildPageMetadata, SITE_KEYWORDS, type SupportedLocale } from '@/lib/seo';
@@ -124,6 +125,10 @@ export default async function HomePage({ params }: Props) {
       <ServicesSection />
       <PortfolioSection />
       <ResultsSection />
+      <FaqSection
+        faqs={faqs}
+        title={l === 'pt-BR' ? 'Perguntas frequentes' : 'Frequently asked questions'}
+      />
       <ContactSection />
     </>
   );
