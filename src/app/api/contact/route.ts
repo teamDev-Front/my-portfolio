@@ -35,7 +35,7 @@ function validate(body: unknown): { data?: ContactPayload; error?: string } {
     return { error: 'Invalid email' };
   if (projectType.length < 2 || projectType.length > 40)
     return { error: 'Invalid project type' };
-  if (message.length < 10 || message.length > 5000)
+  if (message.length < 2 || message.length > 5000)
     return { error: 'Invalid message' };
   if (company.length > 160) return { error: 'Invalid company' };
 
