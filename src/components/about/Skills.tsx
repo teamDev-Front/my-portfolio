@@ -1,160 +1,54 @@
-'use client';
-
-import { useRef, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { SectionTitle } from '@/components/ui/SectionTitle';
 import { skills } from '@/lib/data/timeline';
 
-gsap.registerPlugin(ScrollTrigger);
-
+/**
+ * ABOUT / 03 — the stack. Four hairline rows (label in the gutter, hairline chips in the
+ * reading column) instead of four boxed cards. Server Component; reveal via [data-reveal].
+ */
 export function Skills() {
   const t = useTranslations('about.skills');
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
 
-  const skillCategories = [
+  const categories: Array<{ key: string; label: string; items: string[] }> = [
     { key: 'frontend', label: t('frontend'), items: skills.frontend },
     { key: 'backend', label: t('backend'), items: skills.backend },
     { key: 'databases', label: 'Databases', items: skills.databases },
     { key: 'tools', label: t('tools'), items: skills.tools },
   ];
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Title animation
-      if (titleRef.current) {
-        gsap.fromTo(
-          titleRef.current,
-          { opacity: 0, y: 50 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: titleRef.current,
-              start: 'top 85%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
-      }
-
-      // Cards animation
-      cardsRef.current.forEach((card, index) => {
-        if (!card) return;
-
-        // Card entrance
-        gsap.fromTo(
-          card,
-          {
-            opacity: 0,
-            y: 60,
-            scale: 0.95,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.6,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top 85%',
-              toggleActions: 'play none none reverse',
-            },
-            delay: index * 0.1,
-          }
-        );
-
-        // Skill tags stagger animation
-        const skillTags = card.querySelectorAll('.skill-tag');
-        gsap.fromTo(
-          skillTags,
-          {
-            opacity: 0,
-            scale: 0,
-            y: 20,
-          },
-          {
-            opacity: 1,
-            scale: 1,
-            y: 0,
-            duration: 0.4,
-            stagger: 0.05,
-            ease: 'back.out(2)',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top 80%',
-              toggleActions: 'play none none reverse',
-            },
-            delay: 0.2 + index * 0.1,
-          }
-        );
-
-        // Hover effect
-        const handleMouseEnter = () => {
-          gsap.to(card, {
-            y: -5,
-            scale: 1.02,
-            duration: 0.3,
-            ease: 'power2.out',
-          });
-        };
-
-        const handleMouseLeave = () => {
-          gsap.to(card, {
-            y: 0,
-            scale: 1,
-            duration: 0.3,
-            ease: 'power2.out',
-          });
-        };
-
-        card.addEventListener('mouseenter', handleMouseEnter);
-        card.addEventListener('mouseleave', handleMouseLeave);
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <section ref={sectionRef} className="section-padding relative overflow-hidden">
-      {/* Background decorations */}
-      <div className="absolute top-20 right-20 w-40 h-40 bg-accent/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-20 left-20 w-60 h-60 bg-accent/5 rounded-full blur-3xl" />
-
-      <div className="container-custom relative">
-        <div ref={titleRef}>
-          <span className="text-accent font-mono text-sm mb-4 block text-center">TECH STACK</span>
-          <SectionTitle title={t('title')} />
+    <section className="relative px-6 py-24 md:px-12 md:py-32">
+      <div className="mx-auto max-w-6xl">
+        <div className="max-w-2xl">
+          <p data-reveal className="hud-readout text-[10px] opacity-100! text-red-bright">
+            03 / TECH STACK
+          </p>
+          <h2 data-reveal className="type-display mt-6 text-[clamp(1.9rem,4.5vw,3.2rem)] text-fg">
+            {t('title')}
+          </h2>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mt-12">
-          {skillCategories.map((category, index) => (
+        <div className="mt-14 border-t border-line/10 md:mt-20">
+          {categories.map((category, i) => (
             <div
               key={category.key}
-              ref={(el) => { cardsRef.current[index] = el; }}
-              className="bg-card rounded-2xl border border-card-border p-4 md:p-6 hover:border-accent/50 transition-colors duration-300"
+              data-reveal
+              className="grid gap-5 border-b border-line/10 py-8 md:grid-cols-[12rem_1fr] md:gap-10 md:py-10"
             >
-              <h3 className="text-lg font-semibold text-accent mb-4 flex items-center gap-2">
-                <span className="w-2 h-2 bg-accent rounded-full" />
-                {category.label}
-              </h3>
-              <div className="flex flex-wrap gap-2">
+              <p className="hud-readout flex items-baseline gap-3 text-[11px] opacity-100! text-red-bright">
+                <span>0{i + 1}</span>
+                <span>{category.label}</span>
+              </p>
+
+              <ul className="flex flex-wrap gap-2">
                 {category.items.map((skill) => (
-                  <span
+                  <li
                     key={skill}
-                    className="skill-tag px-3 py-1.5 bg-hcs-gray rounded-lg text-sm text-foreground hover:bg-accent/20 hover:text-accent transition-colors cursor-default"
+                    className="border-hairline rounded-xs px-3 py-1.5 font-mono text-[11px] tracking-[0.04em] text-fg/70 md:text-xs"
                   >
                     {skill}
-                  </span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
           ))}
         </div>

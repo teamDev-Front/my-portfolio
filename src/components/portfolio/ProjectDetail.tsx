@@ -1,167 +1,159 @@
-'use client';
-
-import { useTranslations, useLocale } from 'next-intl';
+import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowLeft, ExternalLink, Check } from 'lucide-react';
-import { FadeIn } from '@/components/animations/FadeIn';
-import { Button } from '@/components/ui/Button';
+import { getLocale, getTranslations } from 'next-intl/server';
 import type { Project } from '@/lib/data/projects';
 import type { Locale } from '@/i18n/routing';
 
-interface ProjectDetailProps {
-  project: Project;
-}
-
-export function ProjectDetail({ project }: ProjectDetailProps) {
-  const t = useTranslations('portfolio');
-  const locale = useLocale() as Locale;
-  const translation = project.translations[locale];
+/**
+ * A single case study. Server Component — every word of the study (problem, solution,
+ * features, results) is in the server HTML, which is what the /portfolio/[slug] route
+ * is indexed for. Motion is the [data-reveal] contract only; the hero image is
+ * deliberately NOT revealed so the largest paint is never gated behind hydration.
+ */
+export async function ProjectDetail({ project }: { project: Project }) {
+  const locale = (await getLocale()) as Locale;
+  const t = await getTranslations('portfolio');
+  const copy = project.translations[locale];
+  const isPt = locale === 'pt-BR';
 
   return (
-    <article className="pt-32 pb-16">
-      <div className="container-custom">
-        {/* Back link */}
-        <FadeIn>
+    <article className="px-6 pt-32 pb-20 md:px-12 md:pt-44 md:pb-28">
+      <div className="mx-auto max-w-6xl">
+        <div data-reveal>
           <Link
             href={`/${locale}/portfolio`}
-            className="inline-flex items-center gap-2 text-muted hover:text-accent transition-colors mb-8"
+            className="inline-flex min-h-11 items-center gap-3 font-mono text-[11px] uppercase tracking-[0.16em] text-fg/60 transition-colors duration-200 hover:text-red-bright"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <span aria-hidden>←</span>
             {t('viewAll')}
           </Link>
-        </FadeIn>
 
-        {/* Hero */}
-        <FadeIn>
-          <div className="mb-12">
-            <span className="text-sm text-accent font-medium uppercase tracking-wider">
-              {t(`filters.${project.category}`)}
-            </span>
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground mt-4 mb-6">
-              {translation.title}
-            </h1>
-            <p className="text-base md:text-xl text-muted max-w-3xl">
-              {translation.fullDescription}
-            </p>
-            {project.liveUrl && (
-              <Button href={project.liveUrl} external className="mt-6">
-                <ExternalLink className="w-4 h-4 mr-2" />
-                {t('liveDemo')}
-              </Button>
-            )}
-          </div>
-        </FadeIn>
+          <p className="hud-readout mt-10 text-[10px] opacity-100! text-red-bright">
+            {t(`filters.${project.category}`)}
+          </p>
 
-        {/* Image placeholder */}
-        <FadeIn>
-          <div className="aspect-video bg-card rounded-2xl border border-card-border mb-16 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-accent/20 to-transparent" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <img
-                src={project.image}
-                alt={project.translations[locale].title}
-                className="absolute inset-0 h-full w-full object-cover"
-              />
+          <h1 className="type-display mt-5 max-w-4xl text-[clamp(2rem,6.5vw,4.5rem)] text-fg">
+            {copy.title}
+          </h1>
 
-            </div>
-          </div>
-        </FadeIn>
+          <p className="mt-8 max-w-3xl text-base leading-relaxed text-fg/70 md:text-lg">
+            {copy.fullDescription}
+          </p>
 
-        {/* Content grid */}
-        <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
-          {/* Main content */}
-          <div className="lg:col-span-2 space-y-8 lg:space-y-12">
-            {/* Problem */}
-            <FadeIn>
-              <div>
-                <h2 className="text-2xl font-bold text-foreground mb-4">
-                  {locale === 'pt-BR' ? 'Problema & Objetivo' : 'Problem & Goal'}
+          {project.liveUrl ? (
+            <a
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-10 inline-flex items-center gap-3 rounded-xs bg-red px-7 py-4 font-mono text-xs uppercase tracking-[0.18em] text-white transition-colors duration-200 hover:bg-red-bright"
+            >
+              {t('liveDemo')}
+              <span aria-hidden>↗</span>
+            </a>
+          ) : null}
+        </div>
+
+        <div className="border-hairline relative mt-14 aspect-video w-full overflow-hidden rounded-xs bg-surface md:mt-20">
+          <Image
+            src={project.image}
+            alt={copy.title}
+            fill
+            priority
+            sizes="(max-width: 1199px) 100vw, 1152px"
+            className="object-cover"
+          />
+        </div>
+
+        <div className="mt-16 grid gap-12 md:mt-24 lg:grid-cols-12 lg:gap-16">
+          <div className="lg:col-span-8">
+            <section data-reveal className="border-t border-line/10 pt-10">
+              <h2 className="hud-readout text-[10px] opacity-100! text-red-bright">
+                {isPt ? 'PROBLEMA & OBJETIVO' : 'PROBLEM & GOAL'}
+              </h2>
+              <p className="mt-6 text-base leading-relaxed text-fg/70 md:text-lg">
+                {copy.problem}
+              </p>
+            </section>
+
+            <section data-reveal className="mt-14 border-t border-line/10 pt-10 md:mt-20">
+              <h2 className="hud-readout text-[10px] opacity-100! text-red-bright">
+                {isPt ? 'SOLUÇÃO' : 'SOLUTION'}
+              </h2>
+              <p className="mt-6 text-base leading-relaxed text-fg/70 md:text-lg">
+                {copy.solution}
+              </p>
+            </section>
+
+            <section data-reveal className="mt-14 border-t border-line/10 pt-10 md:mt-20">
+              <h2 className="hud-readout text-[10px] opacity-100! text-red-bright">
+                {isPt ? 'RECURSOS PRINCIPAIS' : 'KEY FEATURES'}
+              </h2>
+              <ul className="mt-6">
+                {copy.features.map((feature, index) => (
+                  <li
+                    key={`${index}-${feature}`}
+                    className="flex items-baseline gap-5 border-b border-line/10 py-4 last:border-b-0"
+                  >
+                    <span className="hud-readout shrink-0 text-[9px] opacity-100! text-red-bright">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    <span className="text-sm leading-relaxed text-fg md:text-base">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            {copy.results && copy.results.length > 0 ? (
+              <section data-reveal className="mt-14 border-t border-line/10 pt-10 md:mt-20">
+                <h2 className="hud-readout text-[10px] opacity-100! text-red-bright">
+                  {isPt ? 'RESULTADOS' : 'RESULTS'}
                 </h2>
-                <p className="text-muted leading-relaxed">
-                  {translation.problem}
-                </p>
-              </div>
-            </FadeIn>
-
-            {/* Solution */}
-            <FadeIn>
-              <div>
-                <h2 className="text-2xl font-bold text-foreground mb-4">
-                  {locale === 'pt-BR' ? 'Solução' : 'Solution'}
-                </h2>
-                <p className="text-muted leading-relaxed">
-                  {translation.solution}
-                </p>
-              </div>
-            </FadeIn>
-
-            {/* Features */}
-            <FadeIn>
-              <div>
-                <h2 className="text-2xl font-bold text-foreground mb-4">
-                  {locale === 'pt-BR' ? 'Recursos Principais' : 'Key Features'}
-                </h2>
-                <ul className="space-y-3">
-                  {translation.features.map((feature, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <div className="w-5 h-5 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <Check className="w-3 h-3 text-accent" />
-                      </div>
-                      <span className="text-foreground">{feature}</span>
+                <ul className="mt-6 grid gap-4 sm:grid-cols-3">
+                  {copy.results.map((result, index) => (
+                    <li
+                      key={`${index}-${result}`}
+                      className="border-hairline rounded-xs bg-surface p-5 text-sm leading-relaxed text-fg"
+                    >
+                      {result}
                     </li>
                   ))}
                 </ul>
-              </div>
-            </FadeIn>
-
-            {/* Results */}
-            {translation.results && translation.results.length > 0 && (
-              <FadeIn>
-                <div>
-                  <h2 className="text-2xl font-bold text-foreground mb-4">
-                    {locale === 'pt-BR' ? 'Resultados' : 'Results'}
-                  </h2>
-                  <div className="grid sm:grid-cols-3 gap-4">
-                    {translation.results.map((result, index) => (
-                      <div key={index} className="bg-card rounded-xl border border-card-border p-4 text-center">
-                        <p className="text-foreground font-medium">{result}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </FadeIn>
-            )}
+              </section>
+            ) : null}
           </div>
 
-          {/* Sidebar */}
-          <div className="lg:col-span-1">
-            <FadeIn>
-              <div className="bg-card rounded-2xl border border-card-border p-6 sticky top-32">
-                <h3 className="text-lg font-semibold text-foreground mb-4">
+          <aside className="lg:col-span-4">
+            <div className="lg:sticky lg:top-28">
+              <div data-reveal className="border-hairline rounded-xs bg-surface p-6 md:p-7">
+                <h2 className="hud-readout text-[10px] opacity-100! text-red-bright">
                   {t('techStack')}
-                </h3>
-                <div className="flex flex-wrap gap-2">
+                </h2>
+
+                <ul className="mt-6 flex flex-wrap gap-2">
                   {project.technologies.map((tech) => (
-                    <span
+                    <li
                       key={tech}
-                      className="px-3 py-1.5 bg-hcs-gray rounded-lg text-sm text-foreground"
+                      className="hud-readout border-hairline rounded-xs px-2.5 py-1.5 text-[9px] opacity-70!"
                     >
                       {tech}
-                    </span>
+                    </li>
                   ))}
-                </div>
+                </ul>
 
-                {project.liveUrl && (
-                  <div className="mt-6 pt-6 border-t border-card-border">
-                    <Button href={project.liveUrl} external className="w-full">
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      {t('liveDemo')}
-                    </Button>
-                  </div>
-                )}
+                {project.liveUrl ? (
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-8 flex min-h-11 items-center justify-center gap-3 rounded-xs bg-red px-6 py-4 font-mono text-[11px] uppercase tracking-[0.16em] text-white transition-colors duration-200 hover:bg-red-bright"
+                  >
+                    {t('liveDemo')}
+                    <span aria-hidden>↗</span>
+                  </a>
+                ) : null}
               </div>
-            </FadeIn>
-          </div>
+            </div>
+          </aside>
         </div>
       </div>
     </article>

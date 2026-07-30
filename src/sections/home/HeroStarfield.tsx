@@ -39,6 +39,17 @@ export function HeroStarfield() {
     let w = 0;
     let h = 0;
 
+    // Colours come from the CSS tokens at runtime — one source of truth, so the field
+    // inverts correctly with the light theme instead of drawing white on white.
+    const readTokens = () => {
+      const s = getComputedStyle(document.documentElement);
+      return {
+        fg: s.getPropertyValue('--c-fg').trim() || '244 244 246',
+        accent: s.getPropertyValue('--c-red-bright').trim() || '248 113 113',
+      };
+    };
+    let tokens = readTokens();
+
     const seed = () => {
       const count = Math.min(cfg.maxStars, Math.round(((w * h) / 10000) * cfg.density));
       stars = Array.from({ length: count }, () => ({
@@ -59,7 +70,9 @@ export function HeroStarfield() {
         const a = cfg.baseAlpha * depth * tw;
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.r * depth * dpr, 0, Math.PI * 2);
-        ctx.fillStyle = s.red ? `rgba(248,113,113,${a * 0.8})` : `rgba(244,244,246,${a})`;
+        ctx.fillStyle = s.red
+          ? `rgb(${tokens.accent} / ${a * 0.8})`
+          : `rgb(${tokens.fg} / ${a})`;
         ctx.fill();
       }
     };
@@ -73,8 +86,18 @@ export function HeroStarfield() {
     fit();
     window.addEventListener('resize', fit);
 
+    // Re-read the tokens when the theme flips (ThemeProvider toggles a class on <html>).
+    const themeWatcher = new MutationObserver(() => {
+      tokens = readTokens();
+      if (!live) paint(0);
+    });
+    themeWatcher.observe(document.documentElement, { attributeFilter: ['class'] });
+
     if (!live) {
-      return () => window.removeEventListener('resize', fit);
+      return () => {
+        window.removeEventListener('resize', fit);
+        themeWatcher.disconnect();
+      };
     }
 
     // Slow travelling drift, depth-weighted — 30fps is invisible at these speeds.
@@ -105,6 +128,7 @@ export function HeroStarfield() {
       cancelAnimationFrame(raf);
       document.removeEventListener('visibilitychange', onVisibility);
       window.removeEventListener('resize', fit);
+      themeWatcher.disconnect();
     };
   }, [live]);
 

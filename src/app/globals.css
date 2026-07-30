@@ -60,6 +60,8 @@
   --c-red-deep: 254 226 226; /* light washes */
   --c-line: 0 0 0;
   --line-alpha: 0.12;
+  /* Multiply blend darkens, so the same amount of grain reads far heavier here. */
+  --grain-opacity: 0.05;
 
   --accent: var(--hcs-red);
   --accent-hover: var(--hcs-red-dark);
@@ -185,6 +187,12 @@ html.lenis body {
   text-transform: uppercase;
   letter-spacing: -0.03em;
   line-height: 0.98;
+}
+
+/* The grain is additive interference on the dark skin; on the light one it has to
+   subtract, or it just washes the page out. */
+.light [data-noise] {
+  mix-blend-mode: multiply;
 }
 
 /* Portfolio queue — static fallback (reduced motion): the receding corridor collapses

@@ -5,6 +5,7 @@ import { Biography } from '@/components/about/Biography';
 import { Timeline } from '@/components/about/Timeline';
 import { Skills } from '@/components/about/Skills';
 import { Values } from '@/components/about/Values';
+import { PageReveal } from '@/components/shell/PageReveal';
 import { ContactSection } from '@/sections/home/ContactSection';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { buildPageMetadata, type SupportedLocale } from '@/lib/seo';
@@ -63,11 +64,14 @@ export default async function AboutPage({ params }: Props) {
         id="ld-breadcrumb"
       />
 
-      <AboutHero />
-      <Biography />
-      <Timeline />
-      <Skills />
-      <Values />
+      <PageReveal>
+        <AboutHero />
+        <Biography />
+        <Timeline />
+        <Skills />
+        <Values />
+      </PageReveal>
+
       <ContactSection numbered={false} />
     </>
   );

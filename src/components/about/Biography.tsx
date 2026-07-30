@@ -1,161 +1,68 @@
-'use client';
-
-import { useRef, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { SectionTitle } from '@/components/ui/SectionTitle';
 
-gsap.registerPlugin(ScrollTrigger);
-
+/**
+ * ABOUT / 01 — the story. Server Component: an identity panel (the HUD monogram) beside
+ * the four biography paragraphs, the last one pulled out on a red rule. Reveal comes from
+ * the [data-reveal] contract read by <PageReveal />.
+ */
 export function Biography() {
   const t = useTranslations('about.bio');
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const paragraphsRef = useRef<(HTMLParagraphElement | null)[]>([]);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Image animation
-      if (imageRef.current) {
-        gsap.fromTo(
-          imageRef.current,
-          {
-            opacity: 0,
-            x: -80,
-            scale: 0.9,
-          },
-          {
-            opacity: 1,
-            x: 0,
-            scale: 1,
-            duration: 1,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: imageRef.current,
-              start: 'top 80%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
-
-        // Floating animation
-        gsap.to(imageRef.current, {
-          y: -15,
-          duration: 3,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-        });
-      }
-
-      // Content animation
-      if (contentRef.current) {
-        gsap.fromTo(
-          contentRef.current.querySelector('h2'),
-          {
-            opacity: 0,
-            y: 40,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: contentRef.current,
-              start: 'top 80%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
-      }
-
-      // Paragraphs stagger animation
-      paragraphsRef.current.forEach((p, index) => {
-        if (!p) return;
-
-        gsap.fromTo(
-          p,
-          {
-            opacity: 0,
-            y: 30,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: p,
-              start: 'top 85%',
-              toggleActions: 'play none none reverse',
-            },
-            delay: index * 0.1,
-          }
-        );
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
 
   return (
-    <section ref={sectionRef} className="section-padding relative overflow-hidden">
-      {/* Background decorations */}
-      <div className="absolute top-20 right-10 w-60 h-60 bg-accent/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-20 left-10 w-40 h-40 bg-accent/5 rounded-full blur-3xl" />
-
-      <div className="container-custom relative">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Image Side */}
-          <div
-            ref={imageRef}
-            className="relative max-w-md mx-auto lg:mx-0"
-          >
-            <div className="aspect-[4/5] bg-card rounded-2xl border border-card-border overflow-hidden relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-accent/10 to-transparent" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="w-40 h-40 mx-auto bg-gradient-to-br from-accent/20 to-accent/5 rounded-full flex items-center justify-center mb-6 relative">
-                    <span className="text-6xl font-bold gradient-text">LH</span>
-                    <div className="absolute inset-0 rounded-full border-2 border-accent/20 animate-ping" style={{ animationDuration: '3s' }} />
-                  </div>
-                  <h3 className="text-2xl font-bold text-foreground">Luiz Habaeb</h3>
-                  <p className="text-muted">Front-End Developer</p>
-                  <p className="text-accent text-sm mt-2">HCS Founder</p>
-
-                  {/* Status */}
-                  <div className="flex items-center justify-center gap-2 mt-4">
-                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                    <span className="text-xs text-muted">Available for projects</span>
-                  </div>
-                </div>
-              </div>
+    <section className="relative px-6 py-24 md:px-12 md:py-32">
+      <div className="mx-auto grid max-w-6xl items-start gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+        {/* Identity panel — the HUD frame, not a photo card. */}
+        <div
+          data-reveal
+          className="border-hairline relative mx-auto w-full max-w-sm rounded-xs bg-surface lg:mx-0"
+        >
+          <div className="flex flex-col items-center gap-7 px-6 py-14 text-center md:py-20">
+            <span className="type-display text-[clamp(3.5rem,11vw,5.5rem)] text-red-bright">LH</span>
+            <div className="hud-readout text-[10px] opacity-100!">
+              <p className="text-fg">LUIZ HABAEB</p>
+              <p className="mt-2 text-fg/60">FRONT-END DEVELOPER</p>
+              <p className="mt-1 text-fg/60">HCS FOUNDER</p>
             </div>
-
-            {/* Decorative elements */}
-            <div className="absolute -top-4 -right-4 w-24 h-24 bg-accent/20 rounded-full blur-2xl" />
-            <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-accent/10 rounded-full blur-2xl" />
           </div>
 
-          {/* Content Side */}
-          <div ref={contentRef}>
-            <span className="text-accent font-mono text-sm mb-4 block">MY STORY</span>
-            <SectionTitle title={t('title')} centered={false} className="mb-8" />
+          <p className="hud-readout flex items-center justify-center gap-2 border-t border-line/10 py-3 text-[9px] opacity-100! text-fg/60">
+            <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-red-bright" />
+            AVAILABLE FOR PROJECTS
+          </p>
 
-            <div className="space-y-4 text-muted leading-relaxed">
-              <p ref={(el) => { paragraphsRef.current[0] = el; }}>{t('p1')}</p>
-              <p ref={(el) => { paragraphsRef.current[1] = el; }}>{t('p2')}</p>
-              <p ref={(el) => { paragraphsRef.current[2] = el; }}>{t('p3')}</p>
-              <p
-                ref={(el) => { paragraphsRef.current[3] = el; }}
-                className="text-foreground font-medium border-l-2 border-accent pl-4"
-              >
-                {t('p4')}
-              </p>
-            </div>
+          {/* Corner ticks — the HUD frame language. */}
+          <span aria-hidden className="absolute left-3 top-3 h-3 w-3 border-l border-t border-line/25" />
+          <span aria-hidden className="absolute right-3 top-3 h-3 w-3 border-r border-t border-line/25" />
+          <span aria-hidden className="absolute bottom-3 left-3 h-3 w-3 border-b border-l border-line/25" />
+          <span aria-hidden className="absolute bottom-3 right-3 h-3 w-3 border-b border-r border-line/25" />
+        </div>
+
+        {/* Editorial column. */}
+        <div>
+          <p data-reveal className="hud-readout text-[10px] opacity-100! text-red-bright">
+            01 / MY STORY
+          </p>
+
+          <h2 data-reveal className="type-display mt-6 text-[clamp(1.9rem,4.5vw,3.2rem)] text-fg">
+            {t('title')}
+          </h2>
+
+          <div className="mt-10 space-y-6">
+            <p data-reveal className="text-base leading-relaxed text-fg/70 md:text-lg">
+              {t('p1')}
+            </p>
+            <p data-reveal className="text-base leading-relaxed text-fg/70 md:text-lg">
+              {t('p2')}
+            </p>
+            <p data-reveal className="text-base leading-relaxed text-fg/70 md:text-lg">
+              {t('p3')}
+            </p>
+            <p
+              data-reveal
+              className="border-l border-red-bright/60 pl-5 text-base leading-relaxed text-fg md:pl-6 md:text-lg"
+            >
+              {t('p4')}
+            </p>
           </div>
         </div>
       </div>

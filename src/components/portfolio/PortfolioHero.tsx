@@ -1,134 +1,32 @@
-'use client';
+import { getLocale, getTranslations } from 'next-intl/server';
+import { projects } from '@/lib/data/projects';
+import type { Locale } from '@/i18n/routing';
 
-import { useRef, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
-
-export function PortfolioHero() {
-  const t = useTranslations('portfolio');
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
-  const line1Ref = useRef<HTMLSpanElement>(null);
-  const line2Ref = useRef<HTMLSpanElement>(null);
-  const subtitleRef = useRef<HTMLParagraphElement>(null);
-  const marqueeRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Initial states
-      gsap.set([line1Ref.current, line2Ref.current], { yPercent: 100, opacity: 0 });
-      gsap.set(subtitleRef.current, { opacity: 0, y: 30 });
-
-      const tl = gsap.timeline({ delay: 0.3 });
-
-      // Line 1 reveal
-      tl.to(line1Ref.current, {
-        yPercent: 0,
-        opacity: 1,
-        duration: 1,
-        ease: 'power4.out',
-      });
-
-      // Line 2 reveal with offset
-      tl.to(line2Ref.current, {
-        yPercent: 0,
-        opacity: 1,
-        duration: 1,
-        ease: 'power4.out',
-      }, '-=0.7');
-
-      // Subtitle
-      tl.to(subtitleRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: 'power3.out',
-      }, '-=0.5');
-
-      // Marquee animation
-      if (marqueeRef.current) {
-        gsap.to(marqueeRef.current, {
-          xPercent: -50,
-          ease: 'none',
-          duration: 20,
-          repeat: -1,
-        });
-      }
-
-      // Parallax on scroll
-      ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: 'top top',
-        end: 'bottom top',
-        scrub: 1,
-        onUpdate: (self) => {
-          gsap.to(titleRef.current, {
-            yPercent: self.progress * 30,
-            duration: 0.1,
-          });
-        },
-      });
-
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  const marqueeWords = ['WEBSITES', 'E-COMMERCE', 'SAAS', 'AI', 'DESIGN', 'BRANDING'];
+/**
+ * PORTFOLIO — page masthead. Server Component: the h1, the subtitle and the index
+ * readout all ship in the server HTML. No GSAP here — motion is delegated to the
+ * [data-reveal] contract read by <PageReveal> (src/motion/page-reveal.timeline.ts).
+ */
+export async function PortfolioHero() {
+  const locale = (await getLocale()) as Locale;
+  const t = await getTranslations('portfolio');
+  const count = String(projects.length).padStart(2, '0');
 
   return (
-    <section ref={sectionRef} className="min-h-screen flex flex-col justify-center relative overflow-hidden bg-hcs-dark">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(239,68,68,0.1),transparent_50%)]" />
+    <section className="relative border-b border-line/10 px-6 pt-32 pb-14 md:px-12 md:pt-44 md:pb-20">
+      <div data-reveal className="mx-auto max-w-6xl">
+        <p className="hud-readout text-[10px] opacity-100! text-red-bright">
+          {count} {locale === 'pt-BR' ? 'PROJETOS' : 'PROJECTS'}
+        </p>
 
-      {/* Animated grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:80px_80px]" />
+        <h1 className="type-display mt-6 text-[clamp(2.5rem,9vw,6.5rem)] text-fg">
+          {t('title')}
+        </h1>
 
-      {/* Main content */}
-      <div className="container-custom relative z-10 py-32">
-        <div ref={titleRef} className="max-w-6xl">
-          {/* Label */}
-          <div className="flex items-center gap-4 mb-8">
-            <div className="w-12 h-[2px] bg-accent" />
-            <span className="text-accent font-mono text-sm tracking-widest">SELECTED WORK</span>
-          </div>
-
-          {/* Large title with mask effect */}
-          <h1 className="text-5xl md:text-7xl lg:text-[8rem] font-bold leading-[1.35] mb-8">
-            <span className="block overflow-hidden pb-2">
-              <span ref={line1Ref} className="block text-foreground">
-                {t('title').split(' ')[0] || 'My'}
-              </span>
-            </span>
-            <span className="block overflow-hidden pb-4">
-              <span ref={line2Ref} className="block text-transparent bg-clip-text bg-gradient-to-r from-accent to-accent/50">
-                {t('title').split(' ').slice(1).join(' ') || 'Projects'}
-              </span>
-            </span>
-          </h1>
-
-          {/* Subtitle */}
-          <p ref={subtitleRef} className="text-xl md:text-2xl text-muted max-w-2xl">
-            {t('subtitle')}
-          </p>
-        </div>
+        <p className="mt-8 max-w-2xl text-base leading-relaxed text-fg/70 md:text-lg">
+          {t('subtitle')}
+        </p>
       </div>
-
-      {/* Infinite marquee */}
-      <div className="absolute bottom-0 left-0 right-0 py-4 md:py-8 border-t border-card-border/50 overflow-hidden">
-        <div ref={marqueeRef} className="flex gap-8 md:gap-16 whitespace-nowrap" style={{ width: 'fit-content' }}>
-          {[...marqueeWords, ...marqueeWords, ...marqueeWords, ...marqueeWords].map((word, i) => (
-            <span key={i} className="text-4xl md:text-8xl font-bold text-accent/10 flex items-center gap-8 md:gap-16">
-              {word}
-              <span className="w-4 h-4 bg-accent/10 rounded-full" />
-            </span>
-          ))}
-        </div>
-      </div>
-
     </section>
   );
 }
