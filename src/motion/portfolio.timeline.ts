@@ -26,20 +26,39 @@ import type { TimelineOptions } from '@/motion/types';
  */
 
 /**
- * Queue slots in viewport units: centre-x (%), centre-y (%), width (vw), paint order.
- * Slot 0 is the front; higher slots recede to the right, smaller and dimmer — a receding
- * corridor of work rather than a cropped row.
+ * Queue slots in viewport units: centre-x (%), centre-y (%), width (vw), paint order,
+ * opacity. Slot 0 is the front, anchored left of centre; the rest recede to the right,
+ * smaller, higher and dimmer — a corridor of work receding into the screen. Every slot's
+ * box (cx ± w/2) stays inside 0–100% so nothing is ever clipped at the edge.
  */
-const SLOTS = [
-  { cx: 32, cy: 52, w: 40, z: 50, o: 1 },
-  { cx: 68, cy: 50, w: 30, z: 40, o: 0.82 },
-  { cx: 86, cy: 48.5, w: 22, z: 30, o: 0.5 },
-  { cx: 97, cy: 47.5, w: 16, z: 20, o: 0.24 },
-  // Off-stage staging slot: cards recycle through here unseen.
-  { cx: 108, cy: 47, w: 12, z: 10, o: 0 },
-] as const;
+interface Slot {
+  cx: number;
+  cy: number;
+  w: number;
+  z: number;
+  o: number;
+}
 
-const CYCLE = SLOTS.length;
+const SLOTS_DESKTOP: readonly Slot[] = [
+  { cx: 30, cy: 53, w: 40, z: 50, o: 1 },
+  { cx: 62, cy: 50, w: 26, z: 40, o: 0.7 },
+  { cx: 80, cy: 48, w: 18, z: 30, o: 0.38 },
+  { cx: 91, cy: 46.5, w: 12, z: 20, o: 0.16 },
+  // Off-stage staging slot: cards recycle through here unseen.
+  { cx: 104, cy: 46, w: 9, z: 10, o: 0 },
+];
+
+/**
+ * Mobile has no room for a four-deep corridor: the front card takes most of the width,
+ * one card peeks in from the right as the affordance that there is more, and the rest
+ * stage off-screen. Drag (already pointer-based) is the primary control here.
+ */
+const SLOTS_MOBILE: readonly Slot[] = [
+  { cx: 46, cy: 52, w: 78, z: 50, o: 1 },
+  { cx: 108, cy: 50, w: 56, z: 40, o: 0.45 },
+  { cx: 150, cy: 49, w: 40, z: 20, o: 0 },
+];
+
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 export function portfolioTimeline(
@@ -67,9 +86,13 @@ export function portfolioTimeline(
 
   const cfg = motion.workQueue;
   const n = cards.length;
+  const SLOTS = mobile ? SLOTS_MOBILE : SLOTS_DESKTOP;
+  const CYCLE = SLOTS.length;
 
-  const slotX = (s: number) => ((SLOTS[s]!.cx - SLOTS[0]!.cx) / 100) * window.innerWidth;
-  const slotY = (s: number) => ((SLOTS[s]!.cy - SLOTS[0]!.cy) / 100) * window.innerHeight;
+  // Cards sit at left/top 50% with xPercent/yPercent -50, so slot positions are offsets
+  // from the viewport centre — slot 0 lands at its designed cx, not at 50%.
+  const slotX = (s: number) => ((SLOTS[s]!.cx - 50) / 100) * window.innerWidth;
+  const slotY = (s: number) => ((SLOTS[s]!.cy - 50) / 100) * window.innerHeight;
   const slotScale = (s: number) => SLOTS[s]!.w / SLOTS[0]!.w;
   const easeStep = gsap.parseEase('power1.inOut');
   const easeExit = gsap.parseEase('power2.out');
@@ -84,20 +107,24 @@ export function portfolioTimeline(
     const step = Math.floor(t);
     const f = t - step;
     cards.forEach((el, i) => {
-      // Which slot this card occupies right now (front = 0). Cards beyond the last
-      // visible slot park off-stage in the staging slot.
-      const from = Math.min((i - step + n) % n, CYCLE - 1);
-      const to = from === 0 ? CYCLE - 1 : Math.min(from - 1, CYCLE - 1);
+      // The card's raw place in the queue (0 = front), then its VISUAL slot: anything
+      // deeper than the corridor shares the off-stage staging slot. Mapping raw→visual
+      // (rather than clamping first) keeps exactly one card entering the corridor per
+      // step — clamping first would march two cards onto the same slot.
+      const rawFrom = (i - step + n) % n;
+      const rawTo = rawFrom === 0 ? n - 1 : rawFrom - 1;
+      const from = Math.min(rawFrom, CYCLE - 1);
+      const to = Math.min(rawTo, CYCLE - 1);
       let x: number;
       let y: number;
       let sc: number;
       let op: number;
       let z: number;
-      if (from === 0) {
-        // The front card leaves toward the viewer's left, growing slightly then out.
+      if (rawFrom === 0) {
+        // The front card leaves toward the viewer — left and slightly larger, then out.
         const ef = easeExit(Math.min(f / 0.45, 1));
         x = lerp(slotX(0), slotX(0) - window.innerWidth * 0.42, ef);
-        y = lerp(slotY(0), slotY(0), ef);
+        y = slotY(0);
         sc = lerp(slotScale(0), slotScale(0) * 1.08, ef);
         op = 1 - ef;
         z = f < 0.5 ? 60 : 5;
@@ -112,9 +139,11 @@ export function portfolioTimeline(
       // gsap.set (not quickSetter): scale must land in the same transform as x/y.
       gsap.set(el, { x, y, scale: sc, autoAlpha: op });
       el.style.zIndex = String(z);
-      // Only the front card is interactive/tabbable — the rest are decor until they arrive.
-      const isFront = from === 0 && f < 0.5;
-      el.dataset.queueFront = isFront ? 'on' : 'off';
+      // Pointer events belong to whichever card is NEAREST the front slot: the one
+      // sitting in it while it still holds the stage (f < 0.5), otherwise the one
+      // already arriving. Gating on "rawFrom === 0" alone would leave the queue
+      // unclickable for half of every step.
+      el.dataset.queueFront = (f < 0.5 ? rawFrom === 0 : rawFrom === 1) ? 'on' : 'off';
     });
   };
 
@@ -174,8 +203,9 @@ export function portfolioTimeline(
         lastPX = e.clientX;
         lastMoveT = performance.now() / 1000;
         live.dragVel = 0;
-        surface.setPointerCapture(e.pointerId);
-        surface.style.cursor = 'grabbing';
+        // Pointer capture is claimed LATER, only once this becomes a real drag: capturing
+        // on pointerdown would retarget the subsequent click to the surface, so a card
+        // could never be opened by clicking it.
       },
       { signal },
     );
@@ -189,6 +219,10 @@ export function portfolioTimeline(
         lastPX = e.clientX;
         lastMoveT = now;
         dragMoved += Math.abs(dx);
+        if (dragMoved > 6) {
+          surface.setPointerCapture(e.pointerId);
+          surface.style.cursor = 'grabbing';
+        }
         // Drag left = pull the queue forward (the next work steps up to the front).
         live.offset -= dx * cfg.dragGain;
         live.dragVel = gsap.utils.clamp(-1.5, 1.5, (-dx * cfg.dragGain) / dt);

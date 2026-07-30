@@ -44,22 +44,26 @@ function OverlayBody({ slug, open, onGone }: { slug: string; open: boolean; onGo
     const scope = root.current;
 
     if (reduced) {
-      gsap.set(scope, { autoAlpha: 1 });
+      gsap.set(scope, { opacity: 1 });
       return;
     }
 
     const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
-    tl.fromTo(scope, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.28 }, 0);
+    // opacity, NOT autoAlpha, throughout: autoAlpha sets visibility:hidden at time 0, and
+    // nothing inside an invisible subtree can take focus — the dialog would open with the
+    // focus still on the card behind it. The node unmounts when closed, so there is
+    // nothing to hide from the pointer anyway.
+    tl.fromTo(scope, { opacity: 0 }, { opacity: 1, duration: 0.28 }, 0);
     tl.fromTo(
       scope.querySelector('[data-overlay-panel]'),
-      { autoAlpha: 0, scale: 0.94, filter: 'blur(10px)' },
-      { autoAlpha: 1, scale: 1, filter: 'blur(0px)', duration: 0.5 },
+      { opacity: 0, scale: 0.94, filter: 'blur(10px)' },
+      { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.5 },
       0.04,
     );
     tl.fromTo(
       scope.querySelectorAll('[data-overlay-item]'),
-      { autoAlpha: 0, y: 14 },
-      { autoAlpha: 1, y: 0, duration: 0.4, stagger: 0.05 },
+      { opacity: 0, y: 14 },
+      { opacity: 1, y: 0, duration: 0.4, stagger: 0.05 },
       0.18,
     );
     tlRef.current = tl;
@@ -88,7 +92,9 @@ function OverlayBody({ slug, open, onGone }: { slug: string; open: boolean; onGo
   useEffect(() => {
     if (!open) return;
     const previous = document.activeElement as HTMLElement | null;
-    closeBtn.current?.focus();
+    // One frame late: the opening timeline has to have rendered before the button can
+    // take focus (and before a screen reader announces the dialog).
+    const focusFrame = requestAnimationFrame(() => closeBtn.current?.focus());
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -114,6 +120,7 @@ function OverlayBody({ slug, open, onGone }: { slug: string; open: boolean; onGo
 
     document.addEventListener('keydown', onKey);
     return () => {
+      cancelAnimationFrame(focusFrame);
       document.removeEventListener('keydown', onKey);
       previous?.focus();
     };
@@ -152,7 +159,7 @@ function OverlayBody({ slug, open, onGone }: { slug: string; open: boolean; onGo
           ESC ✕
         </button>
 
-        <div data-overlay-item className="relative aspect-16/9 w-full overflow-hidden bg-bg">
+        <div data-overlay-item className="relative aspect-video w-full overflow-hidden bg-bg">
           <Image
             src={project.image}
             alt={copy.title}

@@ -58,7 +58,7 @@ export function QueueCard({
           new CustomEvent('queue:focus', { detail: { index }, bubbles: true }),
         );
       }}
-      className="absolute left-1/2 top-1/2 block w-[40vw] max-w-[560px] min-w-[240px] will-change-transform data-[queue-front=off]:pointer-events-none"
+      className="absolute left-1/2 top-1/2 block w-[78vw] max-w-140 will-change-transform data-[queue-front=off]:pointer-events-none md:w-[40vw]"
     >
       {children}
     </a>
