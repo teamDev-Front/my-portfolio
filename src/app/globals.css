@@ -22,7 +22,7 @@
   /* Atmosphere parameters (JS twins in src/config/visual.ts) */
   --line-alpha: 0.1;
   --hud-opacity: 0.4;
-  --grain-opacity: 0.32;
+  --grain-opacity: 0.13;
   --page-margin: 24px;
   --container-max: 1440px;
   --ease-hcs: cubic-bezier(0.16, 1, 0.3, 1);

@@ -7,7 +7,7 @@ import type { JourneyStage } from '@/stores/experienceStore';
  */
 export const visual = {
   /** Noise/grain layer intensity 0–1 (CSS twin: --grain-opacity). */
-  grainOpacity: 0.32,
+  grainOpacity: 0.13,
 
   /**
    * The living TV static: pre-rendered noise tiles shuffled at ~12fps through a canvas
