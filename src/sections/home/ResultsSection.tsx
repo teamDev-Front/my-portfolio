@@ -16,11 +16,17 @@ export async function ResultsSection() {
 
   return (
     <Choreography name="results">
-      <section
-        data-results-stage
+      {/* Track + sticky section instead of a ScrollTrigger pin (no position:fixed swap,
+          so no CLS). The track's extra height is the counting beat's scroll travel. */}
+      <div
+        data-results-track
         data-stage="results"
         data-stage-lead="0.6"
-        className="relative flex min-h-screen items-center overflow-hidden px-6 py-24 md:px-12"
+        className="relative h-[240vh] md:h-[280vh]"
+      >
+      <section
+        data-results-stage
+        className="sticky top-0 flex h-screen items-center overflow-hidden px-6 py-24 md:px-12"
       >
         <div className="mx-auto w-full max-w-6xl">
           <div data-results-header className="max-w-2xl">
@@ -75,6 +81,7 @@ export async function ResultsSection() {
           </div>
         </div>
       </section>
+      </div>
     </Choreography>
   );
 }

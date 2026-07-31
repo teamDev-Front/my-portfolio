@@ -13,11 +13,18 @@ export function AboutSection() {
 
   return (
     <Choreography name="about">
-      <section
-        data-about-stage
+      {/* Track + sticky section instead of a ScrollTrigger pin: identical on screen, but
+          it never swaps to position:fixed, so it costs nothing in CLS. The track's extra
+          height IS the beat's scroll travel. */}
+      <div
+        data-about-track
         data-stage="about"
         data-stage-lead="0.5"
-        className="relative flex min-h-screen items-center overflow-hidden px-6 md:px-12"
+        className="relative h-[230vh] md:h-[220vh]"
+      >
+      <section
+        data-about-stage
+        className="sticky top-0 flex h-screen items-center overflow-hidden px-6 md:px-12"
       >
         {/* The giant chapter number, surfacing at depth behind the content. */}
         <span
@@ -94,6 +101,7 @@ export function AboutSection() {
           </div>
         </div>
       </section>
+      </div>
     </Choreography>
   );
 }

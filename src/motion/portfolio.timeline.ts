@@ -16,8 +16,13 @@ import type { TimelineOptions } from '@/motion/types';
  * never a crossfade. All gains live in config/motion.workQueue — zero them and this is
  * the exact scrub-only choreography.
  *
+ * The section holds still through CSS `position: sticky` inside a taller track, not
+ * ScrollTrigger's pin — pinning swaps the element to position:fixed mid-scroll, which the
+ * CLS observer scores as a layout shift.
+ *
  * Expected DOM (inside `scope`):
- *   [data-portfolio-stage]   pin container (the <section>)
+ *   [data-portfolio-track]   the tall track that gives the sticky section its travel
+ *   [data-portfolio-stage]   the sticky <section>
  *   [data-portfolio-header]  eyebrow + title
  *   [data-queue-surface]     the drag surface (touch-action: pan-y)
  *   [data-queue-card="i"]    one element per project (0 starts at the front slot)
@@ -70,6 +75,7 @@ export function portfolioTimeline(
   if (cards.length === 0) return null;
 
   const stage = (q('[data-portfolio-stage]')[0] as HTMLElement) ?? scope;
+  const track = (q('[data-portfolio-track]')[0] as HTMLElement) ?? stage;
 
   if (reduced) {
     // Reduced motion: the queue collapses to a plain readable stack (CSS owns the layout
@@ -151,33 +157,38 @@ export function portfolioTimeline(
   applyPhase(0);
 
   const state = { scrubPhase: 0 };
-  const pinLen = mobile ? cfg.pinLengthMobile : cfg.pinLength;
 
   const tl = gsap.timeline({
     defaults: { ease: 'none' },
     scrollTrigger: {
-      trigger: stage,
+      trigger: track,
       start: 'top top',
-      end: `+=${pinLen * 100}%`,
+      end: 'bottom bottom',
       scrub: motion.scroll.scrub,
-      pin: true,
-      anticipatePin: 1,
       invalidateOnRefresh: true,
     },
   });
 
-  // Arrival — header and hint are timeline-gated (tunnel rule: nothing slides in pre-pin).
-  tl.fromTo(
+  // ARRIVAL — before the pin. The pin only starts once the section's top reaches the top
+  // of the viewport; gating the reveal on the pinned timeline would leave a full viewport
+  // of empty screen while the section travels up. The queue's own opacity is owned by
+  // applyPhase per slot, so the whole surface fades as one here instead.
+  const arrival = gsap.timeline({
+    defaults: { ease: 'none' },
+    scrollTrigger: { trigger: track, start: 'top 85%', end: 'top top', scrub: motion.scroll.scrub },
+  });
+  arrival.fromTo(
     q('[data-portfolio-header]'),
     { autoAlpha: 0, scale: 0.94, filter: 'blur(8px)' },
-    { autoAlpha: 1, scale: 1, filter: 'blur(0px)', duration: 0.25 },
+    { autoAlpha: 1, scale: 1, filter: 'blur(0px)', duration: 0.5 },
     0,
   );
-  tl.fromTo(q('[data-queue-hint]'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.2 }, 0.3);
+  arrival.fromTo(q('[data-queue-surface]'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.6 }, 0.1);
+  arrival.fromTo(q('[data-queue-hint]'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3 }, 0.5);
 
   // The narrative layer: the scrub advances the queue across the pin, chained with no
   // gap — every pixel of scroll moves the fila.
-  tl.to(state, { scrubPhase: n - 1, duration: n - 1 }, 0.25);
+  tl.to(state, { scrubPhase: n - 1, duration: n - 1 }, 0);
   tl.to(q('[data-queue-hint]'), { autoAlpha: 0, duration: 0.2 }, `>-0.3`);
   tl.fromTo(q('[data-portfolio-cta]'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.2 }, '>-0.1');
 
@@ -290,7 +301,11 @@ export function portfolioTimeline(
         // Not wrapped here: applyPhase already works modulo n, and a focus tween needs a
         // continuous target to ease toward (wrapping mid-tween would snap the queue).
         live.offset += (cfg.autoSpeed + live.boost) * dt + (dragging ? 0 : live.dragVel * dt);
-        if (tl.scrollTrigger?.isActive) applyPhase(state.scrubPhase + live.offset);
+        // Runs while the section is anywhere on screen, not only while pinned — the
+        // queue must already be alive as it arrives.
+        if (tl.scrollTrigger?.isActive || arrival.scrollTrigger?.isActive) {
+          applyPhase(state.scrubPhase + live.offset);
+        }
       },
     },
   );

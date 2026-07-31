@@ -10,8 +10,13 @@ import type { TimelineOptions } from '@/motion/types';
  *
  * Numbers are written straight to textContent (never a React re-render per frame).
  *
+ * The section holds still through CSS `position: sticky` inside a taller track, not
+ * ScrollTrigger's pin — pinning swaps the element to position:fixed mid-scroll, which the
+ * CLS observer scores as a layout shift.
+ *
  * Expected DOM (inside `scope`):
- *   [data-results-stage]   pin container (the <section>)
+ *   [data-results-track]   the tall track that gives the sticky section its travel
+ *   [data-results-stage]   the sticky <section>
  *   [data-results-header]  eyebrow + title
  *   [data-metric]          one block per metric; carries
  *                            data-metric-value  the target number (e.g. "30")
@@ -36,7 +41,14 @@ export function resultsTimeline(
   };
 
   if (reduced) {
-    // Final values, no counting, no pin.
+    // Final values, no counting, no sticky travel.
+    const track = scope.querySelector<HTMLElement>('[data-results-track]');
+    const stage = scope.querySelector<HTMLElement>('[data-results-stage]');
+    if (track) track.style.height = 'auto';
+    if (stage) {
+      stage.style.position = 'static';
+      stage.style.height = 'auto';
+    }
     metrics.forEach((el) => write(el, Number(el.dataset.metricValue ?? 0)));
     gsap.set(q('[data-results-header], [data-metric], [data-metric-quote]'), {
       autoAlpha: 1,
@@ -45,54 +57,62 @@ export function resultsTimeline(
     return null;
   }
 
-  const pinLen = mobile ? motion.scroll.pinLengthMobile.results : motion.scroll.pinLength.results;
   const enter = motion.tunnel.enter;
+  const stage = (q('[data-results-stage]')[0] as HTMLElement) ?? scope;
+  const track = (q('[data-results-track]')[0] as HTMLElement) ?? stage;
+
+  // ARRIVAL — while the track travels up. The whole board materialises here, the numbers
+  // sitting at zero: by the time the section parks, the visitor is looking at a complete
+  // composition, and the scroll that follows is what makes the numbers climb. Revealing
+  // them inside the parked timeline instead left a viewport of empty space under the
+  // heading while the section was already filling the screen.
+  metrics.forEach((el) => write(el, 0));
+  const arrival = gsap.timeline({
+    defaults: { ease: 'none' },
+    scrollTrigger: { trigger: track, start: 'top 85%', end: 'top top', scrub: motion.scroll.scrub },
+  });
+  arrival.fromTo(
+    q('[data-results-header]'),
+    { autoAlpha: 0, scale: enter.scale, filter: `blur(${enter.blur}px)` },
+    { autoAlpha: 1, scale: 1, filter: 'blur(0px)', duration: 0.5 },
+    0,
+  );
+  arrival.fromTo(
+    metrics,
+    { autoAlpha: 0, scale: 0.94 },
+    { autoAlpha: 1, scale: 1, duration: 0.4, stagger: 0.06 },
+    0.2,
+  );
+  arrival.fromTo(
+    q('[data-metric-quote]'),
+    { autoAlpha: 0, scale: 0.97 },
+    { autoAlpha: 1, scale: 1, duration: 0.35, stagger: 0.06 },
+    0.5,
+  );
 
   const tl = gsap.timeline({
     defaults: { ease: 'none' },
     scrollTrigger: {
-      trigger: (q('[data-results-stage]')[0] as HTMLElement) ?? scope,
+      trigger: track,
       start: 'top top',
-      end: `+=${pinLen * 100}%`,
+      end: 'bottom bottom',
       scrub: motion.scroll.scrub,
-      pin: true,
-      anticipatePin: 1,
     },
   });
 
-  tl.fromTo(
-    q('[data-results-header]'),
-    { autoAlpha: 0, scale: enter.scale, filter: `blur(${enter.blur}px)` },
-    { autoAlpha: 1, scale: 1, filter: 'blur(0px)', duration: 0.18 },
-    0,
-  );
-
-  // Each metric arrives from depth, then counts up across its share of the pin. The
-  // counters overlap slightly so the block reads as one rising system, not a queue.
+  // The counting itself: each number climbs across its share of the parked beat, the
+  // spans overlapping so the board reads as one rising system rather than a queue.
   const span = motion.metrics.countPortion;
   const each = span / Math.max(metrics.length, 1);
   metrics.forEach((el, i) => {
     const target = Number(el.dataset.metricValue ?? 0);
-    const at = 0.12 + i * each * 0.85;
-    tl.fromTo(el, { autoAlpha: 0, scale: 0.94 }, { autoAlpha: 1, scale: 1, duration: 0.12 }, at);
     const counter = { n: 0 };
     tl.to(
       counter,
-      {
-        n: target,
-        duration: each * 1.35,
-        onUpdate: () => write(el, counter.n),
-      },
-      at,
+      { n: target, duration: each * 1.6, onUpdate: () => write(el, counter.n) },
+      0.04 + i * each * 0.5,
     );
   });
-
-  tl.fromTo(
-    q('[data-metric-quote]'),
-    { autoAlpha: 0, scale: 0.97 },
-    { autoAlpha: 1, scale: 1, duration: 0.15, stagger: 0.06 },
-    0.62,
-  );
 
   // Hold, then the whole board grows past the camera — the pin releases empty.
   tl.to(

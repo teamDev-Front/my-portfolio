@@ -199,8 +199,13 @@ html.lenis body {
 /* Portfolio queue — static fallback (reduced motion): the receding corridor collapses
    into a plain readable stack, every card in flow and tabbable. */
 [data-queue-static='on'] {
-  min-height: 0;
+  position: static;
+  height: auto;
   padding: 7rem 1.5rem;
+}
+/* The track's travel height is meaningless without the sticky choreography. */
+[data-portfolio-track]:has([data-queue-static='on']) {
+  height: auto;
 }
 [data-queue-static='on'] [data-queue-surface] {
   position: static;

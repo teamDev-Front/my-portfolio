@@ -20,11 +20,17 @@ export async function PortfolioSection() {
 
   return (
     <Choreography name="portfolio">
-      <section
-        data-portfolio-stage
+      {/* Track + sticky section instead of a ScrollTrigger pin (no position:fixed swap,
+          so no CLS). The track's extra height is the queue's scroll travel. */}
+      <div
+        data-portfolio-track
         data-stage="portfolio"
         data-stage-lead="0.7"
-        className="relative min-h-screen overflow-hidden"
+        className="relative h-[320vh] md:h-[420vh]"
+      >
+      <section
+        data-portfolio-stage
+        className="sticky top-0 h-screen overflow-hidden"
       >
         <div data-portfolio-headwrap className="absolute inset-x-0 top-24 z-20 px-6 md:px-12">
           <div data-portfolio-header className="mx-auto max-w-6xl">
@@ -61,7 +67,7 @@ export async function PortfolioSection() {
                   />
                   <span
                     aria-hidden
-                    className="absolute inset-0 bg-gradient-to-t from-bg/90 via-bg/10 to-transparent"
+                    className="absolute inset-0 bg-linear-to-t from-bg/90 via-bg/10 to-transparent"
                   />
                   <div className="absolute inset-x-0 bottom-0 p-5 md:p-7">
                     <p className="hud-readout text-[9px] opacity-100! text-red-bright">
@@ -96,6 +102,7 @@ export async function PortfolioSection() {
           </div>
         </div>
       </section>
+      </div>
 
       <ProjectOverlay />
     </Choreography>

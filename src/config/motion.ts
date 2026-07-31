@@ -69,6 +69,6 @@ export const motion = {
 
   /** Results metrics count 0→value with the scrub across this pin. */
   metrics: {
-    countPortion: 0.55, // fraction of the pin spent counting
+    countPortion: 0.42, // fraction of the pin spent counting
   },
 } as const;
