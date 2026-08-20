@@ -9,20 +9,20 @@ import type { Locale, StaticPathname } from '@/i18n/routing';
  * column, hairline between services. Server Component — every title, description and
  * inclusion ships in the server HTML.
  *
- * The `id` on each row is load-bearing: the footer deep-links to /services#websites,
- * #ecommerce, #saas, #ai, #design and #marketing. `scroll-mt-*` clears the fixed header.
+ * The `id` on each row is load-bearing: the footer deep-links to /services#saas,
+ * #mobile, #ecommerce, #ai, #websites and #design. `scroll-mt-*` clears the fixed header.
  *
  * Three services also carry the SEO landing routes (/create-website, /create-saas,
  * /ai-automation) — the same key internal links the homepage services list exposes.
  */
 
 const SERVICES: Array<{ key: string; id: string; landingRoute?: StaticPathname }> = [
-  { key: 'websites', id: 'websites', landingRoute: '/create-website' },
-  { key: 'ecommerce', id: 'ecommerce' },
   { key: 'saas', id: 'saas', landingRoute: '/create-saas' },
+  { key: 'mobile', id: 'mobile' },
+  { key: 'ecommerce', id: 'ecommerce' },
   { key: 'ai', id: 'ai', landingRoute: '/ai-automation' },
+  { key: 'websites', id: 'websites', landingRoute: '/create-website' },
   { key: 'design', id: 'design' },
-  { key: 'marketing', id: 'marketing' },
 ];
 
 const FEATURE_SLOTS = [0, 1, 2, 3, 4, 5];

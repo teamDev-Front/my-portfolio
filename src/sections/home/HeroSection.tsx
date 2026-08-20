@@ -10,7 +10,7 @@ import { HeroStarfield } from '@/sections/home/HeroStarfield';
  */
 
 const HIGHLIGHTS = new Set(['&', 'ia', 'ai']);
-const TECH = ['React', 'Next.js', 'TypeScript', 'Node.js', 'Python', 'AI/LLM'];
+const TECH = ['React', 'Next.js', 'React Native', 'TypeScript', 'Node.js', 'AI/LLM'];
 
 export function HeroSection() {
   const t = useTranslations('hero');

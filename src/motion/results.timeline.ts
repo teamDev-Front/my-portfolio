@@ -8,6 +8,9 @@ import type { TimelineOptions } from '@/motion/types';
  * result. Quotes are supporting text underneath. Pinned, scrubbed, reversible — scrolling
  * back counts the numbers down again.
  *
+ * On phones the beat is NOT pinned: the ledger is taller than the viewport there, so it
+ * flows at natural height and each row counts once as it arrives.
+ *
  * Numbers are written straight to textContent (never a React re-render per frame).
  *
  * The section holds still through CSS `position: sticky` inside a taller track, not
@@ -36,14 +39,16 @@ export function resultsTimeline(
     const numberEl = el.querySelector<HTMLElement>('[data-metric-number]');
     if (!numberEl) return;
     const prefix = el.dataset.metricPrefix ?? '';
+    const suffix = el.dataset.metricSuffix ?? '';
     // Thousands separator matches the rendered locale, so the counter never disagrees
     // with the value the server painted.
     const formatted = Math.round(n).toLocaleString(el.dataset.metricLocale || undefined);
-    numberEl.textContent = `${prefix}${formatted}`;
+    numberEl.textContent = `${prefix}${formatted}${suffix}`;
   };
 
-  if (reduced) {
-    // Final values, no counting, no sticky travel.
+  // Unpin: the ledger is taller than a phone viewport, so holding it in a h-screen
+  // sticky stage would clip the last rows. Let it flow at its natural height instead.
+  const unpin = () => {
     const track = scope.querySelector<HTMLElement>('[data-results-track]');
     const stage = scope.querySelector<HTMLElement>('[data-results-stage]');
     if (track) track.style.height = 'auto';
@@ -51,10 +56,50 @@ export function resultsTimeline(
       stage.style.position = 'static';
       stage.style.height = 'auto';
     }
+  };
+
+  if (reduced) {
+    // Final values, no counting, no sticky travel.
+    unpin();
     metrics.forEach((el) => write(el, Number(el.dataset.metricValue ?? 0)));
     gsap.set(q('[data-results-header], [data-metric], [data-metric-quote]'), {
       autoAlpha: 1,
       clearProps: 'transform,filter',
+    });
+    return null;
+  }
+
+  if (mobile) {
+    // Phones: no pin, no scrub. Each row fades up and its number counts once, as the row
+    // itself reaches the viewport — the same story told down the page instead of in place.
+    unpin();
+    metrics.forEach((el) => write(el, 0));
+    gsap.from(q('[data-results-header]'), {
+      autoAlpha: 0,
+      y: 24,
+      duration: motion.duration.narrative,
+      ease: motion.ease.out,
+      scrollTrigger: { trigger: scope, start: 'top 80%' },
+    });
+    metrics.forEach((el) => {
+      const target = Number(el.dataset.metricValue ?? 0);
+      const counter = { n: 0 };
+      gsap.timeline({ scrollTrigger: { trigger: el, start: 'top 88%' } })
+        .from(el, { autoAlpha: 0, y: 18, duration: 0.5, ease: motion.ease.out })
+        .to(counter, {
+          n: target,
+          duration: 1.1,
+          ease: 'power2.out',
+          onUpdate: () => write(el, counter.n),
+        }, 0);
+    });
+    gsap.from(q('[data-metric-quote]'), {
+      autoAlpha: 0,
+      y: 18,
+      duration: 0.6,
+      stagger: 0.1,
+      ease: motion.ease.out,
+      scrollTrigger: { trigger: q('[data-metric-quote]')[0] ?? scope, start: 'top 88%' },
     });
     return null;
   }

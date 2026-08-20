@@ -1,4 +1,5 @@
 import { useTranslations } from 'next-intl';
+import { projects } from '@/lib/data/projects';
 
 /**
  * SERVICES — page masthead. Server Component: title, subtitle and the three HUD figures
@@ -6,10 +7,12 @@ import { useTranslations } from 'next-intl';
  * contract read by <PageReveal />.
  */
 
-const STATS: Array<{ value: string; label: string }> = [
-  { value: '50+', label: 'Projects' },
-  { value: '8+', label: 'Years' },
-  { value: '6+', label: 'Services' },
+/** Figures are derived or checkable — the project count comes from the portfolio data
+ *  itself, so it can never drift from what the visitor can go and count. */
+const STATS: Array<{ value: string; labelKey: 'projects' | 'years' | 'services' }> = [
+  { value: String(projects.length), labelKey: 'projects' },
+  { value: '10+', labelKey: 'years' },
+  { value: '6', labelKey: 'services' },
 ];
 
 export function ServicesHero() {
@@ -35,9 +38,9 @@ export function ServicesHero() {
 
         <dl data-reveal className="mt-14 grid max-w-2xl grid-cols-3 border-t border-line/10 pt-8">
           {STATS.map((stat) => (
-            <div key={stat.label}>
+            <div key={stat.labelKey}>
               <dt className="hud-readout text-[9px] opacity-100! text-fg/60 md:text-[10px]">
-                {stat.label}
+                {t(`stats.${stat.labelKey}`)}
               </dt>
               <dd className="type-display mt-3 text-[clamp(1.8rem,5vw,3.2rem)] text-red-bright">
                 {stat.value}

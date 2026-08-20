@@ -14,8 +14,8 @@
     "getQuote": "Orçamento"
   },
   "hero": {
-    "tagline": "Criamos Sites, SaaS, Lojas Virtuais & Soluções com IA",
-    "subtitle": "Sites, e-commerces, SaaS, sistemas e soluções com tecnologia de ponta, design centrado no usuário e foco em resultados",
+    "tagline": "Criamos Apps, SaaS, E-commerces & Soluções com IA",
+    "subtitle": "Aplicativos nativos, plataformas SaaS, e-commerces e sistemas com IA — construídos para rodar em produção e sustentar operação real",
     "cta": "Solicitar Orçamento",
     "secondaryCta": "Ver Portfólio"
   },
@@ -23,8 +23,8 @@
     "title": "Sobre Luiz Habaeb",
     "subtitle": "Desenvolvedor SAP BTP & Full Stack · Fundador da HCS",
     "description": "Sou desenvolvedor com mais de 10 anos em tecnologia. Atuo como Analista Sênior SAP BTP & Fiori na SAUTER e como front-end developer na Quantflow (Suíça), e é da minha HCS que saem os projetos deste portfólio — de e-commerce e sites a plataformas SaaS e sistemas com IA em produção.",
-    "highlight1": "SAP BTP · CAP · Fiori · SuccessFactors",
-    "highlight2": "React · Next.js · TypeScript · Node.js",
+    "highlight1": "React · Next.js · TypeScript · Node.js",
+    "highlight2": "SAP BTP · CAP · Fiori · SuccessFactors",
     "highlight3": "Tecnólogo em Banco de Dados — FATEC (2024)",
     "cta": "Conheça Minha História"
   },
@@ -35,31 +35,31 @@
     "learnMore": "Saiba mais",
     "websites": {
       "title": "Sites & Landing Pages",
-      "description": "Desenvolvimento de sites responsivos, acessíveis, otimizados para SEO e alta performance"
+      "description": "Sites responsivos, acessíveis, otimizados para SEO e alta performance"
     },
     "ecommerce": {
-      "title": "E-commerce",
-      "description": "Lojas virtuais em Shopify, WooCommerce ou desenvolvimento customizado com integração de pagamentos"
+      "title": "E-commerces",
+      "description": "E-commerces em Shopify, Nuvemshop, WooCommerce ou sob medida, com integração de pagamentos e checkout otimizado"
     },
     "saas": {
-      "title": "SaaS & Sistemas",
-      "description": "Desenvolvimento full-stack com React/Next.js, Node.js, Python/Django e bancos SQL/NoSQL"
+      "title": "SaaS & Plataformas",
+      "description": "Plataformas web e sistemas de gestão full-stack com React/Next.js, Node.js, Python/Django e bancos SQL/NoSQL"
     },
     "ai": {
       "title": "IA & Automação",
-      "description": "Chatbots, business intelligence, automação de marketing e estratégias de personalização"
+      "description": "Integração com LLMs, agentes e assistentes, automação de processos e business intelligence"
     },
     "design": {
       "title": "UX/UI Design",
       "description": "Wireframing, prototipagem em Figma/Framer, micro-interações e design acessível"
     },
-    "marketing": {
-      "title": "Marketing Digital",
-      "description": "SEO, SEM, anúncios em redes sociais e estratégia de conteúdo"
-    },
     "consulting": {
       "title": "Consultoria",
       "description": "Análise técnica, planejamento estratégico e mentoria para times de desenvolvimento"
+    },
+    "mobile": {
+      "title": "Aplicativos Mobile",
+      "description": "Apps nativos para iOS e Android em React Native/Expo, publicados na App Store e no Google Play"
     }
   },
   "portfolio": {
@@ -83,12 +83,11 @@
     "title": "Resultados & Depoimentos",
     "subtitle": "Números reais dos sistemas que entreguei e que rodam em produção hoje",
     "metrics": {
-      "stores": "Lojas em produção",
       "prescriptions": "Prescrições processadas",
-      "patients": "Pacientes cadastrados",
+      "stores": "Lojas em produção",
+      "tests": "Testes automatizados na API",
       "entries": "Lançamentos migrados",
-      "reports": "Linhas de produto",
-      "label": "Resultados em números"
+      "accuracy": "Precisão vs. jurisprudência"
     }
   },
   "cta": {
@@ -132,7 +131,7 @@
   },
   "servicesPage": {
     "pageTitle": "Serviços",
-    "pageSubtitle": "Do desenvolvimento web ao SaaS e automação com IA — soluções completas para transformar seu negócio",
+    "pageSubtitle": "De aplicativos e plataformas SaaS a e-commerce e automação com IA — soluções completas para transformar seu negócio",
     "websites": {
       "title": "Sites & Landing Pages",
       "description": "Criação de sites institucionais, landing pages e páginas de captura otimizadas para conversão.",
@@ -146,10 +145,10 @@
       ]
     },
     "ecommerce": {
-      "title": "E-commerce",
-      "description": "Lojas virtuais completas e prontas para vender, com gestão de estoque, pagamentos e logística.",
+      "title": "E-commerces",
+      "description": "E-commerces completos e prontos para vender, com gestão de estoque, pagamentos e logística.",
       "features": [
-        "Shopify, WooCommerce ou desenvolvimento customizado",
+        "Shopify, Nuvemshop, WooCommerce ou sob medida",
         "Integração com gateways de pagamento",
         "Gestão de estoque e logística",
         "Checkout otimizado para conversão",
@@ -158,8 +157,8 @@
       ]
     },
     "saas": {
-      "title": "SaaS & Sistemas Customizados",
-      "description": "Desenvolvimento de plataformas web, sistemas de gestão e aplicações SaaS escaláveis.",
+      "title": "SaaS & Plataformas",
+      "description": "Plataformas web, sistemas de gestão e aplicações SaaS escaláveis, com multiusuário e controle de acesso.",
       "features": [
         "React, Next.js, Angular",
         "Node.js, Python, Django",
@@ -193,18 +192,6 @@
         "Testes de usabilidade"
       ]
     },
-    "marketing": {
-      "title": "Marketing Digital & Ads",
-      "description": "Estratégias digitais para atrair, converter e fidelizar clientes.",
-      "features": [
-        "SEO técnico e on-page",
-        "Google Ads e Meta Ads",
-        "Estratégia de conteúdo",
-        "Email marketing e automação",
-        "Gestão de redes sociais",
-        "Analytics e otimização de conversão"
-      ]
-    },
     "industries": {
       "title": "Segmentos Atendidos",
       "subtitle": "Experiência em diversos segmentos de mercado",
@@ -216,6 +203,23 @@
         "Startups e SaaS",
         "Consultorias e serviços"
       ]
+    },
+    "mobile": {
+      "title": "Aplicativos Mobile",
+      "description": "Apps nativos para iOS e Android, do primeiro protótipo à publicação nas lojas.",
+      "features": [
+        "React Native e Expo, um código para iOS e Android",
+        "Publicação na App Store e no Google Play",
+        "Notificações push e recursos nativos do aparelho",
+        "Funcionamento offline e sincronização",
+        "Integração com a mesma API do seu sistema web",
+        "Atualizações contínuas sem nova submissão"
+      ]
+    },
+    "stats": {
+      "projects": "Projetos",
+      "years": "Anos em tecnologia",
+      "services": "Frentes de atuação"
     }
   },
   "blog": {

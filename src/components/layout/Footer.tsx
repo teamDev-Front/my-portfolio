@@ -27,12 +27,12 @@ export function Footer() {
   ];
 
   const services = [
-    { href: `/${locale}/services#websites`, label: pt ? 'Sites & Landing Pages' : 'Websites & Landing Pages' },
-    { href: `/${locale}/services#ecommerce`, label: 'E-commerce' },
-    { href: `/${locale}/services#saas`, label: pt ? 'SaaS & Sistemas' : 'SaaS & Systems' },
+    { href: `/${locale}/services#saas`, label: pt ? 'SaaS & Plataformas' : 'SaaS & Platforms' },
+    { href: `/${locale}/services#mobile`, label: pt ? 'Aplicativos Mobile' : 'Mobile Apps' },
+    { href: `/${locale}/services#ecommerce`, label: pt ? 'E-commerces' : 'E-commerce' },
     { href: `/${locale}/services#ai`, label: pt ? 'IA & Automação' : 'AI & Automation' },
+    { href: `/${locale}/services#websites`, label: pt ? 'Sites & Landing Pages' : 'Websites & Landing Pages' },
     { href: `/${locale}/services#design`, label: 'UX/UI Design' },
-    { href: `/${locale}/services#marketing`, label: pt ? 'Marketing Digital' : 'Digital Marketing' },
   ];
 
   const socials = [

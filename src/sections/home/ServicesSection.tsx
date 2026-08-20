@@ -12,12 +12,12 @@ import type { Locale, StaticPathname } from '@/i18n/routing';
  */
 
 const SERVICES: Array<{ key: string; landingRoute?: StaticPathname }> = [
-  { key: 'websites', landingRoute: '/create-website' },
-  { key: 'ecommerce' },
   { key: 'saas', landingRoute: '/create-saas' },
+  { key: 'mobile' },
+  { key: 'ecommerce' },
   { key: 'ai', landingRoute: '/ai-automation' },
+  { key: 'websites', landingRoute: '/create-website' },
   { key: 'design' },
-  { key: 'marketing' },
   { key: 'consulting' },
 ];
 
