@@ -26,7 +26,7 @@ export async function PortfolioSection() {
         data-portfolio-track
         data-stage="portfolio"
         data-stage-lead="0.7"
-        className="relative h-[320vh] md:h-[420vh]"
+        className="relative h-[380vh] md:h-[560vh]"
       >
       <section
         data-portfolio-stage

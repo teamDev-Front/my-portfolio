@@ -53,15 +53,18 @@ export const motion = {
    */
   workQueue: {
     /** Idle breath, in queue-phase units/s (1 = one full slot advance). */
-    autoSpeed: 0.045,
+    autoSpeed: 0.022,
     /** Extra phase/s per px/s of scroll velocity. Kept LOW — the beat is pinned. */
-    velocityGain: 0.00009,
+    velocityGain: 0.00004,
     /** Cap on the scroll-fed acceleration (phase/s). */
-    maxBoost: 0.4,
+    maxBoost: 0.2,
     /** Phase per px of horizontal drag. */
     dragGain: 0.0026,
     /** 1/s exponential decay of thrown drag velocity. */
     inertiaDecay: 2.4,
+    /** Scrub smoothing for the queue only — heavier than the global value so the cards
+     *  glide instead of snapping to the scroll position. */
+    scrub: 1.6,
     /** Pin length of the portfolio beat, in viewport-heights. */
     pinLength: 3.2,
     pinLengthMobile: 2.2,

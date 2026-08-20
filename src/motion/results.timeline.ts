@@ -36,8 +36,10 @@ export function resultsTimeline(
     const numberEl = el.querySelector<HTMLElement>('[data-metric-number]');
     if (!numberEl) return;
     const prefix = el.dataset.metricPrefix ?? '';
-    const suffix = el.dataset.metricSuffix ?? '';
-    numberEl.textContent = `${prefix}${Math.round(n)}${suffix}`;
+    // Thousands separator matches the rendered locale, so the counter never disagrees
+    // with the value the server painted.
+    const formatted = Math.round(n).toLocaleString(el.dataset.metricLocale || undefined);
+    numberEl.textContent = `${prefix}${formatted}`;
   };
 
   if (reduced) {

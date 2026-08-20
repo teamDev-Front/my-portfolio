@@ -24,11 +24,12 @@ export function Timeline() {
         </div>
 
         <ol className="mt-14 border-t border-line/10 md:mt-20">
-          {timeline.map((item) => {
+          {timeline.map((item, i) => {
             const entry = item.translations[locale];
 
+            // The year is not a unique key — two roles can start in the same year.
             return (
-              <li key={item.year} data-reveal className="border-b border-line/10">
+              <li key={`${item.year}-${entry.company}-${i}`} data-reveal className="border-b border-line/10">
                 <div className="grid gap-4 py-8 md:grid-cols-[9rem_1fr] md:gap-10 md:py-10">
                   <div className="flex items-center gap-3 md:flex-col md:items-start">
                     <span className="hud-readout text-[13px] opacity-100! text-red-bright">

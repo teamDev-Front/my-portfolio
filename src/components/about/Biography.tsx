@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 
 /**
@@ -11,17 +12,25 @@ export function Biography() {
   return (
     <section className="relative px-6 py-24 md:px-12 md:py-32">
       <div className="mx-auto grid max-w-6xl items-start gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
-        {/* Identity panel — the HUD frame, not a photo card. */}
+        {/* Identity panel — the portrait inside the HUD frame. */}
         <div
           data-reveal
-          className="border-hairline relative mx-auto w-full max-w-sm rounded-xs bg-surface lg:mx-0"
+          className="border-hairline relative mx-auto w-full max-w-sm overflow-hidden rounded-xs bg-surface lg:mx-0"
         >
-          <div className="flex flex-col items-center gap-7 px-6 py-14 text-center md:py-20">
-            <span className="type-display text-[clamp(3.5rem,11vw,5.5rem)] text-red-bright">LH</span>
-            <div className="hud-readout text-[10px] opacity-100!">
-              <p className="text-fg">LUIZ HABAEB</p>
-              <p className="mt-2 text-fg/60">FRONT-END DEVELOPER</p>
-              <p className="mt-1 text-fg/60">HCS FOUNDER</p>
+          <div className="relative aspect-4/5 w-full">
+            <Image
+              src="/images/luiz-habaeb-desenvolvedor-full-stack.jpg"
+              alt="Luiz Habaeb"
+              fill
+              sizes="(max-width: 1023px) 90vw, 24rem"
+              className="object-cover"
+            />
+            <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-bg via-bg/70 to-transparent p-6 pt-16">
+              <div className="hud-readout text-[10px] opacity-100!">
+                <p className="text-fg">LUIZ HABAEB</p>
+                <p className="mt-2 text-fg/70">SAP BTP &amp; FULL STACK DEVELOPER</p>
+                <p className="mt-1 text-fg/70">HCS FOUNDER</p>
+              </div>
             </div>
           </div>
 

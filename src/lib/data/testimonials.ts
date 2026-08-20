@@ -14,100 +14,96 @@ export interface Testimonial {
   };
   metrics?: {
     /** i18n key under `testimonials.metrics` — the label is translated, not stored here. */
-    key: 'revenue' | 'bookings' | 'sales' | 'consultations' | 'satisfaction';
-    value: string;
+    key: 'stores' | 'prescriptions' | 'patients' | 'entries' | 'reports';
+    /** The number the counter climbs to. Rendered with a locale thousands separator. */
+    value: number;
+    /** Rendered before the number (e.g. "+"). */
+    prefix?: string;
   };
 }
 
+/**
+ * Every number here is a fact from the delivered system — store counts, records in
+ * production, entries migrated — not a satisfaction score. The quotes describe what was
+ * built and what it replaced.
+ */
 export const testimonials: Testimonial[] = [
   {
     id: '1',
-    name: 'AION Solution',
-    role: 'AI & Marketing',
-    company: 'AION',
+    name: 'InfiniteGear · BIOS',
+    role: 'Health / Prescriptions',
+    company: 'InfiniteSign',
     translations: {
       en: {
-        quote: 'The platform developed by Luiz helped us achieve measurable results for our clients. The AI integration was seamless and the results speak for themselves.'
+        quote:
+          'The prescription platform runs the full chain for compounded hormone implants — prescriber, commercial approval and pharmacist manipulation with batch tracking — with digital signature and an auditable trail on every document issued. It holds more than 12,500 patients and 18,000 prescriptions in production.',
       },
       'pt-BR': {
-        quote: 'A plataforma desenvolvida por Luiz nos ajudou a alcançar resultados mensuráveis para nossos clientes. A integração de IA foi perfeita e os resultados falam por si.'
-      }
+        quote:
+          'A plataforma de prescrições conduz toda a cadeia dos implantes hormonais manipulados — prescritor, aprovação comercial e manipulação farmacêutica com rastreio de lote — com assinatura digital e trilha auditável em cada documento emitido. Hoje sustenta mais de 12.500 pacientes e 18.000 prescrições em produção.',
+      },
     },
     metrics: {
-      key: 'revenue',
-      value: '+30%'
-    }
+      key: 'prescriptions',
+      value: 18000,
+      prefix: '+',
+    },
   },
   {
     id: '2',
-    name: 'StayDepot',
-    role: 'AI Analytics',
-    company: 'StayDepot',
+    name: 'Vidget',
+    role: 'E-commerce / AI',
+    company: 'Vidget',
     translations: {
       en: {
-        quote: 'StayDepot\'s AI-powered analytics have transformed how our hosts optimize their listings. The actionable insights have led to significant booking improvements.'
+        quote:
+          'Shoppable video and AI virtual try-on embedded straight into the storefront. The app was officially homologated by Nuvemshop, and the migration to the native integration kept more than 100 stores already in production running without a single manual reinstall.',
       },
       'pt-BR': {
-        quote: 'As análises com IA da StayDepot transformaram como nossos anfitriões otimizam seus anúncios. Os insights acionáveis levaram a melhorias significativas nas reservas.'
-      }
+        quote:
+          'Vídeo shoppable e provador virtual com IA embarcados direto na vitrine da loja. O app foi homologado oficialmente pela Nuvemshop, e a migração para a integração nativa manteve mais de 100 lojas já em produção rodando sem uma única reinstalação manual.',
+      },
     },
     metrics: {
-      key: 'bookings',
-      value: '+20%'
-    }
+      key: 'stores',
+      value: 100,
+      prefix: '+',
+    },
   },
   {
     id: '3',
-    name: 'Coquim',
-    role: 'Sustainability',
-    company: 'Coquim',
+    name: 'AramBI',
+    role: 'Agribusiness / Management',
+    company: 'Grupo Aramburu',
     translations: {
       en: {
-        quote: 'The new e-commerce platform beautifully represents our commitment to sustainability while making it easier for customers to shop our eco-friendly products.'
+        quote:
+          'The spreadsheet stack that ran the group became a system: finance, grain inventory from electronic invoices, documents, profit distribution and a field-worker portal. 1,282 entries across 13 months were migrated with the balances matching the original spreadsheet to the cent.',
       },
       'pt-BR': {
-        quote: 'A nova plataforma de e-commerce representa lindamente nosso compromisso com sustentabilidade enquanto facilita para os clientes comprarem nossos produtos ecológicos.'
-      }
+        quote:
+          'O conjunto de planilhas que tocava o grupo virou sistema: financeiro, estoque de grãos a partir das notas eletrônicas, documentos, distribuição de lucro e portal do colaborador de campo. Foram 1.282 lançamentos de 13 meses migrados, com os saldos batendo ao centavo com a planilha original.',
+      },
     },
     metrics: {
-      key: 'sales',
-      value: '+45%'
-    }
+      key: 'entries',
+      value: 1282,
+    },
   },
   {
     id: '4',
-    name: 'Smart Controller',
-    role: 'Consulting',
-    company: 'Smart Controller',
+    name: 'StayDepot',
+    role: 'Data / Short Stay',
+    company: 'StayDepot',
     translations: {
       en: {
-        quote: 'Our new website perfectly captures our humanized approach to accounting. We\'ve seen a significant increase in consultation bookings since launch.'
+        quote:
+          'Each short-stay property analysed inside its own regional micro-market, turning the benchmark into a prioritised action list for investors and property managers. The payment infrastructure was fully migrated to Stripe and the product line restructured into three commercial tiers.',
       },
       'pt-BR': {
-        quote: 'Nosso novo site captura perfeitamente nossa abordagem humanizada de contabilidade. Vimos um aumento significativo em agendamentos de consultoria desde o lançamento.'
-      }
+        quote:
+          'Cada imóvel de temporada analisado dentro do seu micro-mercado regional, transformando o benchmark em lista priorizada de ações para investidores e gestoras. A infraestrutura de pagamento foi migrada por completo para Stripe e a linha de produtos reestruturada em três níveis comerciais.',
+      },
     },
-    metrics: {
-      key: 'consultations',
-      value: '+60%'
-    }
   },
-  {
-    id: '5',
-    name: 'Grupo NC',
-    role: 'Pharma',
-    company: 'Sara Digital',
-    translations: {
-      en: {
-        quote: 'Sara has revolutionized how patients access medication information. The accessibility features have received excellent feedback from users with disabilities.'
-      },
-      'pt-BR': {
-        quote: 'Sara revolucionou como pacientes acessam informações sobre medicamentos. Os recursos de acessibilidade receberam feedback excelente de usuários com deficiência.'
-      }
-    },
-    metrics: {
-      key: 'satisfaction',
-      value: '95%'
-    }
-  }
 ];

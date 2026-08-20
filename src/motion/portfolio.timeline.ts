@@ -164,7 +164,7 @@ export function portfolioTimeline(
       trigger: track,
       start: 'top top',
       end: 'bottom bottom',
-      scrub: motion.scroll.scrub,
+      scrub: cfg.scrub,
       invalidateOnRefresh: true,
     },
   });
@@ -175,7 +175,7 @@ export function portfolioTimeline(
   // applyPhase per slot, so the whole surface fades as one here instead.
   const arrival = gsap.timeline({
     defaults: { ease: 'none' },
-    scrollTrigger: { trigger: track, start: 'top 85%', end: 'top top', scrub: motion.scroll.scrub },
+    scrollTrigger: { trigger: track, start: 'top 85%', end: 'top top', scrub: cfg.scrub },
   });
   arrival.fromTo(
     q('[data-portfolio-header]'),

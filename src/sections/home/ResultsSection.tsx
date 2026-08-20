@@ -35,26 +35,23 @@ export async function ResultsSection() {
             <p className="mt-6 text-base leading-relaxed text-fg/60 md:text-lg">{t('subtitle')}</p>
           </div>
 
-          <dl className="mt-16 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+          <dl className="mt-16 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
             {withMetrics.map((item) => {
-              const raw = item.metrics!.value;
-              const numeric = raw.replace(/[^\d]/g, '');
-              const prefix = raw.startsWith('+') ? '+' : '';
-              const suffix = raw.includes('%') ? '%' : '';
+              const { value, prefix = '' } = item.metrics!;
               return (
                 <div
                   key={item.id}
                   data-metric
-                  data-metric-value={numeric}
+                  data-metric-value={value}
                   data-metric-prefix={prefix}
-                  data-metric-suffix={suffix}
+                  data-metric-locale={locale}
                   className="border-t border-line/15 pt-5"
                 >
                   <dd
                     data-metric-number
                     className="type-display text-[clamp(2.6rem,6vw,4.6rem)] text-red-bright tabular-nums"
                   >
-                    {raw}
+                    {`${prefix}${value.toLocaleString(locale)}`}
                   </dd>
                   <dt className="hud-readout mt-3 text-[10px] opacity-70!">
                     {t(`metrics.${item.metrics!.key}`)}
@@ -68,7 +65,7 @@ export async function ResultsSection() {
           </dl>
 
           <div className="mt-20 grid gap-10 border-t border-line/10 pt-12 md:grid-cols-2 lg:gap-16">
-            {withMetrics.slice(0, 2).map((item) => (
+            {testimonials.map((item) => (
               <figure key={item.id} data-metric-quote>
                 <blockquote className="text-sm leading-relaxed text-fg/60 md:text-base">
                   {item.translations[locale].quote}

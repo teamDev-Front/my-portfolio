@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { Choreography } from '@/components/shell/Choreography';
@@ -36,14 +37,21 @@ export function AboutSection() {
         </span>
 
         <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-16 lg:grid-cols-[0.85fr_1.15fr]">
-          {/* Monogram panel — unveiled by a cover sheet (desktop only). */}
+          {/* Portrait panel — unveiled by a cover sheet (desktop only). */}
           <div data-about-panel className="relative hidden lg:block">
             <div className="border-hairline relative aspect-4/5 overflow-hidden rounded-xs bg-surface">
-              <div className="flex h-full flex-col items-center justify-center gap-8">
-                <span className="type-display text-[7rem] text-red-bright">LH</span>
-                <div className="hud-readout text-center text-[10px] opacity-70!">
-                  <p>LUIZ HABAEB</p>
-                  <p className="mt-2">{t('subtitle')}</p>
+              <Image
+                src="/images/luiz-habaeb-desenvolvedor-full-stack.jpg"
+                alt="Luiz Habaeb"
+                fill
+                sizes="(max-width: 1023px) 0px, 30vw"
+                className="object-cover"
+              />
+              {/* The readout sits on a gradient so it stays legible over the photo. */}
+              <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-bg via-bg/70 to-transparent p-6 pt-16">
+                <div className="hud-readout text-[10px] opacity-100!">
+                  <p className="text-fg">LUIZ HABAEB</p>
+                  <p className="mt-2 text-fg/70">{t('subtitle')}</p>
                 </div>
               </div>
               {/* Corner ticks — the HUD frame language. */}

@@ -151,6 +151,26 @@ export async function ProjectDetail({ project }: { project: Project }) {
                     <span aria-hidden>↗</span>
                   </a>
                 ) : null}
+
+                {/* Secondary destinations: app stores, the product's own admin, a second
+                    domain. Listed under the primary link, never competing with it. */}
+                {project.extraLinks?.length ? (
+                  <ul className="mt-3 grid gap-2">
+                    {project.extraLinks.map((link) => (
+                      <li key={link.url}>
+                        <a
+                          href={link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="border-hairline flex min-h-11 items-center justify-center gap-3 rounded-xs px-6 py-3 font-mono text-[11px] uppercase tracking-[0.16em] text-fg/70 transition-colors duration-200 hover:text-red-bright"
+                        >
+                          {link.label}
+                          <span aria-hidden>↗</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
               </div>
             </div>
           </aside>

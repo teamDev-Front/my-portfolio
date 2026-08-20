@@ -21,11 +21,11 @@
   },
   "intro": {
     "title": "About Luiz Habaeb",
-    "subtitle": "Full-Stack Developer & HCS Founder",
-    "description": "I'm a developer with 8+ years of experience in React, Next.js, Angular and TypeScript. I also work with Python, Django, SQL, Oracle and Supabase. I build end-to-end solutions — from websites and e-commerce stores to SaaS platforms and AI automations — leading cross-functional teams from concept to delivery.",
-    "highlight1": "8+ years of experience",
-    "highlight2": "Database degree from FATEC (2024)",
-    "highlight3": "Advanced English",
+    "subtitle": "SAP BTP & Full Stack Developer · HCS Founder",
+    "description": "I am a developer with over 10 years in technology. I work as a Senior SAP BTP & Fiori Analyst at SAUTER and as a front-end developer at Quantflow (Switzerland), and my studio HCS is where the projects in this portfolio come from — e-commerce and websites through to SaaS platforms and AI systems running in production.",
+    "highlight1": "SAP BTP · CAP · Fiori · SuccessFactors",
+    "highlight2": "React · Next.js · TypeScript · Node.js",
+    "highlight3": "Database Technology degree — FATEC (2024)",
     "cta": "Learn My Story"
   },
   "services": {
@@ -81,13 +81,13 @@
   },
   "testimonials": {
     "title": "Results & Testimonials",
-    "subtitle": "Measurable impacts for our clients",
+    "subtitle": "Real numbers from the systems I delivered, running in production today",
     "metrics": {
-      "revenue": "Revenue increase",
-      "bookings": "Booking increase",
-      "sales": "Online sales",
-      "consultations": "Consultation increase",
-      "satisfaction": "User satisfaction",
+      "stores": "Stores in production",
+      "prescriptions": "Prescriptions processed",
+      "patients": "Patients registered",
+      "entries": "Entries migrated",
+      "reports": "Product lines",
       "label": "Results in numbers"
     }
   },
@@ -99,13 +99,13 @@
   },
   "about": {
     "pageTitle": "About Me",
-    "pageSubtitle": "8+ years building digital solutions — from websites and e-commerce to SaaS and AI automations",
+    "pageSubtitle": "Over 10 years in technology — from enterprise SAP systems to e-commerce, SaaS and AI-powered products",
     "bio": {
       "title": "My Story",
-      "p1": "My journey in technology began in technical support and hospital administration, which gave me a solid foundation in empathy, user service and problem-solving.",
-      "p2": "When I moved into software development, I found my true passion: transforming complex ideas into simple, memorable digital experiences. I started as an intern at Ericsson, where I worked with .NET and process automation. Shortly afterward, I founded Habaeb Creative Solutions, my freelance studio focused on landing pages, websites and custom systems.",
-      "p3": "In 2024, I took the lead of the development team at Deploy Experience, coordinating front-end and full-stack projects for diverse clients. Today, I work as a front-end developer at Quantflow (Heerbrugg, St Gallen), combining React, Next.js and TypeScript with robust Django back-ends, and integrating language models (LLMs) to add intelligence to applications.",
-      "p4": "What sets me apart is the ability to combine deep technical knowledge with a user‑oriented product vision. I believe technology should solve real business problems and deliver intuitive experiences. Outside of work, I love exploring design, studying new languages and collaborating with the community. I'm always open to conversations about projects, partnerships and ways to apply technology strategically."
+      "p1": "My path into technology started on the operations floor: as an electronics technician patching Ericsson sites and radio links for the carrier TIM across Brazil, then in emergency-room reception and hospital administration. That is where I learned to handle critical data and people under pressure — a foundation I still carry.",
+      "p2": "Moving into software development, I found what I actually love: turning complex ideas into simple, memorable digital experiences. I returned to Ericsson, this time as a .NET development intern, and soon after founded Habaeb Creative Solutions — the studio behind most of the work in this portfolio.",
+      "p3": "I led the development team at Deploy Experience for nearly three years, as Frontend Manager and then Head of Development. Today I am a Senior SAP BTP & Fiori Analyst at SAUTER, supporting and evolving CAP (Node.js) applications integrated with SuccessFactors for the HR area of a retailer with over 40,000 employees — and a front-end developer at Quantflow (Switzerland), building Next.js applications and LLM integrations.",
+      "p4": "What sets me apart is the range: I will trace a production incident to its root cause in an enterprise SAP environment and, in the same month, design the scroll choreography of an artwork-grade website. I believe technology has to solve a real business problem — and that the number on the screen has to be true. I am always open to conversations about projects, partnerships and applying technology strategically."
     },
     "skills": {
       "title": "Technical Skills",
